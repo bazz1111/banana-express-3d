@@ -1,10 +1,16 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clamp} from './game.ts';
-import {ScenePhysics} from './physics.ts';
 import {roadPosition,roadQuaternion,frameQuaternion,cyclePosition,rebasePosition,rebaseVector} from './route.ts';
 
-const compose=new THREE.Object3D();
+const compose=new THREE.Object3D(),tint=new THREE.Color();
+// Deterministic 0..1 noise per instance index, so color variation never flickers between frames.
+export const instanceNoise=(i,salt=0)=>{const x=Math.sin((i+1)*12.9898+salt*78.233)*43758.5453;return x-Math.floor(x);};
+// Small HSL offsets on top of the authored vertex colors; magnitudes stay below a visible palette change.
+export function variedColor(target,i,{hue=.02,sat=.08,light=.10,salt=0}={}){
+  const warm=(instanceNoise(i,salt)-.5)*hue*4,green=(instanceNoise(i,salt+2)-.5)*sat,scale=1+(instanceNoise(i,salt+1)-.5)*light;
+  return target.setRGB((1+warm)*scale,(1+green)*scale,(1-warm)*scale);
+}
 const windVertex='transformed.x += sin(uWindTime*1.4+instanceMatrix[3].x*.18+position.y)*.022*min(3.,max(0.,position.y));';
 export function foliageWind(material,clock){
   material.onBeforeCompile=shader=>{
@@ -70,12 +76,12 @@ export class GameView {
     this.canvas=canvas;this.onProgress=onProgress;this.assets={};this.obstacleModels=new Map();this.pool=new Map();
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure=1.04;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFShadowMap;
+    this.renderer.toneMappingExposure=1.12;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFShadowMap;
     this.renderer.autoClear=false;
-    this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#8dcff1');this.scene.fog=new THREE.Fog('#b9d4c5',100,430);
+    this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#8dcff1');this.scene.fog=new THREE.Fog('#c3e0e6',110,460);
     this.camera=new THREE.PerspectiveCamera(52,1,.1,1800);this.panoramaCamera=this.camera.clone();this.panoramaCamera.layers.set(1);
-    const fill=new THREE.HemisphereLight(0xc5def6,0x665366,1.25);fill.layers.enable(1);this.scene.add(fill);
-    this.sun=new THREE.DirectionalLight(0xffe4b8,2.7);this.sun.layers.enable(1);this.sun.castShadow=true;
+    const fill=new THREE.HemisphereLight(0xcfe6ff,0x8a6248,1.35);fill.layers.enable(1);this.scene.add(fill);
+    this.sun=new THREE.DirectionalLight(0xffe2ae,3.0);this.sun.layers.enable(1);this.sun.castShadow=true;
     this.sun.position.set(35,70,-30);this.sun.target.position.set(0,0,16);
     this.sun.shadow.mapSize.set(2048,2048);Object.assign(this.sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:160});
     this.sun.shadow.bias=-.00003;this.sun.shadow.normalBias=.028;this.sun.shadow.radius=2.5;this.scene.add(this.sun,this.sun.target);
@@ -88,9 +94,14 @@ export class GameView {
     this.renderer.setPixelRatio(this.quality==='high'?Math.min(devicePixelRatio,1.5):.8);this.renderer.setSize(w,h,false);
     this.camera.aspect=w/h;this.camera.updateProjectionMatrix();
   }
-  setQuality(quality){this.quality=quality;this.renderer.shadowMap.enabled=quality==='high';this.resize();}
+  setQuality(quality){
+    this.quality=quality;this.renderer.shadowMap.enabled=quality==='high';
+    // Low quality draws the evenly interleaved first half of each forest batch (see authoredBatch).
+    for(const mesh of this.thinnedBatches??[])mesh.count=quality==='high'?mesh.userData.fullCount:Math.ceil(mesh.userData.fullCount/2);
+    this.resize();
+  }
   async load(onProgress=this.onProgress){
-    const loader=new GLTFLoader(),base=import.meta.env.BASE_URL+'assets/';
+    const loader=new GLTFLoader(),base=import.meta.env.BASE_URL+'assets/',physicsModule=import('./physics.ts');
     const response=await fetch(base+'course.json');if(!response.ok)throw new Error('路线配置载入失败');this.course=await response.json();
     const names=['bicycle','rider','banana','bananaRack','looseBanana','truck','car','pedestrian','goat','barrier','crate','wall','train','boost','shield','double','palm','tree','bananaPlant','rock','bush','hut','stall','foundation','sign','dust','spark','burst','roadTile','roadCourse','valley','cliff','sky'];
     const gradient=new THREE.DataTexture(new Uint8Array([80,170,255]),3,1,THREE.RedFormat);gradient.minFilter=gradient.magFilter=THREE.NearestFilter;gradient.needsUpdate=true;
@@ -122,7 +133,7 @@ export class GameView {
       const p=geometry.getAttribute('position');return {segment:chunk.segment,vertices:new Float32Array(p.array),
         indices:geometry.index?new Uint32Array(geometry.index.array):Uint32Array.from({length:p.count},(_,i)=>i)};
     }));
-    this.physics=await ScenePhysics.create(this.course,surfaces);await this.renderer.compileAsync(this.scene,this.camera);
+    const {ScenePhysics}=await physicsModule;this.physics=await ScenePhysics.create(this.course,surfaces);await this.renderer.compileAsync(this.scene,this.camera);
     this.sun.castShadow=false;await this.renderer.compileAsync(this.scene,this.panoramaCamera);this.sun.castShadow=true;return this.course;
   }
   clone(name){return this.assets[name].clone(true);}
@@ -140,16 +151,21 @@ export class GameView {
     compose.rotation.set(0,rotation,0);compose.updateMatrix();mesh.setMatrixAt(i,compose.matrix);
   }
   finishInstances(mesh,count){mesh.count=count;mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();}
-  authoredBatch(group,name){
-    const sources=this.assets.valley.getObjectByName(group).children.filter(o=>o.isMesh);
+  authoredBatch(group,name,{thin=false,vary=null}={}){
+    let sources=this.assets.valley.getObjectByName(group).children.filter(o=>o.isMesh);
+    // Even indices first: any prefix is then a spatially uniform subset of the authored layout.
+    if(thin)sources=[...sources.filter((_,i)=>i%2===0),...sources.filter((_,i)=>i%2===1)];
     const mesh=new THREE.InstancedMesh(sources[0].geometry,sources[0].material,sources.length);mesh.name=name;mesh.layers.set(1);
-    sources.forEach((o,i)=>mesh.setMatrixAt(i,o.matrixWorld));this.finishInstances(mesh,sources.length);this.scene.add(mesh);return mesh;
+    sources.forEach((o,i)=>{mesh.setMatrixAt(i,o.matrixWorld);if(vary)mesh.setColorAt(i,variedColor(tint,i,vary));});
+    this.finishInstances(mesh,sources.length);this.scene.add(mesh);
+    if(thin){mesh.userData.fullCount=sources.length;(this.thinnedBatches??=[]).push(mesh);}
+    return mesh;
   }
   buildScene(){
     const sky=this.geometry('sky');
     this.sky=new THREE.Mesh(sky.geometry,new THREE.ShaderMaterial({
       side:THREE.BackSide,depthWrite:false,toneMapped:false,
-      uniforms:{horizon:{value:new THREE.Color('#c5e4ec')},zenith:{value:new THREE.Color('#69b1ed')}},
+      uniforms:{horizon:{value:new THREE.Color('#d2eef4')},zenith:{value:new THREE.Color('#4b9fe8')}},
       vertexShader:'varying vec3 vDirection; void main(){vDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
       fragmentShader:'uniform vec3 horizon;uniform vec3 zenith;varying vec3 vDirection;void main(){float h=smoothstep(-.12,.72,normalize(vDirection).y);gl_FragColor=vec4(mix(horizon,zenith,h),1.);\n#include <colorspace_fragment>\n}',
     }));this.sky.name='BlenderSkyDome';this.sky.scale.setScalar(1700);this.sky.layers.set(1);this.sky.renderOrder=-1000;this.sky.frustumCulled=false;this.scene.add(this.sky);
@@ -160,6 +176,12 @@ export class GameView {
       this.scene.add(group);return group;
     });
     this.scenery={};for(const name of ['palm','tree','bananaPlant','rock','bush','hut','stall','foundation','sign','cliff'])this.scenery[name]=this.instances(name,160);
+    const sceneryVariation={palm:{hue:.05,sat:.14,light:.20},tree:{hue:.07,sat:.16,light:.22},bananaPlant:{hue:.05,sat:.16,light:.22},bush:{hue:.07,sat:.16,light:.24},rock:{hue:.03,sat:.12,light:.20},cliff:{hue:.025,sat:.14,light:.16}};
+    this.sceneryColors={};
+    for(const [name,vary] of Object.entries(sceneryVariation)){
+      const mesh=this.scenery[name];for(let i=0;i<mesh.instanceMatrix.count;i++)mesh.setColorAt(i,new THREE.Color(1,1,1));
+      this.sceneryColors[name]=this.roadChunks.map(chunk=>chunk.scenery.map((_,i)=>variedColor(new THREE.Color(),chunk.segment*977+i,{...vary,salt:11})));
+    }
     this.sceneryShadows={};
     for(const [name,source] of Object.entries(this.scenery)){
       // Reuse native geometry; this small batch submits only nearby casters to the shadow map.
@@ -178,13 +200,14 @@ export class GameView {
       const source=this.assets.valley.getObjectByName(name),mesh=source.clone();mesh.matrixAutoUpdate=false;mesh.matrix.copy(source.matrixWorld);
       mesh.layers.set(1);mesh.castShadow=false;mesh.receiveShadow=false;valleyTile.add(mesh);this.valleyMeshes[name]=mesh;
     }
-    this.valleyBatches=Object.fromEntries([['ValleyVillageHouse','villageHouse'],['ValleyVillageLonghouse','villageLonghouse'],['ValleyTower','tower'],['ValleyFoundations','valleyFoundation'],['ValleyForest','forestTree'],['ValleyPalms','valleyPalm'],['ValleyMountains','valleyMountain'],['ValleyFoothills','panoramaFoothills'],['ValleyClouds','panoramaClouds'],
-      ['ValleyPanoramaForest','panoramaForest'],['ValleyPanoramaHouse','panoramaHouse'],['ValleyPanoramaLonghouse','panoramaLonghouse'],['ValleyPanoramaTower','panoramaTower'],['ValleyPanoramaFoundations','panoramaFoundations']].map(([group,name])=>[group,this.authoredBatch(group,name)]));
+    const forest={thin:true,vary:{hue:.06,sat:.16,light:.24,salt:3}},houses={vary:{hue:.03,sat:.10,light:.12,salt:5}},palms={vary:{hue:.05,sat:.14,light:.18,salt:7}};
+    this.valleyBatches=Object.fromEntries([['ValleyVillageHouse','villageHouse',houses],['ValleyVillageLonghouse','villageLonghouse',houses],['ValleyTower','tower'],['ValleyFoundations','valleyFoundation'],['ValleyForest','forestTree',forest],['ValleyPalms','valleyPalm',palms],['ValleyMountains','valleyMountain'],['ValleyFoothills','panoramaFoothills'],['ValleyClouds','panoramaClouds'],
+      ['ValleyPanoramaForest','panoramaForest',forest],['ValleyPanoramaHouse','panoramaHouse',houses],['ValleyPanoramaLonghouse','panoramaLonghouse',houses],['ValleyPanoramaTower','panoramaTower'],['ValleyPanoramaFoundations','panoramaFoundations']].map(([group,name,options])=>[group,this.authoredBatch(group,name,options)]));
     const panoramaGroups=['ValleyMountains','ValleyFoothills','ValleyClouds','ValleyPanoramaForest','ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower','ValleyPanoramaFoundations'];
     for(const [group,mesh] of Object.entries(this.valleyBatches))if(!panoramaGroups.includes(group))valleyTile.add(mesh);
     const nextValley=valleyTile.clone(true);nextValley.name='ValleyTile_1';this.scene.add(nextValley);this.valleyTiles=[valleyTile,nextValley];
     this.farPanorama=new THREE.Group();this.scene.add(this.farPanorama);this.farPanorama.add(...panoramaGroups.map(group=>this.valleyBatches[group]));
-    this.panoramaFog=new THREE.Fog('#8bbfd0',450,1700);
+    this.panoramaFog=new THREE.Fog('#9fcde0',480,1750);
     this.valleyBatches.ValleyClouds.receiveShadow=false;
     this.player=new THREE.Group();this.bike=this.clone('bicycle');this.rider=this.clone('rider');this.player.add(this.bike,this.rider);this.scene.add(this.player);
     this.wheels=['WheelFront','WheelRear'].map(n=>this.bike.getObjectByName(n));this.crank=this.bike.getObjectByName('Crank');
@@ -194,12 +217,12 @@ export class GameView {
     this.elbows=['Elbow_L','Elbow_R'].map(n=>this.rider.getObjectByName(n));this.hands=['Hand_L','Hand_R'].map(n=>this.rider.getObjectByName(n));
     const bundles=this.assets.bananaRack.getObjectByName('BananaCargo').children.filter(o=>o.isMesh).sort((a,b)=>a.name.localeCompare(b.name));
     this.cargo=new THREE.InstancedMesh(bundles[0].geometry,bundles[0].material,bundles.length);this.cargo.name='bananaRack';this.cargo.castShadow=true;
-    bundles.forEach((bundle,i)=>this.cargo.setMatrixAt(i,bundle.matrixWorld));
+    bundles.forEach((bundle,i)=>{this.cargo.setMatrixAt(i,bundle.matrixWorld);this.cargo.setColorAt(i,variedColor(tint,i,{hue:.035,sat:.18,light:.16,salt:17}));});
     this.cargo.instanceMatrix.needsUpdate=true;this.cargo.computeBoundingSphere();this.cargo.count=0;this.player.add(this.cargo);
     this.pickupMeshes={};for(const name of ['banana','boost','shield','double'])this.pickupMeshes[name]=this.instances(name==='banana'?'looseBanana':name,name==='banana'?400:48);
     this.burst=this.clone('burst');this.burst.visible=false;this.scene.add(this.burst);
     this.shieldBadge=this.clone('shield');this.shieldBadge.position.set(0,3.2,0);this.shieldBadge.scale.setScalar(.35);this.shieldBadge.visible=false;this.player.add(this.shieldBadge);
-    this.particleMeshes={};for(const name of ['dust','spark']){const m=this.instances(name,48);m.frustumCulled=false;this.particleMeshes[name]=m;}
+    this.particleMeshes={};for(const name of ['dust','spark','rock']){const m=this.instances(name,48);m.frustumCulled=false;m.castShadow=false;this.particleMeshes[name]=m;}
   }
   reset(g){
     this.lastGame=g;this.lastDistance=g.s;this.effects=[];this.shake=0;this.cameraReady=false;this.time=0;this.stanceBlend=g.stance==='standing'?1:0;this.kickBlend=[0,0];
@@ -207,12 +230,14 @@ export class GameView {
     for(const m of Object.values(this.particleMeshes))m.count=0;
   }
   emit(name,p,count,speed=3){
-    for(let i=0;i<count&&this.effects.filter(v=>v.name===name).length<48;i++)this.effects.push({name,p:p.clone(),v:new THREE.Vector3((Math.random()-.5)*speed*2,1+Math.random()*speed,(Math.random()-.5)*speed),age:0,ttl:.65+Math.random()*.4,scale:name==='dust'?.14+Math.random()*.18:.55});
+    const scale=()=>name==='dust'?.10+Math.random()*.14:name==='rock'?.025+Math.random()*.04:.55;
+    for(let i=0;i<count&&this.effects.filter(v=>v.name===name).length<48;i++)this.effects.push({name,p:p.clone(),v:new THREE.Vector3((Math.random()-.5)*speed*2,1+Math.random()*speed,(Math.random()-.5)*speed),age:0,ttl:(name==='rock'?1.1:.65)+Math.random()*.4,scale:scale()});
   }
   events(events,g){
     for(const e of events){
       if(e.type==='kick'){
-        this.shake=.38;const o=g.obstacles.find(v=>v.id===e.id);if(o){const p=worldAt(this.course,o.s,o.lane,1.3,this.lastDistance);this.emit('spark',p,18,8);this.emit('dust',p,12,4);}
+        this.shake=.5;this.burstAge=0;const o=g.obstacles.find(v=>v.id===e.id);if(o){const p=worldAt(this.course,o.s,o.lane,1.3,this.lastDistance);this.emit('spark',p,24,8);this.emit('dust',p,20,4);
+          this.emit('rock',worldAt(this.course,o.s,o.lane,.4,this.lastDistance),e.charged?22:12,5);}
       }else if(e.type==='collision'||e.type==='shield'){this.shake=.28;this.emit('spark',worldAt(this.course,g.s,g.lane,1,this.lastDistance),12,4);}
       else if(e.type==='pickup')this.emit('spark',worldAt(this.course,g.s,g.lane,1.5,this.lastDistance),e.kind==='banana'?2:8,1.2);
     }
@@ -232,12 +257,13 @@ export class GameView {
       const nearGuard=logical*80-g.s<55&&(logical+1)*80-g.s> -25;
       tile.children.forEach(mesh=>{const s=source.surfaces.find(s=>s.role===mesh.userData.surfaceRole);mesh.geometry=s.geometry;mesh.material=s.material;
         mesh.castShadow=mesh.userData.surfaceRole==='guard'&&nearGuard;});
-      for(const placement of source.scenery){const mesh=this.scenery[placement.kind];instance.multiplyMatrices(transform,placement.matrix);mesh.setMatrixAt(counts[placement.kind]++,instance);
+      for(const [p,placement] of source.scenery.entries()){const mesh=this.scenery[placement.kind];instance.multiplyMatrices(transform,placement.matrix);
+        const colors=this.sceneryColors[placement.kind];if(colors)mesh.setColorAt(counts[placement.kind],colors[segment][p]);mesh.setMatrixAt(counts[placement.kind]++,instance);
         if(instance.elements[14]> -35&&instance.elements[14]<70&&Math.abs(instance.elements[12])<35)
           this.sceneryShadows[placement.kind].setMatrixAt(shadowCounts[placement.kind]++,instance);
       }
     }
-    for(const [name,mesh] of Object.entries(this.scenery))this.finishInstances(mesh,counts[name]);
+    for(const [name,mesh] of Object.entries(this.scenery)){this.finishInstances(mesh,counts[name]);if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}
     for(const [name,mesh] of Object.entries(this.sceneryShadows)){mesh.visible=this.quality==='high';this.finishInstances(mesh,shadowCounts[name]);}
   }
   update(g,dt){
@@ -299,12 +325,13 @@ export class GameView {
     }
     for(const [name,m] of Object.entries(this.pickupMeshes))this.finishInstances(m,counts[name]);
     this.effects=this.effects.filter(p=>p.age<p.ttl);
-    const pc={dust:0,spark:0};for(const p of this.effects){p.age+=delta;p.v.y-=7*delta;p.p.addScaledVector(p.v,delta);
+    const pc={dust:0,spark:0,rock:0};for(const p of this.effects){p.age+=delta;p.v.y-=7*delta;p.p.addScaledVector(p.v,delta);
       this.setInstance(this.particleMeshes[p.name],pc[p.name]++,p.p,p.scale*(1-p.age/p.ttl),this.time*4);}
     for(const [name,m] of Object.entries(this.particleMeshes))this.finishInstances(m,pc[name]);
     if(g.speed>10&&g.jumpHeight===0&&delta>0&&Math.random()<delta*10)this.emit('dust',new THREE.Vector3(-g.lane,.1,-.6),1,1.2);
     this.burst.visible=g.kickPose>.24&&g.kickPose<.56;
-    if(this.burst.visible){this.feet[kickLeg].getWorldPosition(this.burst.position);this.burst.position.add(new THREE.Vector3(g.kickSide>0?-.1:.1,0,.04).applyQuaternion(this.player.quaternion));}
+    if(this.burst.visible){this.feet[kickLeg].getWorldPosition(this.burst.position);this.burst.position.add(new THREE.Vector3(g.kickSide>0?-.1:.1,0,.04).applyQuaternion(this.player.quaternion));
+      const t=clamp((.56-g.kickPose)/.32,0,1);this.burst.scale.setScalar(1.25+.55*Math.sin(Math.PI*Math.min(1,t*1.6)));}
     const ready=g.phase==='ready',portrait=1-clamp((this.camera.aspect-.6)/.6,0,1);
     const offset=ready?THREE.MathUtils.lerp(3.4,1.2,portrait):THREE.MathUtils.lerp(1.6,1.0,portrait);
     const height=ready?3.0:THREE.MathUtils.lerp(2.45,2.7,portrait),distance=ready?THREE.MathUtils.lerp(5.4,6.6,portrait):THREE.MathUtils.lerp(4.8,8.2,portrait);
