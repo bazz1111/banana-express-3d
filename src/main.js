@@ -2,7 +2,7 @@ import './style.css';
 import './reference.css';
 import { GameView } from './view.js';
 import { GameAudio } from './audio.js';
-import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp } from './game.ts';
+import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH } from './game.ts';
 
 const $ = id => document.getElementById(id);
 const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
@@ -10,8 +10,36 @@ const audio = new GameAudio();
 const keys = new Set();
 const pointers = new Map();
 const bestKey = 'banana-endless-best';
-let view, game, previousPhase = '', contextLost = false, resultSaved = false, toastRemaining = 0, lastFrame = 0;
+const RACK_CAPACITY = 100, KICK_COOLDOWN = 18;
+// Presentation-only freeze on a landed kick; the fixed-step simulation simply receives no time.
+const HIT_STOP = .085;
+let view, game, previousPhase = '', contextLost = false, resultSaved = false, toastRemaining = 0, lastFrame = 0, hitStop = 0;
 let best = readBest();
+const params = new URLSearchParams(location.search);
+// ?quality=high|low pins the tier; otherwise sustained slow racing frames step down to low once.
+const pinnedQuality = ['high', 'low'].includes(params.get('quality')) ? params.get('quality') : null;
+let qualityLocked = !!pinnedQuality;
+const frameTimes = [];
+function percentile(sorted, q) { return sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * q))] : 0; }
+function perfStats() {
+  const sorted = [...frameTimes].sort((a, b) => a - b), mean = sorted.reduce((a, b) => a + b, 0) / Math.max(1, sorted.length);
+  return { frames: sorted.length, fps: mean ? 1000 / mean : 0, p50: percentile(sorted, .5), p95: percentile(sorted, .95), p99: percentile(sorted, .99), quality: view?.quality };
+}
+function setQuality(quality) {
+  view.setQuality(quality);
+  $('quality').textContent = `画质 · ${view.quality === 'high' ? '高' : '低'}`;
+}
+function sampleFrame(ms) {
+  if (game?.phase !== 'racing' || document.hidden) return;
+  frameTimes.push(ms);
+  if (frameTimes.length > 600) frameTimes.shift();
+  if (!qualityLocked && view.quality === 'high' && frameTimes.length >= 240 && percentile([...frameTimes].sort((a, b) => a - b), .5) > 25) {
+    qualityLocked = true;
+    setQuality('low');
+    frameTimes.length = 0;
+    toast('帧率偏低，已自动切换低画质；可在右上角切回。', 3200);
+  }
+}
 const running = () => game && ['countdown', 'racing'].includes(game.phase);
 const canInteract = () => !contextLost && !document.hidden;
 const held = code => keys.has(code) || [...pointers.values()].includes(code);
@@ -35,7 +63,8 @@ function bestText() {
 function clearInput() {
   keys.clear();
   pointers.clear();
-  for (const id of ['touch-left', 'touch-right', 'touch-jump', 'touch-kick', 'kick-skill']) {
+  hitStop = 0;
+  for (const id of ['touch-left', 'touch-right', 'touch-jump', 'touch-kick', 'touch-dash', 'kick-skill', 'dash-skill']) {
     $(id).classList.remove('pressed');
   }
 }
@@ -112,13 +141,13 @@ $('sound').addEventListener('click', async () => {
 });
 $('quality').addEventListener('click', () => {
   if (!view || contextLost) return;
-  view.setQuality(view.quality === 'high' ? 'low' : 'high');
-  $('quality').textContent = `画质 · ${view.quality === 'high' ? '高' : '低'}`;
+  qualityLocked = true;
+  setQuality(view.quality === 'high' ? 'low' : 'high');
 });
 
 for (const [id, code] of [
   ['touch-left', 'KeyA'], ['touch-right', 'KeyD'], ['touch-jump', 'Space'],
-  ['touch-kick', 'KeyQ'], ['kick-skill', 'KeyQ'],
+  ['touch-kick', 'KeyQ'], ['kick-skill', 'KeyQ'], ['touch-dash', 'KeyE'], ['dash-skill', 'KeyE'],
 ]) {
   const button = $(id);
   button.addEventListener('pointerdown', event => {
@@ -154,7 +183,7 @@ window.addEventListener('keydown', event => {
     start();
     return;
   }
-  if (['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyQ'].includes(event.code)) {
+  if (['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyQ', 'KeyE'].includes(event.code)) {
     event.preventDefault();
     if (game.phase === 'racing') keys.add(event.code);
   }
@@ -237,10 +266,13 @@ function updateUI() {
   $('resume').disabled = !canInteract();
   $('end-paused').disabled = !canInteract();
   $('kick-skill').disabled = phase !== 'racing' || contextLost;
+  $('dash-skill').disabled = phase !== 'racing' || contextLost;
   $('countdown').textContent = Math.max(1, Math.ceil(game.countdown));
   $('score').textContent = Math.floor(game.score).toLocaleString();
   $('distance').textContent = Math.floor(game.s).toLocaleString();
   $('banana-count').textContent = game.bananas.toLocaleString();
+  $('banana-capacity').textContent = game.bananas >= RACK_CAPACITY ? '满载' : `/ ${RACK_CAPACITY}`;
+  $('banana-capacity').classList.toggle('full', game.bananas >= RACK_CAPACITY);
   $('speed').textContent = Math.round(game.speed * 3.6);
   $('timer').textContent = formatTime(game.elapsed);
   $('combo').textContent = `×${game.combo.toFixed(1)}`;
@@ -251,7 +283,14 @@ function updateUI() {
   $('kick-skill').classList.toggle('cooldown', kick > 0);
   $('kick-skill').classList.toggle('charged', charge === 1);
   $('kick-status').textContent = kick > 0 ? `${Math.ceil(kick)} 秒后再踢` : charge === 1 ? '蓄力完成，靠近卡车松开！' : charge > 0 ? '按住 Q 蓄力，松开飞踢' : '点踢汽车 · 蓄力 0.8 秒踢卡车';
-  $('kick-bar').style.width = `${kick > 0 ? (1 - kick / 18) * 100 : charge * 100}%`;
+  $('kick-ring').style.setProperty('--p', kick > 0 ? 1 - kick / KICK_COOLDOWN : charge || 1);
+  $('kick-ring').classList.toggle('charging', kick === 0 && charge > 0 && charge < 1);
+  const dash = game.cooldowns.dash;
+  $('dash-seconds').textContent = dash > 0 ? `${Math.ceil(dash)}s` : '就绪';
+  $('dash-skill').classList.toggle('cooldown', dash > 0);
+  $('dash-ring').style.setProperty('--p', dash > 0 ? 1 - dash / DASH.cooldown : 1);
+  const lines = phase === 'racing' && view?.motion ? .22 + clamp((game.speed - 12) / 14, 0, 1) * .45 + (game.buffs.boost > 0 ? .3 : 0) : 0;
+  $('speed-lines').style.opacity = lines.toFixed(3);
   for (const kind of ['boost', 'shield', 'double']) {
     const remaining = game.buffs[kind];
     $(`buff-${kind}`).classList.toggle('active', remaining > 0);
@@ -269,7 +308,12 @@ function feedback() {
     if (event.type === 'pickup' && event.kind !== 'banana') {
       toast({ boost: '加速 5 秒，冲起来！', shield: '护盾 8 秒，抵挡一次碰撞', double: '双倍分 10 秒，抓住这一段！' }[event.kind]);
     }
+    if (event.type === 'dash') toast('冲刺！', 900);
     if (event.type === 'kick') {
+      hitStop = HIT_STOP;
+      $('impact-flash').classList.remove('show');
+      void $('impact-flash').offsetWidth;
+      $('impact-flash').classList.add('show');
       toast(event.charged ? '重踢命中！车辆起飞！' : '飞踢命中！汽车起飞！');
       $('impact').textContent = '走你！';
       $('impact').classList.remove('show');
@@ -279,7 +323,7 @@ function feedback() {
     if (event.type === 'miss') toast(event.charged ? '踢空了，靠近车辆再松开 Q。' : '汽车可以点踢，卡车需蓄力 0.8 秒。');
     if (event.type === 'shield') toast('护盾挡住了！继续向前。', 1800);
     if (event.type === 'stunt') toast(`${event.label} +${event.points} 分`, 1200);
-    if (event.type === 'go') toast('自动向前 · 左右避障 · Space 跳跃', 2800);
+    if (event.type === 'go') toast('自动向前 · 左右避障 · Space 跳跃 · E 冲刺', 2800);
   }
 }
 
@@ -292,7 +336,8 @@ async function boot() {
     await view.load();
     game = createGame(view.course);
     view.reset(game);
-    window.__bananaGame = { get game() { return game; }, view };
+    if (pinnedQuality) setQuality(pinnedQuality);
+    window.__bananaGame = { get game() { return game; }, view, perf: perfStats };
     $('start').disabled = false;
     $('start').innerHTML = '开始骑行 <span>→</span>';
     $('load-status').textContent = '山路已就绪';
@@ -300,13 +345,16 @@ async function boot() {
     updateUI();
     lastFrame = performance.now();
     const frame = now => {
+      if (now > lastFrame) sampleFrame(now - lastFrame);
       const dt = Math.min(.1, Math.max(0, (now - lastFrame) / 1000));
       lastFrame = now;
-      const activeDt = running() && canInteract() ? dt : 0;
+      const stopped = hitStop > 0;
+      hitStop = Math.max(0, hitStop - dt);
+      const activeDt = running() && canInteract() && !stopped ? dt : 0;
       if (!contextLost) {
         advance(game, {
           steer: (held('KeyD') || held('ArrowRight') ? 1 : 0) - (held('KeyA') || held('ArrowLeft') ? 1 : 0),
-          jump: held('Space'), kick: held('KeyQ'),
+          jump: held('Space'), kick: held('KeyQ'), dash: held('KeyE'),
         }, activeDt);
         feedback();
         view.update(game, activeDt);
