@@ -1,0 +1,208 @@
+{
+  "status": "pass",
+  "blenderVersion": "5.2.2 LTS",
+  "cargo": {
+    "bundles": 20,
+    "nativeSharedMesh": "CurvedBanana",
+    "glbSharedMeshes": 1,
+    "maxMatrixError": 3.516674041748047e-06,
+    "rackPolygons": 64,
+    "firstBundleRackDistance": 0.0004453007713891566,
+    "nearestRackDistance": 1.7881393432617188e-07,
+    "minimumZ": 0.904436469078064,
+    "maximumZ": 1.5540558099746704,
+    "coverage": "Actual native rack contact and first visible bundle; no dynamic cargo simulation."
+  },
+  "exportColors": {
+    "models": [
+      "rider",
+      "bicycle",
+      "banana",
+      "looseBanana",
+      "bananaRack"
+    ],
+    "uniqueExportVertices": 35028,
+    "triangles": 15948
+  },
+  "libraryStandingContacts": [
+    {
+      "side": "L",
+      "soleHeight": 1.194572925567627,
+      "nativeSupportDistance": 0.004371702205389738
+    },
+    {
+      "side": "R",
+      "soleHeight": 1.1165728569030762,
+      "nativeSupportDistance": 0.0023351891431957483
+    }
+  ],
+  "motion": {
+    "seatedContacts": [
+      {
+        "frame": 1,
+        "side": "L",
+        "solePedalGap": 0.0015728473663330078,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 1,
+        "side": "R",
+        "solePedalGap": 0.0015728920698165894,
+        "handGripDistance": 9.151369158644229e-05
+      },
+      {
+        "frame": 9,
+        "side": "L",
+        "solePedalGap": 0.0015729665756225586,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 9,
+        "side": "R",
+        "solePedalGap": 0.0015727579593658447,
+        "handGripDistance": 9.151369158644229e-05
+      },
+      {
+        "frame": 17,
+        "side": "L",
+        "solePedalGap": 0.001572921872138977,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 17,
+        "side": "R",
+        "solePedalGap": 0.0015728473663330078,
+        "handGripDistance": 9.151369158644229e-05
+      },
+      {
+        "frame": 25,
+        "side": "L",
+        "solePedalGap": 0.0015728771686553955,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 25,
+        "side": "R",
+        "solePedalGap": 0.0015728771686553955,
+        "handGripDistance": 9.151369158644229e-05
+      },
+      {
+        "frame": 33,
+        "side": "L",
+        "solePedalGap": 0.0015728473663330078,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 33,
+        "side": "R",
+        "solePedalGap": 0.0015728920698165894,
+        "handGripDistance": 9.151369158644229e-05
+      },
+      {
+        "frame": 160,
+        "side": "L",
+        "solePedalGap": 0.0015728473663330078,
+        "handGripDistance": 9.146810771198943e-05
+      },
+      {
+        "frame": 160,
+        "side": "R",
+        "solePedalGap": 0.0015728920698165894,
+        "handGripDistance": 9.151369158644229e-05
+      }
+    ],
+    "standingAndKickSupports": [
+      {
+        "frame": 48,
+        "feet": [
+          {
+            "side": "L",
+            "soleHeight": 1.194572925567627,
+            "nativeSupportDistance": 0.004371823742985725
+          },
+          {
+            "side": "R",
+            "soleHeight": 1.1165728569030762,
+            "nativeSupportDistance": 0.002335189376026392
+          }
+        ]
+      },
+      {
+        "frame": 80,
+        "feet": [
+          {
+            "side": "L",
+            "soleHeight": 1.194572925567627,
+            "nativeSupportDistance": 0.004371823742985725
+          },
+          {
+            "side": "R",
+            "soleHeight": 1.1165728569030762,
+            "nativeSupportDistance": 0.002335189376026392
+          }
+        ]
+      },
+      {
+        "frame": 96,
+        "feet": [
+          {
+            "side": "L",
+            "soleHeight": 1.194572925567627,
+            "nativeSupportDistance": 0.004371823742985725
+          },
+          {
+            "side": "R",
+            "soleHeight": 1.1165729761123657,
+            "nativeSupportDistance": 0.0023353088181465864
+          }
+        ]
+      },
+      {
+        "frame": 128,
+        "feet": [
+          {
+            "side": "L",
+            "soleHeight": 1.194572925567627,
+            "nativeSupportDistance": 0.004371823742985725
+          },
+          {
+            "side": "R",
+            "soleHeight": 1.1165728569030762,
+            "nativeSupportDistance": 0.002335189376026392
+          }
+        ]
+      },
+      {
+        "frame": 120,
+        "feet": [
+          {
+            "side": "R",
+            "soleHeight": 1.1165728569030762,
+            "nativeSupportDistance": 0.002335189376026392
+          }
+        ]
+      }
+    ],
+    "nativeActionPoseFramesCompared": [
+      1,
+      9,
+      17,
+      25,
+      33,
+      48,
+      96,
+      120,
+      160
+    ]
+  },
+  "sha256": {
+    "assets/blender/asset-library.blend": "90e80df9ff988bbd13a28a418f55b712e0bdceb97b30b058d1f93e97299d4cd3",
+    "assets/blender/standing-motion.blend": "566f3bf417e68bd724666b43bce89c35e1a538cba7da782a0113a576a82ad056",
+    "public/assets/rider.glb": "867766ff3705c235751e7d404fc1d0b54c9060d87fdbbc7a8c64ba3e6ed5ff04",
+    "public/assets/bicycle.glb": "344d9428c9cd7a5972ffb009d8b4af4a68362e4858ef4db05f4bbe69d968b9b1",
+    "public/assets/banana.glb": "2b7b691fa679cdf5d8cf07f95fa0d3c1f452908a6355e0fad3b1820578108978",
+    "public/assets/looseBanana.glb": "66677f4cd869d0857d3c78e67ca46d0f09e9f8a6c34673cf935127f244b45cb0",
+    "public/assets/bananaRack.glb": "13b71f67fcb64d57b88a97b008f9b26dbdea2ab83319f1e441ed7497e63be84b"
+  },
+  "scope": "Saved native hero source, actual standard GLB exports, shared geometry, author matrices, rack support and object-rig keyframe contacts. Overall image fidelity and real engine visuals are not claimed."
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4c93d" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>彪速骑行 · 无尽香蕉山道</title>
+</head>
+<body>
+  <main id="app" data-phase="loading">
+    <canvas id="game-canvas" tabindex="0" aria-label="无尽香蕉骑行 3D 游戏场景"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="彪速骑行首页"><span class="brand-mark">↗</span><span>彪速骑行<small>BANANA RIDER</small></span></a>
+      <div class="top-actions">
+        <span class="course-tag"><i></i> 红土山道 <b>∞</b></span>
+        <button id="quality" class="icon-button" title="切换画质">画质 · 高</button>
+        <button id="sound" class="icon-button" aria-label="切换音效" aria-pressed="true">音效 · 开</button>
+        <button id="stance" class="icon-button" title="C 切换骑姿" aria-label="切换坐姿与站姿" aria-pressed="false" disabled>骑姿 · 坐姿</button>
+        <button id="pause" class="icon-button" disabled>暂停</button>
+        <button id="end-run" class="icon-button end-button" disabled>结束本局</button>
+      </div>
+    </header>
+
+    <section id="welcome" class="welcome panel" aria-label="开始骑行">
+      <div class="eyebrow"><span></span> 山路不停，快乐不断</div>
+      <h1>一路香蕉，<br><em>一路开彪。</em></h1>
+      <p class="hero-copy">二八大杠自动向前。沿山路拾取香蕉，<br>跳过路栏，躲开高墙和列车，越骑越快！</p>
+      <div class="mission-pills"><span>∞ 无尽骑行</span><span>🍌 拾取加分</span><span>✦ 蓄力踢车</span></div>
+      <button id="start" class="primary-button" disabled>正在准备山路… <span>→</span></button>
+      <div class="welcome-foot"><span class="status-dot"></span><span id="load-status">载入场景与车辆</span></div>
+      <p id="ready-best" class="ready-best">本机最佳 0 分 · 最远 0 m</p>
+    </section>
+    <aside id="mission-card" class="mission-card panel">
+      <div class="eyebrow">这一趟，能彪多远？ <span>∞ / 无尽</span></div>
+      <h2>每一米，都算数。</h2>
+      <p>自动骑行，左右自由移动。碰撞结束本局，护盾可以救你一次。</p>
+      <div class="goal-row"><b>+1<span>每米得分</span></b><b>+10<span>每根香蕉</span></b><b>×2<span>连击最高倍率</span></b></div>
+      <div class="tip"><span>✦</span> 点按 Q 踢汽车；按住 0.8 秒，松开踢卡车。高墙和列车只能绕行。</div>
+    </aside>
+
+    <div id="countdown" class="countdown hidden" aria-live="polite">3</div>
+    <section id="hud" class="hud hidden" aria-label="骑行状态">
+      <div class="hud-card banana-hud" aria-label="拾取香蕉"><img class="hud-icon" src="/ui/banana.svg" alt="" /><b id="banana-count">0</b></div>
+      <div class="hud-card timer-hud" aria-label="骑行用时"><b id="timer">00:00</b></div>
+      <div class="hud-card speed-hud" aria-label="骑行速度"><b><span id="speed">0</span><em> km/h</em></b></div>
+      <div class="hud-secondary" aria-label="得分与连击">
+        <span class="score-hud"><small>得分</small><b id="score">0</b></span>
+        <span class="distance-hud"><b id="distance">0</b><small>m</small></span>
+        <span class="combo-hud"><b id="combo">×1.0</b><small id="chain">0 连击</small></span>
+      </div>
+    </section>
+    <section id="buffs" class="buffs hidden" aria-label="道具剩余时间">
+      <div id="buff-boost" class="buff boost"><span>↗ 加速</span><b id="buff-boost-time">—</b></div>
+      <div id="buff-shield" class="buff shield"><span>◇ 护盾</span><b id="buff-shield-time">—</b></div>
+      <div id="buff-double" class="buff double"><span>×2 双倍分</span><b id="buff-double-time">—</b></div>
+    </section>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <div id="impact" class="impact" aria-hidden="true"></div>
+    <section id="skills" class="skills hidden" aria-label="蓄力飞踢">
+      <button id="kick-skill" class="skill" aria-label="按住蓄力，松开踢飞车辆">
+        <span class="skill-top"><kbd>Q</kbd><strong class="sr-only">蓄力飞踢</strong><b id="kick-seconds">就绪</b></span>
+        <span class="skill-bar"><i id="kick-bar"></i></span>
+        <small id="kick-status">点踢汽车 · 蓄力 0.8 秒踢卡车</small>
+      </button>
+    </section>
+
+    <footer id="controls" class="controls" aria-label="键盘操作">
+      <span><kbd>A</kbd><kbd>D</kbd> / ← → 转向</span>
+      <span><kbd>SPACE</kbd> 跳跃</span>
+      <span><kbd>Q</kbd> 蓄力飞踢</span>
+      <span><kbd>C</kbd> 切换骑姿</span>
+      <span><kbd>ESC</kbd> 暂停</span>
+    </footer>
+    <div id="touch-controls" class="touch-controls hidden" aria-label="触控操作">
+      <div class="touch-steer"><button id="touch-left" aria-label="按住向左转向">←</button><button id="touch-right" aria-label="按住向右转向">→</button></div>
+      <div class="touch-actions"><button id="touch-jump" aria-label="跳跃">跳跃</button><button id="touch-kick" aria-label="按住蓄力，松开踢车">Q<br><small>飞踢</small></button></div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+      <section id="pause-panel" class="panel modal-panel hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+        <div class="eyebrow">歇口气，香蕉等你</div>
+        <h2 id="pause-title">骑行暂停</h2>
+        <p>距离、倒计时、道具和技能冷却都已暂停。准备好了，就继续开彪。</p>
+        <button id="resume" class="primary-button">继续骑行 <span>→</span></button>
+        <button id="end-paused" class="secondary-button">结束本局</button>
+      </section>
+      <section id="result-panel" class="panel modal-panel result-panel hidden" role="dialog" aria-modal="true" aria-labelledby="result-title">
+        <div class="eyebrow">本局结算 / 无尽山道</div>
+        <h2 id="result-title">这趟，彪得漂亮。</h2>
+        <p id="result-copy"></p>
+        <div class="result-total"><span>本局得分</span><b id="result-total">0</b></div>
+        <div class="result-stats">
+          <div><small>骑行距离</small><b id="result-distance">0 m</b></div>
+          <div><small>拾取香蕉</small><b id="result-bananas">0 根</b></div>
+          <div><small>骑行用时</small><b id="result-time">00:00</b></div>
+        </div>
+        <div class="result-ending"><span>结束原因</span><b id="result-reason">主动结束</b></div>
+        <p id="personal-best" class="personal-best"></p>
+        <button id="restart" class="primary-button">再来一局 <span>↗</span></button>
+      </section>
+    </div>
+    <div id="error-panel" class="modal hidden">
+      <section class="panel modal-panel" role="alertdialog" aria-modal="true" aria-labelledby="error-title">
+        <div class="eyebrow">场景需要重新准备</div>
+        <h2 id="error-title">山路未能载入</h2>
+        <p id="error-message"></p>
+        <button id="reload" class="primary-button">重新载入 <span>↻</span></button>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

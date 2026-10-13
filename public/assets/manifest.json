@@ -1,0 +1,465 @@
+{
+  "generator": "local Blender bpy",
+  "mode": "endless",
+  "blenderVersion": "5.2.2 LTS",
+  "sourceFiles": [
+    "assets/blender/asset-library.blend",
+    "assets/blender/endless-course.blend",
+    "assets/blender/standing-motion.blend",
+    "assets/blender/valley-layout.blend"
+  ],
+  "vertexAO": {
+    "method": "local BVH cosine hemisphere",
+    "samples": 24,
+    "distance": 0.28,
+    "strength": 0.3,
+    "assets": [
+      "rider",
+      "bicycle",
+      "banana",
+      "looseBanana",
+      "truck",
+      "car",
+      "hut",
+      "villageHouse",
+      "villageLonghouse",
+      "stall",
+      "tower",
+      "foundation",
+      "palm",
+      "tree",
+      "forestTree",
+      "bananaPlant",
+      "bush",
+      "rock",
+      "cliff"
+    ]
+  },
+  "models": {
+    "bicycle": {
+      "file": "bicycle.glb",
+      "triangles": 5990,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 7,
+        "minFactor": 0.7028859853744507,
+        "changedLoops": 7049,
+        "templatesOnly": false
+      }
+    },
+    "rider": {
+      "file": "rider.glb",
+      "triangles": 6562,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 13,
+        "minFactor": 0.7000234723091125,
+        "changedLoops": 8111,
+        "templatesOnly": false
+      }
+    },
+    "banana": {
+      "file": "banana.glb",
+      "triangles": 1532,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7000025510787964,
+        "changedLoops": 2587,
+        "templatesOnly": false
+      }
+    },
+    "looseBanana": {
+      "file": "looseBanana.glb",
+      "triangles": 332,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7000653147697449,
+        "changedLoops": 231,
+        "templatesOnly": false
+      }
+    },
+    "truck": {
+      "file": "truck.glb",
+      "triangles": 14104,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7066644430160522,
+        "changedLoops": 10367,
+        "templatesOnly": false
+      }
+    },
+    "car": {
+      "file": "car.glb",
+      "triangles": 4498,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7010230422019958,
+        "changedLoops": 2886,
+        "templatesOnly": false
+      }
+    },
+    "pedestrian": {
+      "file": "pedestrian.glb",
+      "triangles": 328,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "goat": {
+      "file": "goat.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "palm": {
+      "file": "palm.glb",
+      "triangles": 328,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.720291256904602,
+        "changedLoops": 618,
+        "templatesOnly": false
+      }
+    },
+    "tree": {
+      "file": "tree.glb",
+      "triangles": 80,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7157895565032959,
+        "changedLoops": 93,
+        "templatesOnly": false
+      }
+    },
+    "hut": {
+      "file": "hut.glb",
+      "triangles": 122,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7192314267158508,
+        "changedLoops": 72,
+        "templatesOnly": false
+      }
+    },
+    "forestTree": {
+      "file": "forestTree.glb",
+      "triangles": 172,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7634992003440857,
+        "changedLoops": 288,
+        "templatesOnly": false
+      }
+    },
+    "villageHouse": {
+      "file": "villageHouse.glb",
+      "triangles": 714,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7091024518013,
+        "changedLoops": 916,
+        "templatesOnly": false
+      }
+    },
+    "villageLonghouse": {
+      "file": "villageLonghouse.glb",
+      "triangles": 510,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7286792397499084,
+        "changedLoops": 540,
+        "templatesOnly": false
+      }
+    },
+    "foundation": {
+      "file": "foundation.glb",
+      "triangles": 12,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 1.0,
+        "changedLoops": 0,
+        "templatesOnly": false
+      }
+    },
+    "bananaPlant": {
+      "file": "bananaPlant.glb",
+      "triangles": 288,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7527303695678711,
+        "changedLoops": 432,
+        "templatesOnly": false
+      }
+    },
+    "stall": {
+      "file": "stall.glb",
+      "triangles": 988,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7093850374221802,
+        "changedLoops": 1782,
+        "templatesOnly": false
+      }
+    },
+    "cliff": {
+      "file": "cliff.glb",
+      "triangles": 280,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.813468337059021,
+        "changedLoops": 105,
+        "templatesOnly": false
+      }
+    },
+    "rock": {
+      "file": "rock.glb",
+      "triangles": 20,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 1.0,
+        "changedLoops": 0,
+        "templatesOnly": false
+      }
+    },
+    "crate": {
+      "file": "crate.glb",
+      "triangles": 36,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "dust": {
+      "file": "dust.glb",
+      "triangles": 20,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "spark": {
+      "file": "spark.glb",
+      "triangles": 20,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "burst": {
+      "file": "burst.glb",
+      "triangles": 16,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "cloud": {
+      "file": "cloud.glb",
+      "triangles": 60,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "sign": {
+      "file": "sign.glb",
+      "triangles": 72,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "bush": {
+      "file": "bush.glb",
+      "triangles": 280,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7023082375526428,
+        "changedLoops": 669,
+        "templatesOnly": false
+      }
+    },
+    "tower": {
+      "file": "tower.glb",
+      "triangles": 40,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7095375061035156,
+        "changedLoops": 20,
+        "templatesOnly": false
+      }
+    },
+    "mountain": {
+      "file": "mountain.glb",
+      "triangles": 1820,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "forestHill": {
+      "file": "forestHill.glb",
+      "triangles": 2064,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "barrier": {
+      "file": "barrier.glb",
+      "triangles": 108,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "wall": {
+      "file": "wall.glb",
+      "triangles": 108,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "train": {
+      "file": "train.glb",
+      "triangles": 3168,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "boost": {
+      "file": "boost.glb",
+      "triangles": 112,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "shield": {
+      "file": "shield.glb",
+      "triangles": 199,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "double": {
+      "file": "double.glb",
+      "triangles": 248,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "roadTile": {
+      "file": "roadTile.glb",
+      "triangles": 4420,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "lake": {
+      "file": "lake.glb",
+      "triangles": 12,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "roadCourse": {
+      "file": "roadCourse.glb",
+      "triangles": 90870,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 9,
+        "minFactor": 0.7023082375526428,
+        "changedLoops": 3771,
+        "templatesOnly": true
+      }
+    },
+    "valley": {
+      "file": "valley.glb",
+      "triangles": 18060,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 6,
+        "minFactor": 0.7091024518013,
+        "changedLoops": 2382,
+        "templatesOnly": true
+      }
+    },
+    "sky": {
+      "file": "sky.glb",
+      "triangles": 960,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "bananaRack": {
+      "file": "bananaRack.glb",
+      "triangles": 1532,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7000025510787964,
+        "changedLoops": 2587,
+        "templatesOnly": true
+      }
+    }
+  }
+}

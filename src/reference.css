@@ -1,0 +1,9 @@
+/* assets/reference/style-a.png: three top anchors and the compact Q capsule. */
+:root { --yellow: #f4cc42; --cream: #fffdf1; }
+.hud-card, .skill { background: rgba(35, 40, 42, .74); border-color: #ffffff25; box-shadow: none; backdrop-filter: none; }
+.hud-card b, .hud-card em { color: white; }
+.hud-secondary .score-hud b { color: #ffe885; }
+.hud-secondary .combo-hud b { color: #fce29a; }
+.skill-top kbd { background: #33383b; border: 2px solid #a6aaae; box-shadow: none; }
+.skill.charged { border-color: #ffe48a; }
+.race-active .vignette { background: linear-gradient(0deg, #1d2b271c, transparent 25%); }
