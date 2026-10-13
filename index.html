@@ -37,12 +37,12 @@
       <h2>每一米，都算数。</h2>
       <p>自动骑行，左右自由移动。碰撞结束本局，护盾可以救你一次。</p>
       <div class="goal-row"><b>+1<span>每米得分</span></b><b>+10<span>每根香蕉</span></b><b>×2<span>连击最高倍率</span></b></div>
-      <div class="tip"><span>✦</span> 点按 Q 踢汽车；按住 0.8 秒，松开踢卡车。高墙和列车只能绕行。</div>
+      <div class="tip"><span>✦</span> 点按 Q 踢汽车；按住 0.8 秒，松开踢卡车。E 冲刺 1.5 秒。高墙和列车只能绕行。</div>
     </aside>
 
     <div id="countdown" class="countdown hidden" aria-live="polite">3</div>
     <section id="hud" class="hud hidden" aria-label="骑行状态">
-      <div class="hud-card banana-hud" aria-label="拾取香蕉"><img class="hud-icon" src="/ui/banana.svg" alt="" /><b id="banana-count">0</b></div>
+      <div class="hud-card banana-hud" aria-label="拾取香蕉，货架容量 100 根"><img class="hud-icon" src="/ui/banana.svg" alt="" /><b id="banana-count">0</b><span id="banana-capacity" class="banana-capacity">/ 100</span></div>
       <div class="hud-card timer-hud" aria-label="骑行用时"><b id="timer">00:00</b></div>
       <div class="hud-card speed-hud" aria-label="骑行速度"><b><span id="speed">0</span><em> km/h</em></b></div>
       <div class="hud-secondary" aria-label="得分与连击">
@@ -57,12 +57,16 @@
       <div id="buff-double" class="buff double"><span>×2 双倍分</span><b id="buff-double-time">—</b></div>
     </section>
     <div id="toast" class="toast hidden" role="status"></div>
+    <div id="speed-lines" class="speed-lines" aria-hidden="true"></div>
+    <div id="impact-flash" class="impact-flash" aria-hidden="true"></div>
     <div id="impact" class="impact" aria-hidden="true"></div>
-    <section id="skills" class="skills hidden" aria-label="蓄力飞踢">
-      <button id="kick-skill" class="skill" aria-label="按住蓄力，松开踢飞车辆">
-        <span class="skill-top"><kbd>Q</kbd><strong class="sr-only">蓄力飞踢</strong><b id="kick-seconds">就绪</b></span>
-        <span class="skill-bar"><i id="kick-bar"></i></span>
-        <small id="kick-status">点踢汽车 · 蓄力 0.8 秒踢卡车</small>
+    <section id="skills" class="skills hidden" aria-label="技能">
+      <small id="kick-status" class="skill-status">点踢汽车 · 蓄力 0.8 秒踢卡车</small>
+      <button id="kick-skill" class="skill" aria-label="Q 蓄力飞踢：按住蓄力，松开踢飞车辆">
+        <span class="skill-ring" id="kick-ring"><kbd>Q</kbd></span><b id="kick-seconds">就绪</b><strong class="sr-only">蓄力飞踢</strong>
+      </button>
+      <button id="dash-skill" class="skill" aria-label="E 冲刺：1.5 秒加速，冷却 6 秒">
+        <span class="skill-ring" id="dash-ring"><kbd>E</kbd></span><b id="dash-seconds">就绪</b><strong class="sr-only">冲刺</strong>
       </button>
     </section>
 
@@ -70,12 +74,13 @@
       <span><kbd>A</kbd><kbd>D</kbd> / ← → 转向</span>
       <span><kbd>SPACE</kbd> 跳跃</span>
       <span><kbd>Q</kbd> 蓄力飞踢</span>
+      <span><kbd>E</kbd> 冲刺</span>
       <span><kbd>C</kbd> 切换骑姿</span>
       <span><kbd>ESC</kbd> 暂停</span>
     </footer>
     <div id="touch-controls" class="touch-controls hidden" aria-label="触控操作">
       <div class="touch-steer"><button id="touch-left" aria-label="按住向左转向">←</button><button id="touch-right" aria-label="按住向右转向">→</button></div>
-      <div class="touch-actions"><button id="touch-jump" aria-label="跳跃">跳跃</button><button id="touch-kick" aria-label="按住蓄力，松开踢车">Q<br><small>飞踢</small></button></div>
+      <div class="touch-actions"><button id="touch-jump" aria-label="跳跃">跳跃</button><button id="touch-dash" aria-label="冲刺">E<br><small>冲刺</small></button><button id="touch-kick" aria-label="按住蓄力，松开踢车">Q<br><small>飞踢</small></button></div>
     </div>
 
     <div id="modal" class="modal hidden">

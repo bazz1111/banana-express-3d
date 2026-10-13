@@ -1,0 +1,20 @@
+{
+  "desktop": {
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 87,
+    "hud": "87",
+    "callsPerFrame": 130.5,
+    "msPerFrame": 1472.6666666666667,
+    "loadMs": 4448
+  },
+  "mobile": {
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 87,
+    "hud": "87",
+    "callsPerFrame": 132.71428571428572,
+    "msPerFrame": 897.6000000000266,
+    "loadMs": 4252
+  }
+}

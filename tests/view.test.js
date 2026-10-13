@@ -89,3 +89,14 @@ test('seated arm joints place both hands on the handlebars',()=>{
     assert.ok(hand.distanceTo(new Vector3(side*.36,1.20,.50))<1e-6);
   }
 });
+
+test('instance color variation is deterministic, near-neutral and bounded',async()=>{
+  const {variedColor,instanceNoise}=await import('../src/view.js');
+  const {Color}=await import('three');
+  for(let i=0;i<500;i++){
+    const n=instanceNoise(i,3);assert.ok(n>=0&&n<1);assert.equal(n,instanceNoise(i,3));
+    const c=variedColor(new Color(),i,{hue:.06,sat:.16,light:.24});
+    assert.ok(c.equals(variedColor(new Color(),i,{hue:.06,sat:.16,light:.24})),'Same instance keeps the same tint every frame');
+    for(const v of [c.r,c.g,c.b])assert.ok(v>.75&&v<1.28,'Tint must stay a subtle multiplier, not a palette change');
+  }
+});

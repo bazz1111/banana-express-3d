@@ -17,12 +17,12 @@ export interface Course {
   points?:RoadPoint[];step?:number;
   road?:{period:number;advance:{x:number;y:number;z:number}};
 }
-export interface PlayerInput {steer?:number;jump?:boolean;kick?:boolean}
+export interface PlayerInput {steer?:number;jump?:boolean;kick?:boolean;dash?:boolean}
 export type GameEvent =
   |{type:'pickup';kind:PickupKind;count:number;points:number}
   |{type:'kick';id:string;charged:boolean}|{type:'miss';charged:boolean}
   |{type:'collision'|'shield';id:string}|{type:'stunt';points:number;label:string}
-  |{type:'jump'|'launch'|'go'|'finish'};
+  |{type:'jump'|'launch'|'go'|'finish'|'dash'};
 export interface Handling {
   steerSpeed:number;steerResponse:number;laneLimit:number;chargeSteerFactor:number;
   jumpVelocity:number;gravity:number;
@@ -38,11 +38,13 @@ export interface GameState {
   score:number;bananas:number;combo:number;chain:number;chainTimer:number;
   countdown:number;accumulator:number;jumpHeight:number;jumpVelocity:number;airTime:number;
   charge:number;kickPose:number;kickSide:1|-1;kickedCount:number;invulnerable:number;
-  cooldowns:{kick:number};buffs:{boost:number;shield:number;double:number};held:{jump:boolean};
+  cooldowns:{kick:number;dash:number};buffs:{boost:number;shield:number;double:number};held:{jump:boolean;dash:boolean};
   events:GameEvent[];failure:string;endReason:'collision'|'quit'|'';
   obstacles:ObstacleState[];pickups:PickupState[];nextChunk:number;
 }
 export const FIXED_STEP = 1 / 60;
+// E sprint: a short boost-buff burst on its own cooldown; it never shortens a longer boost pickup.
+export const DASH = Object.freeze({duration:1.5,cooldown:6});
 export const clamp = (v:number, min:number, max:number) => Math.max(min, Math.min(max, v));
 export const obstacleSpecs:Readonly<Record<ObstacleKind,{width:number;length:number;height:number;jumpable:boolean}>> = {
   barrier:{width:2.2,length:.7,height:.5,jumpable:true},
@@ -66,7 +68,7 @@ export function createGame(course:Course, handling:Partial<Handling> = {}):GameS
     s:0,lane:0,lateralSpeed:0,speed:0,baseSpeed:12,elapsed:0,score:0,bananas:0,
     combo:1,chain:0,chainTimer:0,countdown:3,accumulator:0,jumpHeight:0,jumpVelocity:0,airTime:0,
     charge:0,kickPose:0,kickSide:1,kickedCount:0,invulnerable:0,
-    cooldowns:{kick:0},buffs:{boost:0,shield:0,double:0},held:{jump:false},
+    cooldowns:{kick:0,dash:0},buffs:{boost:0,shield:0,double:0},held:{jump:false,dash:false},
     events:[],failure:'',endReason:'',obstacles:(course.obstacles ?? []).map(freshObstacle),
     pickups:(course.pickups ?? []).map(p => ({...p,collected:false})),nextChunk:0,
   };
@@ -90,7 +92,7 @@ export function togglePause(g:GameState) {
     g.resumePhase = g.phase; g.phase = 'paused';
   } else if (g.phase === 'paused') g.phase = g.resumePhase;
   else return;
-  g.charge = 0; g.held.jump = false; g.accumulator = 0;
+  g.charge = 0; g.held.jump = false; g.held.dash = false; g.accumulator = 0;
 }
 
 function finish(g:GameState, reason:'collision'|'quit') {
@@ -151,7 +153,7 @@ function step(g:GameState, input:PlayerInput, dt:number) {
   if (g.phase !== 'racing') return;
 
   g.elapsed += dt;
-  g.cooldowns.kick = remaining(g.cooldowns.kick,dt);
+  g.cooldowns.kick = remaining(g.cooldowns.kick,dt); g.cooldowns.dash = remaining(g.cooldowns.dash,dt);
   g.kickPose = remaining(g.kickPose,dt); g.invulnerable = remaining(g.invulnerable,dt);
   if (g.chainTimer < dt-1e-9) resetChain(g);
   else g.chainTimer = remaining(g.chainTimer,dt);
@@ -165,6 +167,11 @@ function step(g:GameState, input:PlayerInput, dt:number) {
     g.events.push({type:'jump'});
   }
   g.held.jump = !!input.jump;
+  if (input.dash && !g.held.dash && !g.cooldowns.dash) {
+    g.buffs.boost = Math.max(g.buffs.boost, DASH.duration); g.cooldowns.dash = DASH.cooldown;
+    g.events.push({type:'dash'});
+  }
+  g.held.dash = !!input.dash;
   g.baseSpeed = Math.min(26, 12 + Math.floor((g.s+1e-8) / 250));
   g.speed = g.baseSpeed * (g.buffs.boost > 0 ? 1.25 : 1);
   g.s += g.speed * dt; g.score += (g.s-oldS) * (g.buffs.double > 0 ? 2 : 1);

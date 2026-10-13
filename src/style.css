@@ -82,17 +82,28 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 750; padding: 4px 6px;
 .buff.shield.active { color: #c5edff; border-color: #70badd; }
 .buff.double.active { color: #ecceff; border-color: #b989d8; }
 .toast { position: absolute; left: 50%; top: 171px; transform: translateX(-50%); max-width: calc(100% - 32px); background: #273521e8; border: 1px solid #ffffff55; border-radius: 10px; padding: 11px 18px; color: #fff9ce; font-size: 12px; line-height: 1.6; text-align: center; box-shadow: 0 8px 22px #1c302d30; pointer-events: none; z-index: 5; }
-.skills { position: absolute; right: var(--hud-edge); bottom: 42px; z-index: 3; }
-.skill { position: relative; width: 146px; height: 54px; border: 1px solid #ffffff30; border-radius: 20px; padding: 8px 12px 10px; color: white; touch-action: none; user-select: none; }
-.skill-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.skill-top kbd { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; font: 600 23px/1 Arial, Helvetica, sans-serif; color: white; border-radius: 7px; }
-.skill-top b { margin-left: auto; font: 750 24px/1 Arial, Helvetica, sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.skill small { position: absolute; right: 0; bottom: -22px; margin: 0; padding: 4px 7px; border-radius: 6px; background: #23282a99; display: block; font-size: 9px; color: #fffdf1; text-align: right; line-height: 1.5; white-space: nowrap; }
-.skill-bar { position: absolute; left: 12px; right: 12px; bottom: 5px; display: block; height: 3px; background: #ffffff30; border-radius: 5px; overflow: hidden; }
-.skill-bar i { display: block; height: 100%; width: 0; background: var(--yellow); border-radius: 5px; }
-.skill.cooldown .skill-bar i { background: #9db8c8; }
+.skills { position: absolute; right: var(--hud-edge); bottom: 42px; display: flex; gap: 10px; align-items: center; z-index: 3; }
+.skill { --ring: var(--yellow); position: relative; display: flex; align-items: center; gap: 8px; height: 48px; padding: 5px 14px 5px 5px; border: 1px solid #ffffff30; border-radius: 24px; color: white; touch-action: none; user-select: none; }
+.skill-ring { --p: 1; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--ring) calc(var(--p) * 360deg), #ffffff2b 0); flex-shrink: 0; }
+.skill-ring kbd { display: grid; place-items: center; width: 30px; height: 30px; min-width: 0; padding: 0; border: 0; border-radius: 50%; font: 700 17px/1 Arial, Helvetica, sans-serif; color: white; }
+.skill > b { min-width: 2.3em; text-align: right; font: 750 21px/1 Arial, Helvetica, sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.skill.cooldown { --ring: #9db8c8; }
+.skill.cooldown > b { color: #dfe7ec; }
+.skill-ring.charging { --ring: #ffb238; }
 .skill.charged { border-color: #ffe48a; box-shadow: 0 0 20px #ffcb5680; }
 .skill.pressed { background: #395132ec; }
+.skill-status { position: absolute; right: 0; bottom: -22px; margin: 0; padding: 4px 7px; border-radius: 6px; background: #23282a99; display: block; font-size: 9px; color: #fffdf1; text-align: right; line-height: 1.5; white-space: nowrap; }
+.banana-capacity { font: 700 21px/1 Arial, Helvetica, sans-serif; color: #ffffffcc; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.banana-capacity.full { color: var(--yellow); }
+.speed-lines { position: absolute; inset: -12%; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .3s;
+  background: repeating-conic-gradient(from 0deg at 50% 52%, #fff0 0deg 3.6deg, #ffffffe6 3.9deg 4.6deg, #fff0 5deg 9.3deg),
+    repeating-conic-gradient(from 2deg at 50% 52%, #fff0 0deg 5.4deg, #ffffffb3 5.6deg 6.1deg, #fff0 6.4deg 13.7deg);
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 52%, transparent 52%, #0008 70%, #000 100%); mask-image: radial-gradient(ellipse 60% 55% at 50% 52%, transparent 52%, #0008 70%, #000 100%);
+  transform-origin: 50% 52%; animation: speed-lines .3s steps(3) infinite; }
+@keyframes speed-lines { to { transform: rotate(3deg) scale(1.02); } }
+.impact-flash { position: absolute; inset: 0; pointer-events: none; z-index: 4; opacity: 0; background: radial-gradient(circle at 64% 40%, #fffdf0 0, #fff6c8b0 9%, #ffe9a040 24%, transparent 46%); mix-blend-mode: screen; }
+.impact-flash.show { animation: impact-flash .36s ease-out forwards; }
+@keyframes impact-flash { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
 .race-active .topbar, #app[data-phase="finished"] .topbar { top: 84px; left: auto; right: var(--hud-edge); }
 .race-active .topbar .brand, .race-active .course-tag, #app[data-phase="finished"] .topbar .brand, #app[data-phase="finished"] .course-tag { display: none; }
 .race-active .icon-button, #app[data-phase="finished"] .icon-button { background: #23282ab3; border-color: #ffffff30; color: white; padding: 7px 10px; font-size: 10px; }
@@ -104,7 +115,7 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 750; padding: 4px 6px;
 .touch-steer, .touch-actions { display: flex; gap: 10px; pointer-events: auto; }
 .touch-controls button { width: 60px; height: 60px; background: #25352ada; color: #fffde9; border: 1px solid #ffffff7a; border-radius: 17px; font-size: 22px; font-weight: 850; touch-action: none; user-select: none; box-shadow: 0 3px 0 #16251780; }
 .touch-controls #touch-jump { font-size: 13px; }
-.touch-controls #touch-kick { font-size: 17px; line-height: 1; }
+.touch-controls #touch-kick, .touch-controls #touch-dash { font-size: 17px; line-height: 1; }
 .touch-controls button small { font-size: 10px; font-weight: 600; }
 .touch-controls .pressed { background: #7a8b38; transform: translateY(2px); }
 .modal { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 20px 16px; background: #1828176b; backdrop-filter: blur(6px); }
@@ -162,7 +173,12 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 750; padding: 4px 6px;
   .buff { padding: 5px 7px; gap: 6px; }
   .buff b { min-width: 27px; }
   .toast { top: 184px; font-size: 11px; padding: 9px 13px; }
-  .skills { bottom: 105px; }
+  .skills { bottom: 105px; gap: 6px; }
+  .skill { height: 42px; padding-right: 10px; gap: 6px; }
+  .skill-ring { width: 32px; height: 32px; }
+  .skill-ring kbd { width: 25px; height: 25px; font-size: 14px; }
+  .skill > b { font-size: 17px; }
+  .banana-capacity { font-size: 13px; }
   .touch-controls { display: flex; }
   .modal-panel { padding: 24px; }
   .modal-panel h2 { font-size: 26px; }
@@ -176,6 +192,7 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 750; padding: 4px 6px;
   .skills { bottom: 105px; }
 }
 @media (max-width: 480px) {
+  .banana-capacity { display: none; }
   .brand > span:last-child { display: none; }
   .brand { gap: 0; }
 }
