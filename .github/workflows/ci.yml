@@ -7,8 +7,12 @@ on:
 
 jobs:
   build-and-smoke:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -19,15 +23,28 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm check:assets
+      - run: pnpm assets:fingerprint
+      - name: Verify reproducible lossless delivery assets
+        run: |
+          pnpm assets:compress
+          git diff --exit-code -- public/assets
+          test -z "$(git ls-files --others --exclude-standard public/assets)"
       - run: pnpm build
-      - name: Install Playwright (pinned, outside the app lockfile)
-        run: npm install --prefix "$RUNNER_TEMP/pw" playwright@1.64.0
-      - name: Browser smoke test on software WebGL
+      - name: Install pinned Playwright browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/pw" playwright@1.64.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps "${{ matrix.browser }}"
+      - name: Browser smoke (explicitly report unavailable WebGL2)
         env:
           PLAYWRIGHT_MODULE: ${{ runner.temp }}/pw/node_modules/playwright/index.mjs
+          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
+          PLAYWRIGHT_CHANNEL: ''
           GAME_URL: http://127.0.0.1:4173/
-          SHOT_DIR: artifacts/shots
-          SHOT_SIZES: 960x540:desktop
+          SHOT_DIR: artifacts/shots/${{ matrix.browser }}
+          SHOT_SIZES: 960x540:desktop,390x844:touch
+          # CPU software GL validates gameplay at the shipped low tier; GPU/high
+          # measurements and full framing/cargo checks are separate artifacts.
+          SMOKE_QUALITY: low
         run: |
           pnpm preview --port 4173 --strictPort > preview.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/ > /dev/null && break; sleep 1; done
@@ -35,5 +52,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: smoke-shots
-          path: artifacts/shots
+          name: smoke-${{ matrix.browser }}
+          path: |
+            artifacts/shots
+            artifacts/asset-fingerprint-diff.json
+            preview.log

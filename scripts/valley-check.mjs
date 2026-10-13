@@ -14,7 +14,8 @@ try{
     const Vector=v.player.position.constructor,Matrix=v.player.matrix.constructor;
     let matrixError=0,instances=0;
     for(const [group,batch] of Object.entries(v.valleyBatches)){
-      const source=v.assets.valley.getObjectByName(group).children.filter(o=>o.isMesh);
+      let source=v.assets.valley.getObjectByName(group).children.filter(o=>o.isMesh);
+      if(batch.userData.fullCount)source=[...source.filter((_,i)=>i%2===0),...source.filter((_,i)=>i%2===1)];
       if(source.length!==batch.count)throw new Error('Missing authored instances');
       for(let i=0;i<source.length;i++){
         if(source[i].geometry!==batch.geometry||source[i].material!==batch.material)throw new Error('Batch discarded a material/geometry variant');
@@ -83,13 +84,14 @@ try{
     }
     const farGroups=['ValleyPanoramaForest','ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower','ValleyPanoramaFoundations'];
     if(!farGroups.every(n=>v.valleyBatches[n].parent===v.farPanorama&&!v.valleyTiles.some(t=>t.getObjectByName(v.valleyBatches[n].name))))throw new Error('Distant props must appear once in the fixed panorama frame');
-    const hills=v.valleyBatches.ValleyFoothills,farTriangles=[];
-    for(let i=0;i<hills.count;i++){
+    const farTriangles=[];
+    for(const hills of [v.valleyBatches.ValleyFoothills,v.valleyBatches.ValleyFoothillsB])for(let i=0;i<hills.count;i++){
       const local=new Matrix(),world=new Matrix();hills.getMatrixAt(i,local);world.multiplyMatrices(hills.matrixWorld,local);
       farTriangles.push(...trianglesFor({geometry:hills.geometry,matrixWorld:world}));
     }
     const farForest=v.valleyBatches.ValleyPanoramaForest,farBases=v.valleyBatches.ValleyPanoramaFoundations;
-    if(farForest.geometry!==forest.geometry||farForest.material!==forest.material)throw new Error('Near and far canopy batches must share native geometry/material');
+    const farSource=v.assets.valley.getObjectByName('ValleyPanoramaForest').children[0];
+    if(farForest.geometry!==farSource.geometry||farForest.material!==farSource.material||(farForest.geometry.index?.count??farForest.geometry.attributes.position.count)/3!==12)throw new Error('Far canopy must use the native twelve-triangle LOD2');
     let farTreeSamples=0,maxFarTreeError=0,farFootprintSamples=0,minFarTopClearance=Infinity,minFarBottomEmbed=Infinity;
     for(let i=0;i<farForest.count;i+=113){
       const local=new Matrix(),world=new Matrix();farForest.getMatrixAt(i,local);world.multiplyMatrices(farForest.matrixWorld,local);

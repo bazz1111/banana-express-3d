@@ -7,7 +7,7 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 root=Path(__file__).resolve().parents[1]
-course=json.loads((root/'public/assets/course.json').read_text())
+course=json.loads((root/'assets/export/course.json').read_text())
 bpy.ops.wm.open_mainfile(filepath=str(root/'assets/blender/endless-course.blend'))
 assert bpy.context.scene.name=='EndlessCourse'
 assert bpy.context.scene.unit_settings.system=='METRIC'
@@ -55,11 +55,12 @@ for chunk in chunks:
                     p=obj.matrix_world@Vector((u,v,0));hit=bvh.ray_cast(Vector((p.x,p.y,300)),Vector((0,0,-1)))[0]
                     assert hit and bottom-.001<=hit.z<=top+.001,(obj.name,p,hit)
                     min_clearance=min(min_clearance,top-hit.z);footprints+=1
-        if obj.get('kind')=='cliff':
-            for vertex in list(obj.data.vertices)[:12]:
+        if obj.get('kind') in ['rock'+chr(65+i) for i in range(6)]:
+            cap_count=int(obj.get('groundCapVertices',0));assert cap_count==16,('Rock missing sealed footprint',obj.name)
+            for vertex in list(obj.data.vertices)[:cap_count]:
                 p=obj.matrix_world@vertex.co;hit=bvh.ray_cast(Vector((p.x,p.y,300)),Vector((0,0,-1)))[0]
-                assert hit and p.z<hit.z-.10,(obj.name,'Floating cliff base',p,hit)
+                assert hit and p.z<hit.z-.1498,(obj.name,'Floating cliff base',p,hit)
                 max_cliff_gap=max(max_cliff_gap,p.z-hit.z);cliff_samples+=1
 assert roots==720 and max_root_error<.0001 and footprints==108
-assert cliff_samples==120
+assert cliff_samples==60*16
 print('BLENDER_CURVED_ROAD_PASS',json.dumps({'chunks':20,'arc':arc,'maxSeam':max_seam,'roots':roots,'rootError':max_root_error,'foundationSamples':footprints,'minClearance':min_clearance,'cliffSamples':cliff_samples,'maxCliffGap':max_cliff_gap,'advance':list(advance)}))

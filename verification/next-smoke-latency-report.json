@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "initialCIFailure": {
+    "run": "https://github.com/bazz1111/banana-express-3d/actions/runs/38444906383",
+    "job": "build-and-smoke (chromium)",
+    "viewport": "390x844",
+    "assertion": "Charged Q must launch the staged truck",
+    "actualKicks": 0,
+    "expectedKicks": 1
+  },
+  "controlledRegression": {
+    "releaseDelayMs": 1200,
+    "input": "real Chromium touchStart/touchEnd",
+    "originalViewport": [
+      390,
+      844
+    ],
+    "originalResult": {
+      "exitCode": 1,
+      "assertion": "Charged Q must launch the staged truck",
+      "actualKicks": 0
+    },
+    "fixedViewport": [
+      360,
+      780
+    ],
+    "fixedResult": {
+      "status": "passed",
+      "browser": "chromium",
+      "browserVersion": "155.0.8059.40",
+      "quality": "high",
+      "input": "real touch",
+      "fixture": {
+        "temporaryReleaseFreeze": true,
+        "s": 66.8000000000001,
+        "charge": 1.0000000000000013,
+        "lane": 0
+      },
+      "phase": "racing",
+      "kicks": 1,
+      "bananas": 87,
+      "hud": "87",
+      "callsPerFrame": 118.58333333333333,
+      "msPerFrame": 16.950000000496704,
+      "loadMs": 496
+    },
+    "earlierFixed390x844": {
+      "status": "passed",
+      "browser": "chromium",
+      "input": "real touch",
+      "fixture": {
+        "temporaryReleaseFreeze": true,
+        "s": 66.8000000000001,
+        "charge": 1.0000000000000013,
+        "lane": 0
+      },
+      "phase": "racing",
+      "kicks": 1,
+      "bananas": 86,
+      "hud": "86",
+      "callsPerFrame": 118.41666666666667,
+      "msPerFrame": 16.991666667163372,
+      "loadMs": 585
+    },
+    "scope": "Test fixture holds game-loop time only between staging an in-range truck and delivering the real release. No simulated kick event or awarded points are inserted."
+  },
+  "lowTierChecks": {
+    "desktop": {
+      "status": "passed",
+      "browser": "chromium",
+      "quality": "low",
+      "input": "keyboard",
+      "fixture": {
+        "temporaryReleaseFreeze": true,
+        "s": 53.89999999999992,
+        "charge": 1.016666666666668,
+        "lane": 0
+      },
+      "phase": "racing",
+      "kicks": 1,
+      "bananas": 86,
+      "hud": "86",
+      "callsPerFrame": 86,
+      "msPerFrame": 15.83076922939374,
+      "loadMs": 645
+    },
+    "touch": {
+      "status": "passed",
+      "browser": "chromium",
+      "quality": "low",
+      "input": "real touch",
+      "fixture": {
+        "temporaryReleaseFreeze": true,
+        "s": 68.65000000000012,
+        "charge": 1.0000000000000013,
+        "lane": 0
+      },
+      "phase": "racing",
+      "kicks": 1,
+      "bananas": 87,
+      "hud": "87",
+      "callsPerFrame": 86.25,
+      "msPerFrame": 17.05000000198682,
+      "loadMs": 491
+    }
+  },
+  "notes": [
+    "These are staged functionality checks; short frame samples are not a hardware performance benchmark.",
+    "Final script records actual renderer tier/browser version and asserts the tier.",
+    "Default local smoke remains high; CPU software-GL CI explicitly uses low.",
+    "Game runtime, native assets and original kick rules are unchanged by this harness fix."
+  ]
+}

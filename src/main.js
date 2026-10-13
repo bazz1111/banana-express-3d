@@ -88,6 +88,7 @@ function reset() {
   clearInput();
   game = createGame(view.course);
   view.reset(game);
+  audio.reset();
   resultSaved = false;
   previousPhase = '';
   toastRemaining = 0;
@@ -333,6 +334,7 @@ async function boot() {
     view = new GameView($('game-canvas'), (done, total) => {
       $('load-status').textContent = `准备山路 ${Math.round(clamp(done / Math.max(1, total), 0, 1) * 100)}%`;
     });
+    view.onSound=event=>audio.event(event);
     await view.load();
     game = createGame(view.course);
     view.reset(game);
@@ -357,10 +359,11 @@ async function boot() {
           jump: held('Space'), kick: held('KeyQ'), dash: held('KeyE'),
         }, activeDt);
         feedback();
-        view.update(game, activeDt);
+        view.update(game, activeDt, canInteract()?dt:0);
       }
       toastRemaining = Math.max(0, toastRemaining - activeDt);
       updateUI();
+      audio.setPaused(game.phase==='paused'||!canInteract());
       audio.update(game.phase === 'racing' && canInteract() ? game.speed : 0);
       requestAnimationFrame(frame);
     };

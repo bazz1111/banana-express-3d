@@ -2,14 +2,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 const root = path.resolve(import.meta.dirname, '..');
-const dir = path.join(root, 'public/assets');
+const dir = path.resolve(process.argv[2] ?? path.join(root, 'assets/export'));
 const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json')));
-const required = ['bicycle','rider','banana','looseBanana','bananaRack','truck','car','pedestrian','goat','palm','tree','forestTree','bananaPlant','stall','cliff','hut','villageHouse','villageLonghouse','foundation','rock','crate','dust','spark','cloud','sign','mountain','forestHill','bush','tower','burst','barrier','wall','train','boost','shield','double','roadTile','lake','valley','roadCourse','sky'];
-const aoTargets = ['rider','bicycle','banana','looseBanana','truck','car','hut','villageHouse','villageLonghouse','stall','tower','foundation','palm','tree','forestTree','bananaPlant','bush','rock','cliff'];
+const required = ['bicycle','rider','banana','looseBanana','bananaRack','truck','car','pedestrian','goat','palm','tree','forestTree','bananaPlant','stall','cliff','hut','villageHouse','villageLonghouse','foundation','rock','crate','dust','spark','cloud','sign','mountain','forestHill','bush','tower','burst','barrier','wall','train','boost','shield','double','roadTile','lake','valley','roadCourse','sky','forestTreeLOD1','forestTreeLOD2','rockA','rockB','rockC','rockD','rockE','rockF','mountainB','midMountain','midMountainB','forestHillB','cloudB','cloudC','bananaB','bananaC','bananaD','burstGlow','riderSkinned'];
+const originalAOTargets = ['rider','bicycle','banana','looseBanana','truck','car','hut','villageHouse','villageLonghouse','stall','tower','foundation','palm','tree','forestTree','bananaPlant','bush','rock','cliff'];
+const aoTargets = manifest.vertexAO?.assets ?? [];
+for (const name of [...originalAOTargets,'rockA','rockB','rockC','rockD','rockE','rockF','bananaB','bananaC','bananaD']) assert.ok(aoTargets.includes(name), `Missing AO target ${name}`);
+for (const name of required) assert.ok(manifest.models[name], `Missing asset ${name}`);
 assert.ok(manifest.vertexAO?.method.includes('BVH'), 'Missing Blender BVH vertex AO provenance');
 assert.equal(manifest.vertexAO.samples,24);assert.ok(manifest.vertexAO.strength>=.25&&manifest.vertexAO.strength<=.32);
-assert.deepEqual([...manifest.vertexAO.assets].sort(),[...aoTargets].sort());
-assert.equal(Object.keys(manifest.models).length,41,'The full native runtime set must have 41 assets');
+assert.equal(new Set(aoTargets).size,aoTargets.length,'Duplicate AO targets');
+assert.ok(Object.keys(manifest.models).length >= required.length,'Manifest misses native runtime assets');
 function accessorValues(buffer,data,index){
   const a=data.accessors[index],view=data.bufferViews[a.bufferView],count={VEC3:3,VEC4:4}[a.type];
   const size={5121:1,5123:2,5126:4}[a.componentType],stride=view.byteStride??count*size;
@@ -24,7 +27,7 @@ function accessorValues(buffer,data,index){
   return values;
 }
 let bytes = 0, meshes = 0, triangles = 0;
-for (const name of required) {
+for (const name of Object.keys(manifest.models)) {
   const item = manifest.models[name];
   assert.ok(item, `Missing asset ${name}`);
   assert.ok(fs.existsSync(path.join(root, item.source)), `Missing Blender source for ${name}`);
@@ -40,7 +43,7 @@ for (const name of required) {
     assert.ok(data.nodes.some(n=>n.extras?.vertexAO?.method===manifest.vertexAO.method),`${name} lacks glTF AO extras`);
     assert.ok(item.vertexAO.minFactor>=.68&&item.vertexAO.minFactor<=1,`${name} AO is too dark`);
   }
-  if(['sky','dust','spark','burst','cloud','roadTile','lake'].includes(name))assert.ok(!item.vertexAO,`${name} must not bake AO`);
+  if(['sky','dust','spark','burst','burstGlow','cloud','cloudB','cloudC','forestTreeLOD1','forestTreeLOD2','roadTile','lake'].includes(name))assert.ok(!item.vertexAO,`${name} must not bake AO`);
   if(name==='sky'){
     assert.ok(data.nodes.some(n=>n.name==='SkyDome'),'Sky must have the native SkyDome root');
     assert.equal(data.meshes.length,1);assert.equal(item.triangles,960);
@@ -54,7 +57,9 @@ for (const name of required) {
     const rack=data.nodes.find(n=>n.name==='BananaCargo');assert.ok(rack,'The collected heap must come from Blender');
     const bundles=rack.children.map(i=>data.nodes[i]);assert.equal(bundles.length,20);
     assert.deepEqual(bundles.map(n=>n.name).sort(),Array.from({length:20},(_,i)=>`CargoBundle${String(i).padStart(2,'0')}`));
-    assert.equal(new Set(bundles.map(n=>n.mesh)).size,1,'The whole heap must share one banana geometry');
+    assert.equal(new Set(bundles.map(n=>n.mesh)).size,4,'The heap must share four banana geometry variants');
+    for(const [i,bundle] of bundles.entries()){assert.equal(bundle.extras?.globalBundleIndex,i);assert.equal(bundle.extras?.variant,i%4);}
+    for(let variant=0;variant<4;variant++)assert.ok(bundles.filter(n=>n.extras.variant===variant).length>=4);
   }
   if(name==='roadTile'){
     assert.ok(data.images?.some(i=>i.name==='Asphalt_Painted_Grain'&&Number.isInteger(i.bufferView)), 'Asphalt must pack its Blender-painted image');
@@ -67,17 +72,22 @@ for (const name of required) {
     for(const node of ['ValleyTerrain','ValleyWater','ValleyVillageHouse','ValleyVillageLonghouse','ValleyTower','ValleyFoundations','ValleyForest','ValleyPalms','ValleyMountains','ValleyFoothills','ValleyClouds',
       'ValleyPanoramaForest','ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower','ValleyPanoramaFoundations'])
       assert.ok(data.nodes.some(n=>n.name===node),'Blender valley layout missing '+node);
-    for(const [group,count] of [['ValleyMountains',24],['ValleyFoothills',18],['ValleyClouds',24]]){
-      const nodes=data.nodes.find(n=>n.name===group).children.map(i=>data.nodes[i]);assert.equal(nodes.length,count);
-      assert.equal(new Set(nodes.map(n=>n.mesh)).size,1,'Each panorama group must share its native geometry');
+    const groupNodes=(names)=>names.flatMap(name=>{const group=data.nodes.find(n=>n.name===name);assert.ok(group,`Missing valley group ${name}`);return group.children.map(i=>data.nodes[i]);});
+    for(const [groups,count] of [[['ValleyMountains','ValleyMountainsB'],24],[['ValleyMidMountains','ValleyMidMountainsB'],16],[['ValleyFoothills','ValleyFoothillsB'],18],[['ValleyClouds','ValleyCloudsB','ValleyCloudsC'],24]]){
+      const nodes=groupNodes(groups);assert.equal(nodes.length,count);
+      assert.ok(new Set(nodes.map(n=>n.mesh)).size>=2,'Depth bands must use authored geometry variants');
     }
-    const farForest=data.nodes.find(n=>n.name==='ValleyPanoramaForest').children.map(i=>data.nodes[i]);
-    const nearForest=data.nodes.find(n=>n.name==='ValleyForest').children.map(i=>data.nodes[i]);
+    const farForest=groupNodes(['ValleyPanoramaForest']),nearForest=groupNodes(['ValleyForest']),forestFar=groupNodes(['ValleyForestFar']);
     assert.equal(farForest.length,3600);assert.equal(new Set(farForest.map(n=>n.mesh)).size,1);
-    assert.equal(farForest[0].mesh,nearForest[0].mesh,'Far canopies must reuse the existing native forest mesh');
+    assert.equal(nearForest.length+forestFar.length,2400);
+    assert.equal(new Set(forestFar.map(n=>n.mesh)).size,1);
+    const meshTriangles=(index)=>data.meshes[index].primitives.reduce((sum,p)=>sum+data.accessors[p.indices??p.attributes.POSITION].count/3,0);
+    assert.equal(meshTriangles(farForest[0].mesh),12,'Panorama forest must use native LOD2');
+    assert.ok(meshTriangles(forestFar[0].mesh)<=44,'Far valley forest must use native LOD1');
+    assert.ok(meshTriangles(nearForest[0].mesh)>meshTriangles(forestFar[0].mesh),'Near forest must retain its fuller geometry');
     assert.ok(data.images?.some(i=>i.name==='Valley_Water_Ripples'&&Number.isInteger(i.bufferView)),'Water texture must be embedded by Blender');
     assert.ok(data.nodes.find(n=>n.name==='EndlessValley')?.extras?.buildings>80,'Village must be an authored populated layout');
-    const forest=data.nodes.find(n=>n.name==='ValleyForest').children.map(i=>data.nodes[i].translation);
+    const forest=[...nearForest,...forestFar].map(n=>n.translation);
     const palms=data.nodes.find(n=>n.name==='ValleyPalms').children.map(i=>data.nodes[i].translation);
     for(const palm of palms)assert.ok(forest.every(tree=>Math.hypot(...palm.map((n,c)=>n-tree[c]))>.899),'Palm and forest roots must not overlap');
   }
@@ -117,5 +127,5 @@ assert.ok(!('length' in course),'Endless course must not have a finish distance'
 assert.equal(course.road?.period,1600);assert.equal(course.step,2);assert.equal(course.points?.length,801);
 assert.ok(course.points.some(p=>p.x>50),'The course must actually turn');
 assert.equal(course.points.at(-1).y,-64);
-assert.ok(bytes<30e6,'Runtime GLB budget must stay under 30 MB');
-console.log(JSON.stringify({ assets: required.length, meshes, triangles, megabytes: +(bytes / 1e6).toFixed(2), source: manifest.blenderVersion }, null, 2));
+assert.ok(bytes<30e6,'Canonical GLB budget must stay under 30 MB');
+console.log(JSON.stringify({ assets: Object.keys(manifest.models).length, meshes, triangles, megabytes: +(bytes / 1e6).toFixed(2), source: manifest.blenderVersion }, null, 2));

@@ -13,9 +13,10 @@ from mathutils.bvhtree import BVHTree
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = ROOT / 'tests/fixtures/blender/hero-native-baseline.json'
 REPORT = ROOT / 'artifacts/hero-native-report.json'
+OUT = ROOT / 'assets/export'
 REPORT.parent.mkdir(parents=True, exist_ok=True)
 SOURCES = ['asset-library.blend', 'standing-motion.blend']
-HERO_MODELS = ['rider', 'bicycle', 'banana', 'looseBanana', 'bananaRack']
+HERO_MODELS = ['rider', 'bicycle', 'banana', 'bananaB', 'bananaC', 'bananaD', 'looseBanana', 'bananaRack']
 RIG_NAMES = ['BikeFrame', 'CargoRopes', 'WheelRear', 'WheelFront', 'Crank', 'Pedal_L', 'Pedal_R',
              'BalanceBody', 'Arm_L', 'Arm_R', 'Elbow_L', 'Elbow_R', 'Hand_L', 'Hand_R',
              'Leg_L', 'Leg_R', 'Knee_L', 'Knee_R', 'Foot_L', 'Foot_R']
@@ -118,11 +119,11 @@ def source_color_triangles(mesh):
     return expected
 
 
-def verify_export_colors(models):
+def verify_export_colors(models, names=HERO_MODELS):
     cached, triangles, vertices = {}, 0, 0
-    for name in HERO_MODELS:
+    for name in names:
         item = models[name]
-        gltf, binary = read_glb(ROOT / 'public/assets' / item['file'])
+        gltf, binary = read_glb(OUT / item['file'])
         seen = set()
         minimum, maximum = 1., 0.
         for node in gltf['nodes']:
@@ -156,7 +157,7 @@ def verify_export_colors(models):
                 vertices += len(positions)
         # Black pedals and rubber are legitimate individual meshes; inspect the whole asset palette.
         assert maximum > .05 and minimum < .95, (name, 'invalid all-white/black export')
-    return {'models': HERO_MODELS, 'uniqueExportVertices': vertices, 'triangles': triangles}
+    return {'models': names, 'uniqueExportVertices': vertices, 'triangles': triangles}
 
 
 def frame_bvh(rack_only=False):
@@ -180,15 +181,23 @@ def verify_cargo(item):
     bundles = sorted(cargo.children, key=lambda o: o.name)
     names = [f'CargoBundle{i:02}' for i in range(20)]
     assert [o.name for o in bundles] == names and all(o.type == 'MESH' for o in bundles), 'Expected 20 direct native bundle meshes'
-    shared = next(o.data for o in bpy.data.objects['Banana'].children_recursive if o.type == 'MESH')
-    assert all(o.data == shared for o in bundles), 'Cargo must reuse native five-banana geometry'
+    variants = [next(o.data for o in bpy.data.objects[root].children_recursive if o.type == 'MESH')
+                for root in ['Banana', 'BananaVariant1', 'BananaVariant2', 'BananaVariant3']]
+    assert len({data.as_pointer() for data in variants}) == 4, 'Expected four editable native banana meshes'
+    for index, obj in enumerate(bundles):
+        assert obj.data == variants[index % 4], (obj.name, 'native variant assignment changed')
+        assert obj.get('globalBundleIndex') == index and obj.get('variant') == index % 4
+    assert all(sum(obj.data == data for obj in bundles) == 5 for data in variants)
     assert all(o.get('bananas') == 5 for o in bundles)
-    gltf, binary = read_glb(ROOT / 'public/assets' / item['file'])
+    gltf, binary = read_glb(OUT / item['file'])
     roots = [gltf['nodes'][i] for i in gltf['scenes'][gltf.get('scene', 0)]['nodes']]
     assert len(roots) == 1 and roots[0]['name'] == 'BananaCargo'
     exported = sorted([gltf['nodes'][i] for i in roots[0]['children']], key=lambda n: n['name'])
     assert [n['name'] for n in exported] == names and all('mesh' in n for n in exported)
-    assert len({n['mesh'] for n in exported}) == 1 and len(gltf['meshes']) == 1, '20 GLB bundles must share one geometry'
+    assert len({n['mesh'] for n in exported}) == 4 and len(gltf['meshes']) == 4, '20 GLB bundles must share four geometries'
+    for index, node in enumerate(exported):
+        assert node['extras']['globalBundleIndex'] == index and node['extras']['variant'] == index % 4
+        assert node['mesh'] == exported[index % 4]['mesh'], (node['name'], 'export lost variant sharing')
     assert np.allclose(node_matrix(roots[0]), Matrix.Identity(4), atol=1e-6, rtol=0), 'Runtime cargo root must start at origin'
     matrix_error = 0
     for obj, node in zip(bundles, exported):
@@ -201,10 +210,17 @@ def verify_cargo(item):
     assert distances[0] <= .004, ('First visible native banana bundle floats above rear rack', distances[0])
     assert min(distances) <= .004, ('Entire native banana heap floats above rear rack', min(distances))
     points = [p for obj in bundles for p in mesh_vertices(obj, cargo)]
-    return {'bundles': 20, 'nativeSharedMesh': shared.name, 'glbSharedMeshes': 1, 'maxMatrixError': matrix_error,
+    return {'bundles': 20, 'nativeSharedMeshes': [data.name for data in variants], 'glbSharedMeshes': 4, 'maxMatrixError': matrix_error,
             'rackPolygons': polygon_count, 'firstBundleRackDistance': distances[0], 'nearestRackDistance': min(distances),
             'minimumZ': min(p.z for p in points), 'maximumZ': max(p.z for p in points),
             'coverage': 'Actual native rack contact and first visible bundle; no dynamic cargo simulation.'}
+
+
+def joint_mesh_vertices(name, reference):
+    joint = bpy.data.objects[name]
+    meshes = [obj for obj in joint.children_recursive if obj.type == 'MESH']
+    assert meshes, (name, 'missing editable joint mesh')
+    return [point for obj in meshes for point in mesh_vertices(obj, reference)]
 
 
 def standing_contact(tags=('L', 'R')):
@@ -216,7 +232,7 @@ def standing_contact(tags=('L', 'R')):
         actual = actor.matrix_world.inverted() @ bpy.data.objects['Foot_' + tag].matrix_world.translation
         assert (actual - expected).length < 1e-5, (tag, 'standing support target moved', list(actual))
         # The library lays templates out separately; compare each root's metre-space geometry.
-        shoes = mesh_vertices(bpy.data.objects['Shoe_' + tag], actor)
+        shoes = joint_mesh_vertices('Foot_' + tag, actor)
         bottom = min(p.z for p in shoes)
         top = 1.193 if tag == 'L' else 1.115
         assert -.001 <= bottom - top <= .010, (tag, 'sole no longer reaches handlebar/saddle', bottom, top)
@@ -242,13 +258,13 @@ def verify_motion():
             foot = bpy.data.objects['Foot_' + tag].matrix_world.translation
             pedal = bpy.data.objects['Pedal_' + tag]
             assert (foot - pedal.matrix_world.translation - Vector((0, .075, .138))).length < 1e-5, (frame, tag, 'seated foot left pedal target')
-            shoes = mesh_vertices(bpy.data.objects['Shoe_' + tag], bicycle)
+            shoes = joint_mesh_vertices('Foot_' + tag, bicycle)
             platform = mesh_vertices(pedal, bicycle)
             gap = min(p.z for p in shoes) - max(p.z for p in platform)
             assert 0 <= gap <= .006, (frame, tag, 'actual sole/pedal gap', gap)
             hand = bpy.data.objects['Hand_' + tag].matrix_world.translation
             assert (hand - Vector((side * .36, -.50, 1.20))).length < 1e-5, (frame, tag, 'seated hand left handlebar target')
-            palm = mesh_vertices(bpy.data.objects['RiderHand_' + tag], bicycle)
+            palm = joint_mesh_vertices('Hand_' + tag, bicycle)
             distance = min(support.find_nearest(p)[3] for p in palm)
             assert distance < .025, (frame, tag, 'hand separated from actual grip mesh', distance)
             seated.append({'frame': frame, 'side': tag, 'solePedalGap': gap, 'handGripDistance': distance})
@@ -272,10 +288,17 @@ if '--baseline' in sys.argv:
     BASELINE.write_text(json.dumps(baseline, indent=2))
     print('HERO_NATIVE_JOINT_BASELINE_SAVED', str(BASELINE))
 else:
-    manifest = json.loads((ROOT / 'public/assets/manifest.json').read_text())
+    manifest = json.loads((OUT / 'manifest.json').read_text())
     assert 'bananaRack' in manifest['models'], 'Missing bananaRack runtime export'
-    assert (ROOT / 'public/assets' / manifest['models']['bananaRack']['file']).is_file(), 'Missing bananaRack runtime export'
+    assert (OUT / manifest['models']['bananaRack']['file']).is_file(), 'Missing bananaRack runtime export'
     baseline = json.loads(BASELINE.read_text())
+    if '--accept-hero-rest' in sys.argv:
+        # Explicit migration only: the new authored fallback has static arms.
+        # Preserve every translation, parent, support target and motion-frame baseline.
+        for name in ['Arm_L', 'Arm_R']:
+            basis = baseline['asset-library.blend']['rig'][name]['basis']
+            for row in range(3):
+                for col in range(3):basis[row][col] = float(row == col)
     open_source('asset-library.blend')
     compare_rig(baseline['asset-library.blend'], rig_snapshot(), 'asset-library.blend')
     cargo = verify_cargo(manifest['models']['bananaRack'])
@@ -284,13 +307,17 @@ else:
     open_source('standing-motion.blend')
     compare_rig(baseline['standing-motion.blend'], rig_snapshot(True), 'standing-motion.blend')
     motion = verify_motion()
+    open_source('rider-hero.blend')
+    skin_colors = verify_export_colors(manifest['models'], ['riderSkinned'])
     hashes = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in
-              [ROOT / 'assets/blender' / source for source in SOURCES] +
-              [ROOT / 'public/assets' / manifest['models'][name]['file'] for name in HERO_MODELS]}
-    report = {'status': 'pass', 'blenderVersion': bpy.app.version_string, 'cargo': cargo, 'exportColors': colors,
+              [ROOT / 'assets/blender' / source for source in SOURCES + ['rider-hero.blend']] +
+              [OUT / manifest['models'][name]['file'] for name in HERO_MODELS + ['riderSkinned']]}
+    report = {'status': 'pass', 'blenderVersion': bpy.app.version_string, 'cargo': cargo, 'exportColors': colors, 'skinnedExportColors': skin_colors,
               'libraryStandingContacts': library_contacts, 'motion': motion, 'sha256': hashes,
               'scope': 'Saved native hero source, actual standard GLB exports, shared geometry, author matrices, rack support and object-rig keyframe contacts. Overall image fidelity and real engine visuals are not claimed.'}
+    if '--accept-hero-rest' in sys.argv:
+        BASELINE.write_text(json.dumps(baseline, indent=2) + '\n')
     REPORT.write_text(json.dumps(report, indent=2))
-    print('HERO_NATIVE_ASSETS_PASS', json.dumps({'bundles': 20, 'sharedGeometry': 1, 'maxMatrixError': cargo['maxMatrixError'],
+    print('HERO_NATIVE_ASSETS_PASS', json.dumps({'bundles': 20, 'sharedGeometry': 4, 'maxMatrixError': cargo['maxMatrixError'],
           'firstBundleRackDistance': cargo['firstBundleRackDistance'], 'colorTriangles': colors['triangles'],
-          'sources': len(SOURCES), 'heroExports': len(HERO_MODELS), 'report': str(REPORT)}))
+          'sources': len(SOURCES)+1, 'heroExports': len(HERO_MODELS)+1, 'report': str(REPORT)}))

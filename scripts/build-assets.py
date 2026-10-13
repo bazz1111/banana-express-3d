@@ -3,17 +3,22 @@ import bpy
 import math
 import random
 import json
+import struct
 import hashlib
+import subprocess
 import numpy as np
 from pathlib import Path
 from mathutils import Vector, Matrix, Euler
 from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'public' / 'assets'
+OUT = ROOT / 'assets' / 'export'
 SOURCE = ROOT / 'assets' / 'blender'
 OUT.mkdir(parents=True, exist_ok=True)
 SOURCE.mkdir(parents=True, exist_ok=True)
+subprocess.run([bpy.app.binary_path,'--background','--factory-startup','--python-exit-code','1',
+                '--python',str(ROOT/'scripts/build-hero.py')],check=True)
+exec(compile((ROOT/'scripts/build-environment.py').read_text(),str(ROOT/'scripts/build-environment.py'),'exec'),globals())
 random.seed(28)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
@@ -280,95 +285,36 @@ def standing_pose(side, crouch=0, sway=0):
     return hip,knee,ankle
 
 def rider():
-    r=root('StandingRider');r['pose']='left foot on handlebar; right foot on saddle'
-    torso=root('BalanceBody');torso.parent=r;torso.location=(0,.04,1.86)
-    v=[];f=[]
-    rings=[(1.81,.04,.23,.155),(1.88,.035,.25,.16),(1.98,.02,.27,.17),
-           (2.08,.00,.29,.17),(2.19,-.025,.31,.18),(2.30,-.035,.315,.16),
-           (2.36,-.04,.28,.14),(2.41,-.045,.12,.10)]
-    sides=16
-    for j,(z,y,w,d) in enumerate(rings):
-        for i in range(sides):
-            angle=i*math.tau/sides
-            fold=1+.035*math.cos(angle*3+j*.4)*math.sin(math.pi*j/(len(rings)-1))
-            v.append((w*math.cos(angle)*fold,y+d*math.sin(angle)*fold,z))
-    for j in range(len(rings)-1):
-        for i in range(sides):a=j*sides+i;b=j*sides+(i+1)%sides;f.append((a,b,b+sides,a+sides))
-    p=[mesh('StandingRedShirt',v,f,'red'),ico((0,.04,1.81),(.235,.18,.14),'blue',2),
-       rod((0,-.045,2.37),(0,-.06,2.48),.072,'skin',12),
-       ico((0,-.06,2.57),(.135,.13,.17),'skin',3),ico((0,-.08,2.49),(.101,.094,.084),'skin',2)]
-    hv=[];hf=[]
-    for j in range(6):
-        for i in range(24):
-            angle=i*math.tau/24;theta=(1.36 if math.sin(angle)<0 else 1.88)*(.06+j*.94/5)
-            hv.append((.137*math.sin(theta)*math.cos(angle),-.05+.141*math.sin(theta)*math.sin(angle),2.65+.119*math.cos(theta)))
-    for j in range(5):
-        for i in range(24):a=j*24+i;b=j*24+(i+1)%24;hf.append((a,a+24,b+24,b))
-    hf.append(tuple(range(24)));p.append(mesh('ShortCurledHairCap',hv,hf,(.015,.018,.021,1)))
-    for i in range(100):
-        angle=i*2.39996;theta=math.acos(1-(i+.5)/100*(1-math.cos(1.80)))
-        if math.sin(angle)<0 and theta>1.38:continue
-        size=.024*(.94+.12*math.sin(i*1.7))
-        p.append(ico((.137*math.sin(theta)*math.cos(angle),-.05+.141*math.sin(theta)*math.sin(angle),2.65+.119*math.cos(theta)),(size,size,size*.88),(.018,.021,.024,1),1))
-    p += [ico((0,-.197,2.58),(.027,.033,.029),'skin',2),rod((-.027,-.186,2.528),(.027,-.186,2.528),.004,(.085,.026,.017,1),7)]
-    for side in [-1,1]:
-        p += [ico((side*.056,-.181,2.607),(.017,.010,.009),'white',1),ico((side*.056,-.190,2.607),(.008,.006,.008),'black',1),
-              rod((side*.036,-.178,2.634),(side*.08,-.173,2.632),.007,'black',6),ico((side*.134,-.05,2.57),(.025,.025,.045),'skin',1)]
-    pack(p,'StandingBody',torso,(0,.04,1.86)).location=(0,0,0)
-    for side,tag in [(-1,'L'),(1,'R')]:
-        shoulder=(side*.27,-.025,2.31);elbow=(side*.48,-.06,2.18);hand=(side*.68,-.12,2.23)
-        arm=root('Arm_'+tag);arm.parent=torso;arm.location=Vector(shoulder)-Vector((0,.04,1.86))
-        sleeve_end=Vector(shoulder).lerp(Vector(elbow),.52)
-        pack([limb(shoulder,elbow,.075,'skin'),limb(shoulder,sleeve_end,.098,'red')],'UpperArm_'+tag,arm,shoulder).location=(0,0,0)
-        elbow_joint=root('Elbow_'+tag);elbow_joint.parent=arm;elbow_joint.location=Vector(elbow)-Vector(shoulder)
-        pack([limb(elbow,hand,.06,'skin')],'Forearm_'+tag,elbow_joint,elbow).location=(0,0,0)
-        hand_joint=root('Hand_'+tag);hand_joint.parent=elbow_joint;hand_joint.location=Vector(hand)-Vector(elbow)
-        parts=[ico(hand,(.065,.037,.045),'skin',2)]
-        for finger in range(4):
-            x=side*(.66+finger*.024)
-            parts.extend([rod((x,-.13,2.23),(x+side*.014,-.18,2.23),.009,'skin',7),rod((x+side*.014,-.18,2.23),(x+side*.007,-.20,2.205),.009,'skin',7)])
-        parts.append(rod((side*.64,-.13,2.23),(side*.62,-.17,2.205),.012,'skin',7))
-        pack(parts,'RiderHand_'+tag,hand_joint,hand).location=(0,0,0)
-        hip,knee,foot=standing_pose(side)
-        leg=root('Leg_'+tag);leg.parent=r;leg.location=hip
-        leg['restUpper']=list(knee-hip);leg['support']=list(foot)
-        pack([limb(hip,knee,.112,'blue'),ico(knee,(.105,.095,.10),'blue',2)],'Thigh_'+tag,leg,hip).location=(0,0,0)
-        joint=root('Knee_'+tag);joint.parent=leg;joint.location=knee-hip
-        pack([limb(knee,foot,.085,'blue'),rod(foot+Vector((0,0,-.02)),foot+Vector((0,0,.04)),.073,'red',12)],'Shin_'+tag,joint,knee).location=(0,0,0)
-        ankle=root('Foot_'+tag);ankle.parent=joint;ankle.location=foot-knee
-        shoes=sneaker(0)
-        for obj in shoes:obj.location += foot-Vector((0,-.03,.49))
-        pack(shoes,'Shoe_'+tag,ankle,foot).location=(0,0,0)
-    # Editable object-rig Actions in Blender; runtime solves support-foot IK.
-    for side,tag in [(-1,'L'),(1,'R')]:
-        arm=bpy.data.objects['Arm_'+tag]
-        for frame,angle in [(1,-.10),(16,.10),(32,-.10)]:
-            arm.rotation_euler[1]=angle*side;arm.keyframe_insert(data_path='rotation_euler',frame=frame)
-        arm.animation_data.action.name='StandingBalance_'+tag
-    bpy.context.scene.frame_set(1)
-    for tag in ['L','R']:
-        bpy.data.objects['Arm_'+tag].rotation_euler=(0,0,0)
-    return r
+    # Append an independently editable native hero source, preserving the legacy joint fallback.
+    with bpy.data.libraries.load(str(SOURCE/'rider-hero.blend'),link=False) as (available,loaded):
+        assert 'HeroFallback' in available.collections
+        loaded.collections=['HeroFallback']
+    collection=loaded.collections[0];bpy.context.scene.collection.children.link(collection)
+    for obj in collection.all_objects:
+        obj.hide_viewport=False;obj.hide_render=False;obj.hide_set(False)
+    actor=next(obj for obj in collection.all_objects if obj.name=='StandingRider')
+    actor['source']='assets/blender/rider-hero.blend';actor['style_reference']='style-a.png'
+    return actor
 
-def banana(count=5):
-    r=root('Banana' if count==5 else 'BananaFruit')
+def banana(count=5,variant=0):
+    r=root('Banana' if count==5 and variant==0 else 'BananaVariant'+str(variant) if count>1 else 'BananaFruit')
     p=[]
     for j in range(count):
-        verts=[]; rings=13; sides=10
+        verts=[]; rings=[13,8,13,10][variant]; sides=10
         finger=j-(count-1)/2
-        fan=finger*.075;out=Vector((math.cos(fan),math.sin(fan),0))
+        fan=finger*[.075,.064,.091,.071][variant];out=Vector((math.cos(fan),math.sin(fan),0))
         tangent_side=Vector((-math.sin(fan),math.cos(fan),0))
-        length=.53+.028*math.cos(finger*.95)
+        length=[.53,.55,.45,.51][variant]+.028*math.cos(finger*.95)
         tip_height=.026+.012*math.sin(j*1.9)
         for k in range(rings):
-            t=k/(rings-1);curve=.21+.022*math.cos(j*2)
+            t=k/(rings-1);curve=[.21,.255,.18,.235][variant]+.022*math.cos(j*2)
             bend=.095*(1-t)+curve*math.sin(t*math.pi)+.022*t
             spread=finger*(.018+.055*math.sin(t*math.pi)**.8)
             center=out*bend+tangent_side*spread+Vector((0,0,tip_height+length*t))
             tangent=(out*(-.073+curve*math.pi*math.cos(t*math.pi))
                      +tangent_side*(finger*.044*math.pi*math.cos(t*math.pi)*max(math.sin(t*math.pi),.0001)**(-.2))+Vector((0,0,length))).normalized()
             cross=(out-tangent*out.dot(tangent)).normalized();across=tangent.cross(cross)
-            radius=(.064+.004*math.sin(j*2.1))*(.27+.73*math.sin(t*math.pi)**.65)
+            radius=([.064,.058,.076,.061][variant]+.004*math.sin(j*2.1))*(.27+.73*math.sin(t*math.pi)**.65)
             for h in range(sides):
                 # Two close corners bevel each of the five long, broad peel faces.
                 a=(h//2)*math.tau/5+(-.075 if h%2==0 else .075)
@@ -393,11 +339,12 @@ def banana(count=5):
         p.append(rod(tuple(out*.022+tangent_side*(finger*.018)+Vector((0,0,tip_height+length))),(0,0,.618),.013,(.20,.25,.026,1),7))
     p.append(rod((0,0,.603),(0,0,.65),.023,(.10,.16,.018,1),9))
     pack(p,'BananaMesh',r)
+    r['variant']=variant;r['fingers']=count
     return r
 
 def cargo():
     r=root('BananaCargo')
-    data=next(o.data for o in assets['banana'].children_recursive if o.type=='MESH')
+    variants=[next(o.data for o in assets[name].children_recursive if o.type=='MESH') for name in ['banana','bananaB','bananaC','bananaD']]
     bpy.context.view_layer.update()
     frame=bpy.data.objects['BikeFrame']
     rack_vertices=[frame.matrix_world@v.co for v in frame.data.vertices]
@@ -406,6 +353,7 @@ def cargo():
     rack=BVHTree.FromPolygons(rack_vertices,rack_faces)
     rng=random.Random(2807)
     for i in range(20):
+        data=variants[i%4]
         n=i%9;layer=i//9
         x=(n%3-1)*.20+rng.uniform(-.025,.025)
         y=.54+(n//3)*.28+rng.uniform(-.035,.035)
@@ -432,7 +380,7 @@ def cargo():
             point,hit=min(candidates,key=lambda item:item[1][3])
             placement=Matrix.Translation(hit[0]-point+Vector((0,0,.002)))@placement
         o.matrix_local=placement
-        o['bananas']=5
+        o['bananas']=5;o['globalBundleIndex']=i;o['variant']=i%4
     r['maxDisplayedBananas']=100;r['style_reference']='style-a.png';r['purpose']='collected cargo; empty at start'
     return r
 
@@ -574,8 +522,7 @@ def truck():
     p += [cube((0,-1.35,.56),(.50,.61,.39),chassis),cube((0,-.92,.47),(.26,.32,.22),chassis),
           rod((0,-.92,.44),(0,1.80,.47),.055,chassis,10),
           rod((.85,-.4,.74),(.85,.38,.74),.16,'steel',12),rod((-.48,-.3,.4),(-.48,1.3,.4),.046,chassis,10)]
-    pack(p,'TruckMesh',r)
-    return r
+    return split_truck_parts(p,r)
 
 def car():
     r=root('Car');p=[];verts=[];faces=[]
@@ -796,6 +743,7 @@ def simple(name, build):
     r=root(name); pack(build(),name+'Mesh',r); return r
 
 assets['bicycle']=bicycle(); assets['rider']=rider(); assets['banana']=banana();assets['looseBanana']=banana(1)
+assets['bananaB']=banana(7,1);assets['bananaC']=banana(4,2);assets['bananaD']=banana(6,3)
 collected_rack=cargo()
 assets['truck']=truck(); assets['car']=car(); assets['pedestrian']=pedestrian(); assets['goat']=goat()
 # Compact the goat, including horn tips, to its 0.8 m jumpable silhouette.
@@ -805,8 +753,10 @@ for obj in assets['goat'].children_recursive:
         for vertex in obj.data.vertices:vertex.co.z*=.634
 assets['palm']=palm(); assets['tree']=tree(); assets['hut']=hut(); assets['gate']=gate()
 assets['forestTree']=forest_tree();assets['villageHouse']=village_house();assets['villageLonghouse']=village_house(True)
+assets['forestTreeLOD1']=forest_tree_lod(1);assets['forestTreeLOD2']=forest_tree_lod(2)
 assets['foundation']=simple('VillageStoneFoundation',lambda:[cube((0,0,.5),(1,1,1),(.34,.31,.24,1))])
 assets['bananaPlant']=banana_plant();assets['stall']=stall();assets['cliff']=cliff()
+for i in range(6):assets['rock'+chr(65+i)]=rock_module(i)
 assets['rock']=simple('Rock',lambda:[ico((0,0,.35),(.62,.46,.42),'dust',1)])
 assets['crate']=simple('Crate',lambda:[cube((0,0,.425),(1.5,1.2,.85),'wood')]+[cube((0,y,.425),(1.51,.035,.10),'cream') for y in [-.61,.61]])
 assets['dust']=simple('Dust',lambda:[ico((0,0,0),(1,1,1),'dust',1)])
@@ -819,9 +769,23 @@ def burst():
         a=i*math.tau/16;rad=radius*rays[i//2] if i%2==0 else inner
         verts.append((math.cos(a)*rad,0,math.sin(a)*rad))
     parts.append(mesh('KickFlash',verts,[(0,i+1,(i+1)%16+1) for i in range(16)],(.98,.77,.155,1)))
-    pack(parts,'BurstMesh',r);return r
+    flash=pack(parts,'BurstMesh',r)
+    for loop in flash.data.loops:
+        center=flash.data.vertices[loop.vertex_index].co.length<1e-5
+        flash.data.color_attributes['Color'].data[loop.index].color=(1,1,.92,1) if center else (1,.67,.055,1)
+    return r
 assets['burst']=burst()
+glow_root=root('KickBurstGlow');gv=[];gf=[]
+for radius in [.07,.28,.56,.80]:
+    for i in range(24):a=i*math.tau/24;gv.append((math.cos(a)*radius,0,math.sin(a)*radius))
+for j in range(3):
+    for i in range(24):a=j*24+i;b=j*24+(i+1)%24;gf.extend([(a,b,b+24),(a,b+24,a+24)])
+glow=mesh('BurstGlowMesh',gv,gf,(1,.78,.13,1));glow.parent=glow_root
+for loop in glow.data.loops:
+    ring=loop.vertex_index//24;glow.data.color_attributes['Color'].data[loop.index].color=(1,.78,.13,[.7,.42,.10,0][ring])
+assets['burstGlow']=glow_root
 assets['cloud']=simple('Cloud',lambda:[ico((0,0,0),(2.2,1,.75),'white',1),ico((1.4,0,.2),(1.4,.8,.7),'white',1),ico((-1.2,0,.1),(1.1,.9,.7),'white',1)])
+assets['cloudB']=cloud_variant(1);assets['cloudC']=cloud_variant(2)
 assets['sign']=simple('Sign',lambda:[rod((0,0,0),(0,0,1.7),.06,'wood'),cube((0,0,1.8),(1,.10,.62),'yellow'),
                                          rod((-.17,.062,1.61),(.12,.062,1.8),.035,'black',5),rod((.12,.062,1.8),(-.17,.062,1.99),.035,'black',5)])
 assets['bush']=simple('Bush',lambda:[ico((math.cos(i*2.4)*.48,math.sin(i*2.4)*.4,.25+(i%3)*.17),(.26,.22,.25),
@@ -830,10 +794,12 @@ assets['tower']=simple('VillageTower',lambda:[cube((0,0,2.4),(1.9,1.7,4.8),'crea
     cube((0,.865,3.5),(.55,.035,.85),'black'),cube((0,.87,3.5),(.36,.04,.7),'glass'),
     mesh('TowerRoof',[(-1.15,-1.05,4.8),(1.15,-1.05,4.8),(1.15,1.05,4.8),(-1.15,1.05,4.8),(0,0,6.1)],
           [(0,1,4),(1,2,4),(2,3,4),(3,0,4)],'roof')])
-def mountain(forest=False):
-    r=root('ForestHill' if forest else 'Mountain');v=[];f=[];nx=36;ny=27
+def mountain(forest=False,variant=0,band='far'):
+    r=root(('ForestHill' if forest else 'Mountain')+('B' if variant else '')+('Mid' if band=='mid' else ''));v=[];f=[];nx=24;ny=19
     peaks=[(-.65,-.12,.44,.44,.78),(-.28,.12,.61,.40,.72),
            (.27,.10,.82,.43,.80),(.66,-.03,.30,.35,.66),(-.05,.57,.25,.58,.37)]
+    if variant:
+        peaks=[(-.71,-.02,.31,.32,.65),(-.37,.24,.81,.32,.53),(.17,-.14,.46,.55,.67),(.69,.17,.64,.27,.46),(.06,.62,.38,.48,.27)]
     for j in range(ny):
         y=j/(ny-1)*2-1
         for i in range(nx):
@@ -860,15 +826,44 @@ def mountain(forest=False):
         p=face.center
         # Broad vegetation/rock masses, rather than independently noisy triangle colors.
         patch=math.sin(p.x*14+p.y*9)+.55*math.cos(p.x*27-p.y*17)
-        palette=[(.065,.19,.033,1),(.095,.24,.045,1),(.14,.29,.068,1),(.08,.21,.037,1)] if forest else [(.075,.22,.39,1),(.10,.28,.47,1),(.14,.34,.54,1),(.085,.25,.43,1)]
+        palette=[(.085,.24,.043,1),(.13,.31,.06,1),(.17,.36,.08,1),(.10,.27,.052,1)] if forest else [(.075,.23,.19,1),(.11,.30,.26,1),(.17,.36,.31,1),(.095,.265,.23,1)] if band=='mid' else [(.29,.44,.57,1),(.35,.51,.64,1),(.42,.57,.70,1),(.32,.47,.60,1)]
         c=palette[min(3,max(0,int((patch+1.55)/3.1*4)))]
         for li in face.loop_indices:attr.data[li].color=c
-    pack([m],'MountainMesh',r);return r
+    pack([m],'MountainMesh',r);r['depthBand']='near' if forest else band;r['variant']=variant;return r
 assets['mountain']=mountain()
 assets['forestHill']=mountain(True)
+assets['mountainB']=mountain(variant=1);assets['forestHillB']=mountain(True,1)
+assets['midMountain']=mountain(band='mid');assets['midMountainB']=mountain(variant=1,band='mid')
 
 def hierarchy(r):
     return [r]+list(r.children_recursive)
+
+def stabilize_sky_triangle_order(path):
+    # Smooth-sphere loop triangles are returned in varying order by Blender.
+    # Keep every oriented triangle and all attributes; only order the draw list.
+    data=bytearray(path.read_bytes());json_size=struct.unpack_from('<I',data,12)[0]
+    gltf=json.loads(data[20:20+json_size]);binary_start=28+json_size
+    for model in gltf['meshes']:
+        for primitive in model['primitives']:
+            assert primitive.get('mode',4)==4
+            # Analytic unit-sphere normals avoid thread-order rounding from area
+            # accumulation. This is the sphere's exact shading definition.
+            position=gltf['accessors'][primitive['attributes']['POSITION']]
+            normal=gltf['accessors'][primitive['attributes']['NORMAL']]
+            assert position['type']==normal['type']=='VEC3' and position['componentType']==normal['componentType']==5126
+            assert position['count']==normal['count']
+            pv=gltf['bufferViews'][position['bufferView']];nv=gltf['bufferViews'][normal['bufferView']]
+            po=binary_start+pv.get('byteOffset',0)+position.get('byteOffset',0)
+            no=binary_start+nv.get('byteOffset',0)+normal.get('byteOffset',0)
+            length=position['count']*12;data[no:no+length]=data[po:po+length]
+            accessor=gltf['accessors'][primitive['indices']];view=gltf['bufferViews'][accessor['bufferView']]
+            dtype={5123:'<u2',5125:'<u4'}[accessor['componentType']]
+            offset=binary_start+view.get('byteOffset',0)+accessor.get('byteOffset',0)
+            triangles=np.frombuffer(data,dtype=dtype,count=accessor['count'],offset=offset).reshape(-1,3).copy()
+            faces=[tuple(np.roll(t,-int(np.argmin(t)))) for t in triangles]
+            ordered=np.array(sorted(faces),dtype=dtype).tobytes()
+            data[offset:offset+len(ordered)]=ordered
+    path.write_bytes(data)
 
 def export_selected(path, objs):
     bpy.ops.object.select_all(action='DESELECT')
@@ -889,6 +884,7 @@ def export_selected(path, objs):
             data.color_attributes.active_color_index=color_index;data.color_attributes.render_color_index=color_index
         bpy.ops.export_scene.gltf(filepath=str(path),export_format='GLB',use_selection=True,
                                   export_animations=False,export_yup=True,export_extras=True,export_vertex_color='ACTIVE')
+        if path.stem=='sky':stabilize_sky_triangle_order(path)
     finally:
         for data,kind,domain,original in backups:
             base=data.color_attributes.new(name='AOBaseColor',type=kind,domain=domain)
@@ -1063,7 +1059,7 @@ def roadside_course():
                     p.z+=weight*(.68*math.sin(phase*73-p.x*.34)+.28*math.sin(phase*149+p.x*.57))
                     p.x+=weight*.65*math.sin(phase*113+p.x*.31)
                 obj.data.update()
-                palette=[(.47,.17,.065,1),(.62,.25,.095,1),(.35,.10,.034,1),(.54,.20,.074,1)]
+                palette=[(.34,.084,.025,1),(.43,.112,.028,1),(.22,.043,.011,1),(.37,.094,.023,1)]
                 for polygon in obj.data.polygons:
                     middle=sum((obj.data.vertices[i].co for i in polygon.vertices),Vector())/len(polygon.vertices)
                     if middle.x<-6:
@@ -1116,16 +1112,18 @@ def roadside_course():
                 place(name,segment,along,x,scale,layout.random()*math.tau,index)
             if i<7:place('tree',segment,along,side*(15+layout.random()*13),1.5,layout.random()*math.tau,index)
             if i<3:place('rock',segment,along,side*(6.1+layout.random()*15),.55,layout.random()*math.tau,index)
-        if segment%2==0:
-            cliff=place('cliff',segment,36,-24,1.2,segment*.2,segment);bpy.context.view_layer.update()
-            cliff.data.calc_loop_triangles();gaps=[]
+        for number in range(3):
+            kind='rock'+chr(65+(segment*3+number)%6)
+            cliff=place(kind,segment,12+number*25,-10.5-number%2*2.2,.90+layout.random()*.30,layout.uniform(-.43,.43),segment*3+number)
+            bpy.context.view_layer.update();cliff.data.calc_loop_triangles();gaps=[]
+            cap_count=cliff.get('groundCapVertices',16)
             for triangle in cliff.data.loop_triangles:
-                if not all(i<12 for i in triangle.vertices):continue
+                if not all(i<cap_count for i in triangle.vertices):continue
                 cap=[cliff.matrix_world@cliff.data.vertices[i].co for i in triangle.vertices]
                 a,b,c=cap;normal=(b-a).cross(c-a)
                 for p in occupied_ground(cap):
-                    bottom=a.z-(normal.x*(p.x-a.x)+normal.y*(p.y-a.y))/normal.z
-                    gaps.append(bottom-p.z)
+                    bottom=a.z-(normal.x*(p.x-a.x)+normal.y*(p.y-a.y))/normal.z;gaps.append(bottom-p.z)
+            assert gaps,'Rock bottom must intersect the full native terrain'
             cliff.location.z-=max(0,max(gaps)+.15)
             cliff['groundSupport']={'method':'complete sealed-bottom clipping','buriedBy':.15}
         if segment%3==0:building('hut',segment,26,14,1,.2,segment)
@@ -1144,14 +1142,23 @@ def valley():
         return Vector((center.x+x,center.y/z_scale,z))
     def height(x,s):
         x=-x
-        river=-420+60*math.sin((s-300)/period*math.tau)
-        bank=abs(x-river)-(85+12*math.sin(s/period*math.tau+.5))
-        h=water_level-3+max(0,bank)*.082
+        shoreline=-310-50*math.sin((s-300)/period*math.tau)-20*math.cos(s/period*math.tau*2)
+        bank=x-shoreline
+        h=water_level-3+max(0,bank)*.092
         h+=5*math.sin(x*.010+s/period*math.tau*2)*min(1,max(0,bank)/80)
-        for cx,cs,level in [(-125,305,-25),(-710,680,-27)]:
+        for cx,cs,level in [(-150,380,-18),(-200,1100,-25)]:
             ds=(s-cs+period/2)%period-period/2
             t=((x-cx)/100)**2+(ds/150)**2;blend=math.exp(-t*t)
             h=h*(1-blend)+level*blend
+        # Authored dry coastal terraces keep all declared settlements above the tide.
+        for cs in [120,380,640,900,1160,1440]:
+            ds=(s-cs+period/2)%period-period/2
+            t=((x+225)/110)**2+(ds/100)**2;blend=.88*math.exp(-t*t)
+            h=h*(1-blend)+(water_level+7)*blend
+        # Join the cut's descending shoulder instead of raising a foreground berm
+        # that occludes the sea. The dry coastal terraces remain above the tide.
+        u=-x
+        if 0<u<400:h=min(h,-15-min(15,max(0,u-42)*.30))
         return h-.04*s
     vertices=[tuple(author_point(float(x),float(s),height(float(x),float(s)))) for s in ss for x in xs];faces=[]
     for j in range(ny-1):
@@ -1176,11 +1183,18 @@ def valley():
     pixels[:,:,:3]=np.clip(.90+ripples,.8,1)[:,:,None];image.pixels.foreach_set(pixels.ravel());image.update();image.pack()
     water_mat=asphalt_mat.copy();water_mat.name='Valley_Painted_Water'
     next(n for n in water_mat.node_tree.nodes if n.type=='TEX_IMAGE').image=image
-    water_vertices=[author_point(x,float(s),water_level-.02-.04*float(s)) for s in ss for x in (-100,1000)]
+    # Three native cross-shore color bands, extending to an open bay beyond the coast.
+    water_x=[-100,250,430,1550]
+    water_vertices=[author_point(x,float(s),water_level-.02-.04*float(s)) for s in ss for x in water_x]
     water_faces=[]
     for j in range(ny-1):
-        a=j*2;water_faces.extend([(a,a+3,a+1),(a,a+2,a+3)])
+        for k in range(len(water_x)-1):
+            a=j*len(water_x)+k;water_faces.extend([(a,a+len(water_x)+1,a+1),(a,a+len(water_x),a+len(water_x)+1)])
     water=mesh('ValleyWater',water_vertices,water_faces,(.025,.24,.43,1));water.parent=r
+    for polygon in water.data.polygons:
+        band=(polygon.index//2)%(len(water_x)-1)
+        shade=[linear_hex('3FB6C9'),linear_hex('258CB8'),linear_hex('1F6FA8')][band]
+        for li in polygon.loop_indices:water.data.color_attributes['Color'].data[li].color=shade
     water_bvh=BVHTree.FromPolygons(water_vertices,water_faces,all_triangles=True)
     def water_at(x,y):
         hit=water_bvh.ray_cast(Vector((x,y,300)),Vector((0,0,-1)))[0]
@@ -1190,6 +1204,7 @@ def valley():
     for loop in water.data.loops:
         x,y,_=water.data.vertices[loop.vertex_index].co;uv.data[loop.index].uv=(x/85,y/100)
     groups={name:root(name) for name in ['ValleyVillageHouse','ValleyVillageLonghouse','ValleyTower','ValleyFoundations','ValleyForest','ValleyPalms','ValleyMountains','ValleyFoothills','ValleyClouds',
+                                      'ValleyForestFar','ValleyMountainsB','ValleyMidMountains','ValleyMidMountainsB','ValleyFoothillsB','ValleyCloudsB','ValleyCloudsC',
                                       'ValleyPanoramaForest','ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower','ValleyPanoramaFoundations']}
     for group in groups.values():group.parent=r
     def instance(asset,group,index,position,scale,yaw=0):
@@ -1227,21 +1242,24 @@ def valley():
         occupied.append((cx,cy,radius));buildings.append(obj)
         return True
     settlement_centres=[120,380,640,900,1160,1440];settlements=[]
-    for s in settlement_centres:building('tower','ValleyTower',91,s,3.5,0)
+    building('tower','ValleyTower',148,380,3.5,0)
     for number,centre_s in enumerate(settlement_centres):
         before=len(buildings)
-        for row in range(7):
-            for col,x in enumerate([58,78,100,122,146,170,198,222]):
-                s=centre_s+(row-3)*18;u=x+2.2*math.sin(row*1.6+number*.7);longhouse=(row+col+number)%5==0
-                building('villageLonghouse' if longhouse else 'villageHouse','ValleyVillageLonghouse' if longhouse else 'ValleyVillageHouse',u,s,2.6+(col%3)*.14,-.12*math.sin(row+col+number))
-        for row in range(4):
-            for col,x in enumerate([690,716,742]):
-                building('villageHouse','ValleyVillageHouse',x+3*math.sin(row+number),centre_s+(row-1.5)*22,2.2,-.08)
+        core=number==1
+        for row in range(7 if core else 4):
+            for col in range(10 if core else 7):
+                s=centre_s+(row-(3 if core else 1.5))*22+3*math.sin(col*.9+number)
+                u=(60+col*21 if core else 175+col*20)+4*math.sin(row*1.6+number*.7)
+                if core and math.hypot(u-148,s-380)<23:continue # Native plaza around the single bell tower.
+                longhouse=(row+col+number)%4!=0
+                building('villageLonghouse' if longhouse else 'villageHouse','ValleyVillageLonghouse' if longhouse else 'ValleyVillageHouse',u,s,2.3+(col%3)*.10,-.12*math.sin(row+col+number))
         settlements.append({'s':centre_s,'houses':len(buildings)-before})
     trees=palms=0;forest_roots=[];palm_roots=[]
     for i in range(50000):
         u=layout_rng.uniform(48,260) if i%4 else layout_rng.uniform(260,985)
         s=layout_rng.uniform(17,period-17);p=author_point(u,s);h=ground(p.x,p.y);w=water_at(p.x,p.y)
+        # A deliberate clearing lets the core bend overlook the coastal town and bay.
+        if u<300 and abs((s-380+period/2)%period-period/2)<160:continue
         if h is None or w is None or h<w+1.4:continue
         canopy=3.8+layout_rng.random()*1.8
         if any(math.hypot(p.x-px,p.y-py)<pr+canopy*1.6 for px,py,pr in occupied):continue
@@ -1252,24 +1270,28 @@ def valley():
             scale=1.25+layout_rng.random()*.8
             instance('palm','ValleyPalms',palms,p,(scale,scale,scale),layout_rng.random()*math.tau);palms+=1;palm_roots.append((p.x,p.y));continue
         if trees<2400 and all(math.hypot(p.x-px,p.y-py)>.9 for px,py in palm_roots):
-            instance('forestTree','ValleyForest',trees,p,(canopy,canopy,3.2+layout_rng.random()*1.9),layout_rng.random()*math.tau);trees+=1;forest_roots.append((p.x,p.y))
+            instance('forestTree' if u<=150 else 'forestTreeLOD1','ValleyForest' if u<=150 else 'ValleyForestFar',trees,p,(canopy,canopy,3.2+layout_rng.random()*1.9),layout_rng.random()*math.tau);trees+=1;forest_roots.append((p.x,p.y))
         if trees==2400 and palms==160:break
     # Native panoramic rings keep the distant silhouettes present through every authored turn.
     panorama_rng=random.Random(8176)
     for i in range(24):
-        angle=i*math.tau/24;radius=1280+panorama_rng.uniform(-70,90)
-        instance('mountain','ValleyMountains',i,(radius*math.sin(angle),-radius*math.cos(angle),-65),
+        angle=i*math.tau/24;radius=1460+panorama_rng.uniform(-70,90)
+        instance('mountainB' if i%2 else 'mountain','ValleyMountainsB' if i%2 else 'ValleyMountains',i,(radius*math.sin(angle),-radius*math.cos(angle),-65),
                  (270+panorama_rng.random()*70,190+panorama_rng.random()*40,330+panorama_rng.random()*100),angle+(math.pi if i%3==0 else 0))
+    for i in range(16):
+        angle=(i+.3)*math.tau/16;radius=980+panorama_rng.uniform(-65,65)
+        instance('midMountainB' if i%2 else 'midMountain','ValleyMidMountainsB' if i%2 else 'ValleyMidMountains',i,(radius*math.sin(angle),-radius*math.cos(angle),-40),
+                 (230+panorama_rng.random()*40,170+panorama_rng.random()*35,160+panorama_rng.random()*40),angle)
     for i in range(18):
-        angle=(i+.4)*math.tau/18;radius=850+panorama_rng.uniform(-45,65)
-        instance('forestHill','ValleyFoothills',i,(radius*math.sin(angle),-radius*math.cos(angle),-25),
-                 (235+panorama_rng.random()*55,145+panorama_rng.random()*55,280+panorama_rng.random()*80),angle+(math.pi if i%2==0 else 0))
+        angle=(i+.4)*math.tau/18;radius=660+panorama_rng.uniform(-45,65)
+        instance('forestHillB' if i%2 else 'forestHill','ValleyFoothillsB' if i%2 else 'ValleyFoothills',i,(radius*math.sin(angle),-radius*math.cos(angle),-25),
+                 (205+panorama_rng.random()*45,135+panorama_rng.random()*45,220+panorama_rng.random()*45),angle+(math.pi if i%2==0 else 0))
     # Author small roofs and true canopy silhouettes on the distant hills. They remain
     # in the panorama frame; the two near-valley tiles never duplicate these instances.
-    near_buildings=len(buildings);far_tree=assets['forestTree']
+    near_buildings=len(buildings);far_tree=assets['forestTreeLOD2']
     far_foundation=simple('DistantEarthTerrace',lambda:[cube((0,0,.5),(1,1,1),(.10,.20,.038,1))])
     bpy.context.view_layer.update()
-    hills=list(groups['ValleyFoothills'].children);hill_patches={};far_vertices=[];far_faces=[]
+    hills=list(groups['ValleyFoothills'].children)+list(groups['ValleyFoothillsB'].children);hill_patches={};far_vertices=[];far_faces=[]
     for hill in hills:
         native_vertices=[hill.matrix_world@v.co for v in hill.data.vertices]
         hill.data.calc_loop_triangles();native_faces=[tuple(t.vertices) for t in hill.data.loop_triangles]
@@ -1303,9 +1325,10 @@ def valley():
         assert far_trees==target, 'Missing distant native grove on hill '+hill.name
     for i in range(24):
         angle=(i+.18)*math.tau/24;radius=920+panorama_rng.uniform(-140,110);size=6+panorama_rng.random()*4
-        instance('cloud','ValleyClouds',i,(radius*math.sin(angle),-radius*math.cos(angle),115+panorama_rng.random()*90),
+        instance(['cloud','cloudB','cloudC'][i%3],['ValleyClouds','ValleyCloudsB','ValleyCloudsC'][i%3],i,(radius*math.sin(angle),-radius*math.cos(angle),115+panorama_rng.random()*90),
                  (size,size,size),angle)
-    r['panorama']={'mountains':24,'foothills':18,'clouds':24,'trees':far_trees,'buildings':len(buildings)-near_buildings,'layout':'native full angular rings with hillside canopy and villages'}
+    r['panorama']={'mountains':24,'midMountains':16,'foothills':18,'clouds':24,'trees':far_trees,'buildings':len(buildings)-near_buildings,'layout':'three native depth bands, two ridge silhouettes per band, LOD canopy'}
+    r['coastalLayout']={'coreS':380,'coreTower':1,'shoreBands':6,'openBayWidth':1300,'plazaRadius':23}
     r['waterLevel']=water_level;r['grade']=.04;r['buildings']=near_buildings;r['trees']=trees;r['palms']=palms;r['period']=period
     r['settlements']=settlements;r['courseAligned']=True;r['nativeZScale']=z_scale
     r['style_reference']='style-a.png';return r
@@ -1317,6 +1340,12 @@ bpy.ops.mesh.primitive_uv_sphere_add(segments=32,ring_count=16,radius=1)
 sky_mesh=paint(bpy.context.object,(.38,.62,.76,1));sky_mesh.name='SkySphere';sky_mesh.parent=sky_root
 for vertex in sky_mesh.data.vertices:vertex.co.normalize()
 sky_mesh.data.update()
+# Bake fixed quad diagonals once: the exporter otherwise reorders the cached
+# smooth sphere triangles between the early sky export and the final export.
+triangulate=sky_mesh.modifiers.new('DeterministicSkyTriangulation','TRIANGULATE')
+triangulate.quad_method='FIXED';triangulate.ngon_method='CLIP'
+bpy.context.view_layer.objects.active=sky_mesh
+bpy.ops.object.modifier_apply(modifier=triangulate.name)
 for face in sky_mesh.data.polygons:
     face.use_smooth=True
     for li in face.loop_indices:
@@ -1324,6 +1353,8 @@ for face in sky_mesh.data.polygons:
         low=(.68,.74,.73);horizon=(.38,.62,.76);high=(.065,.30,.55)
         a,b,t=(horizon,high,z) if z>=0 else (horizon,low,-z)
         sky_mesh.data.color_attributes['Color'].data[li].color=tuple(a[i]+(b[i]-a[i])*t for i in range(3))+(1,)
+sky_mesh.data.normals_split_custom_set_from_vertices([tuple(v.co) for v in sky_mesh.data.vertices])
+sky_root['normalSource']='analytic unit sphere POSITION; deterministically serialized'
 sky_root['nativePrimitive']='UV sphere';sky_root['radius']=1;sky_root['segments']=32;sky_root['rings']=16
 assets['sky']=sky_root
 export_selected(OUT/'sky.glb',hierarchy(sky_root))
@@ -1334,6 +1365,7 @@ assets['bananaRack']=collected_rack
 
 AO_TARGETS=['rider','bicycle','banana','looseBanana','truck','car','hut','villageHouse','villageLonghouse',
             'stall','tower','foundation','palm','tree','forestTree','bananaPlant','bush','rock','cliff']
+AO_TARGETS+=['bananaB','bananaC','bananaD']+['rock'+chr(65+i) for i in range(6)]
 AO_SETTINGS={'method':'local BVH cosine hemisphere','samples':24,'distance':.28,'strength':.30}
 
 def geometry_hash(data):
@@ -1393,7 +1425,7 @@ for obj in bpy.data.objects:
     if obj.type=='MESH' and obj.data.get('vertexAO'):obj['vertexAO']=obj.data['vertexAO'].to_dict()
 
 manifest={'generator':'local Blender bpy','mode':'endless','blenderVersion':bpy.app.version_string,
-          'sourceFiles':['assets/blender/asset-library.blend','assets/blender/endless-course.blend','assets/blender/standing-motion.blend','assets/blender/valley-layout.blend'],
+          'sourceFiles':['assets/blender/asset-library.blend','assets/blender/endless-course.blend','assets/blender/standing-motion.blend','assets/blender/valley-layout.blend','assets/blender/rock-kit.blend','assets/blender/rider-hero.blend'],
           'vertexAO':{**AO_SETTINGS,'assets':AO_TARGETS},'models':{}}
 for index,(name,r) in enumerate(assets.items()):
     unique_meshes={o.data.as_pointer():o.data for o in hierarchy(r) if o.type=='MESH'}
@@ -1407,6 +1439,15 @@ for index,(name,r) in enumerate(assets.items()):
     r.location=(index%6*7,index//6*17,0)
 bpy.context.scene.cursor.location=(0,0,0)
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'asset-library.blend'))
+hero_metadata=json.loads((OUT/'hero-metadata.json').read_text())
+manifest['models']['riderSkinned']={'file':'riderSkinned.glb','triangles':hero_metadata['triangles'],'source':'assets/blender/rider-hero.blend',
+    'bones':hero_metadata['bones'],'maxInfluences':hero_metadata['maxInfluences'],'clips':[c['name'] for c in hero_metadata['clips']]}
+rock_scene=bpy.data.scenes.new('RockKit');rock_scene.unit_settings.system='METRIC';main_scene=bpy.context.scene
+for i in range(6):
+    kit=assets['rock'+chr(65+i)];kit.location=(i%3*8,i//3*10,0)
+    for obj in hierarchy(kit):rock_scene.collection.objects.link(obj)
+bpy.context.window.scene=rock_scene;bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'rock-kit.blend'))
+bpy.context.window.scene=main_scene;bpy.data.scenes.remove(rock_scene)
 # Save a scene that opens on the actual background layout, with linked editable prototypes.
 main_scene=bpy.context.scene;valley_scene=bpy.data.scenes.new('ValleyLayout');valley_scene.unit_settings.system='METRIC'
 assets['valley'].location=(0,0,0)

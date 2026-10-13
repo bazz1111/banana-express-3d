@@ -5,6 +5,8 @@ import {roadAt,roadPosition,roadQuaternion,frameQuaternion,cyclePosition,rebaseP
 
 export interface CollisionSurface {vertices:Float32Array;indices:Uint32Array;segment?:number}
 interface Pose {position:XYZ;rotation:XYZW}
+export interface DebrisPart extends Pose {name:string;scale:XYZ;halfExtents:[number,number,number];mass:number}
+export const DEBRIS_LIMIT=12,DEBRIS_LIFETIME=3;
 let initialized:Promise<void>|undefined;
 // m/s per unit mass. A lower, rolling arc keeps the flip inside the chase camera for ~1 s instead of leaving the top edge.
 export const KICK_IMPULSE=Object.freeze({outward:5.5,up:7.5,forward:6,roll:5.5});
@@ -31,6 +33,8 @@ export class ScenePhysics {
   readonly world:World;
   readonly player:RigidBody;
   readonly vehicles=new Map<string,RigidBody>();
+  readonly debris=new Map<string,{vehicleId:string;partName:string;body:RigidBody;scale:XYZ;age:number}>();
+  private debrisSerial=0;
   private course:Course;
   private roadRoots:RigidBody[]=[];
   private roadHeadings=new Map<string,number>();
@@ -52,7 +56,7 @@ export class ScenePhysics {
         RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES_TWO_SIDED).setFriction(.8).setRestitution(.12),root);
     }
     this.player=this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased());
-    this.world.createCollider(RAPIER.ColliderDesc.cuboid(.35,1.35,1.05).setTranslation(0,1.35,0).setSensor(true),this.player);
+    this.world.createCollider(RAPIER.ColliderDesc.cuboid(.35,1.35,1.05).setTranslation(0,1.35,0).setSensor(true).setCollisionGroups(0x0008ffff),this.player);
     this.moveGround(0);
   }
   private moveGround(origin:number){
@@ -76,6 +80,7 @@ export class ScenePhysics {
   private reconcile(g:GameState){
     const ids=new Set(g.obstacles.filter(o=>o.type==='truck'||o.type==='car').map(o=>o.id));
     for(const [id,body]of this.vehicles)if(!ids.has(id)){
+      this.clearDebris(id);
       this.world.removeRigidBody(body);this.vehicles.delete(id);this.launched.delete(id);this.roadHeadings.delete(id);
     }
     for(const o of g.obstacles){
@@ -84,15 +89,44 @@ export class ScenePhysics {
       const body=this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased()
         .setLinearDamping(.12).setAngularDamping(.18).setCcdEnabled(true));
       this.world.createCollider(RAPIER.ColliderDesc.cuboid(truck?1.3:.9,truck?1.3:.65,truck?2.45:1.7)
-        .setTranslation(0,truck?1.3:.65,0).setMass(truck?4000:1100).setFriction(.65).setRestitution(.18),body);
+        .setTranslation(0,truck?1.3:.65,0).setMass(truck?4000:1100).setFriction(.65).setRestitution(.18).setCollisionGroups(0x0004ffff),body);
       snap(body,pose(g,o));this.vehicles.set(o.id,body);this.roadHeadings.set(o.id,roadAt(this.course,o.s).yaw);
     }
   }
   reset(g:GameState){
+    this.clearDebris();this.debrisSerial=0;
     for(const body of this.vehicles.values())this.world.removeRigidBody(body);
     this.vehicles.clear();this.launched.clear();this.roadHeadings.clear();this.accumulator=0;this.lastDistance=g.s;
     this.moveGround(g.s);this.reconcile(g);snap(this.player,pose(g));
     this.world.propagateModifiedBodyPositionsToColliders();
+  }
+  private clearDebris(vehicleId?:string){
+    for(const [id,d]of this.debris)if(vehicleId===undefined||d.vehicleId===vehicleId){
+      this.world.removeRigidBody(d.body);this.debris.delete(id);
+    }
+  }
+  // WORLD poses come from the authored model; debris only collides with the ground.
+  spawnDebris(vehicleId:string,parts:DebrisPart[]){
+    const parent=this.vehicles.get(vehicleId),ids:string[]=[];
+    if(!parent)return ids;
+    for(const part of parts){
+      if(this.debris.size>=DEBRIS_LIMIT)break;
+      if([...this.debris.values()].some(d=>d.vehicleId===vehicleId&&d.partName===part.name))continue;
+      const dimensions=part.halfExtents.map((v,i)=>v*Math.abs([part.scale.x,part.scale.y,part.scale.z][i]));
+      if(![...dimensions,part.mass].every(v=>Number.isFinite(v)&&v>0))continue;
+      const body=this.world.createRigidBody(RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(part.position.x,part.position.y,part.position.z).setRotation(part.rotation)
+        .setLinearDamping(.18).setAngularDamping(.35).setCcdEnabled(true));
+      this.world.createCollider(RAPIER.ColliderDesc.cuboid(dimensions[0],dimensions[1],dimensions[2])
+        .setMass(part.mass).setFriction(.7).setRestitution(.18).setCollisionGroups(0x00020001),body);
+      // Follow the mother's motion, with a small scatter instead of another full truck impulse.
+      const v=parent.linvel(),a=parent.angvel(),index=ids.length;
+      body.setLinvel({x:v.x+(index%2?1:-1)*1.5,y:v.y+1.2,z:v.z+(index%3-1)*.8},true);
+      body.setAngvel({x:a.x+1,y:a.y+(index%2?1:-1),z:a.z+.8},true);
+      const id=`${vehicleId}:debris:${this.debrisSerial++}`;
+      this.debris.set(id,{vehicleId,partName:part.name,body,scale:{...part.scale},age:0});ids.push(id);
+    }
+    return ids;
   }
   // carry: rider speed, so the launched vehicle tumbles ahead of the chase camera instead of falling behind it.
   release(id:string,side:1|-1,carry=0){
@@ -112,6 +146,7 @@ export class ScenePhysics {
     if(g.s!==this.lastDistance){
       this.rebaseBody(this.player,this.lastDistance,g.s);
       for(const body of this.vehicles.values())this.rebaseBody(body,this.lastDistance,g.s);
+      for(const d of this.debris.values())this.rebaseBody(d.body,this.lastDistance,g.s);
     }
     this.lastDistance=g.s;this.moveGround(g.s);this.reconcile(g);
     const targets:Array<{body:RigidBody;start:XYZ;startRotation:XYZW;target:Pose}>=[];
@@ -141,6 +176,10 @@ export class ScenePhysics {
         body.setNextKinematicRotation(blendRotation(startRotation,target.rotation,t));
       }
       this.world.step();
+      for(const [id,d]of this.debris){
+        d.age+=FIXED_STEP;
+        if(d.age+1e-9>=DEBRIS_LIFETIME){this.world.removeRigidBody(d.body);this.debris.delete(id);}
+      }
     }
     this.accumulator=Math.max(0,this.accumulator-steps*FIXED_STEP);
   }

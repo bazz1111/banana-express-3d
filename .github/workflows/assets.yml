@@ -1,0 +1,101 @@
+name: Blender asset rebuild
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-*.py'
+      - 'scripts/test-*.py'
+      - 'scripts/*assets.mjs'
+      - 'scripts/check-compressed.mjs'
+      - 'scripts/asset-fingerprint.mjs'
+      - 'assets/blender/**'
+      - 'assets/export/**'
+      - 'public/assets/**'
+      - 'tests/fixtures/blender/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/assets.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-*.py'
+      - 'scripts/test-*.py'
+      - 'scripts/*assets.mjs'
+      - 'scripts/check-compressed.mjs'
+      - 'scripts/asset-fingerprint.mjs'
+      - 'assets/blender/**'
+      - 'assets/export/**'
+      - 'public/assets/**'
+      - 'tests/fixtures/blender/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/assets.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 1'
+
+jobs:
+  rebuild:
+    # Canonical assets are authored with the official macOS ARM64 build.
+    # Linux x64 changed libm/Blender floats and exporter ordering in 23 GLBs;
+    # retain exact decoded fingerprints instead of broadening tolerances.
+    # https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      BLENDER_VERSION: 5.2.2
+      # https://download.blender.org/release/Blender5.2/blender-5.2.2.sha256
+      BLENDER_SHA256: dc4125399b8bfefe283cc1624d6cfc7809d1cac20ace51072127eb371f31f210
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/cache@v4
+        with:
+          path: ~/blender
+          key: blender-5.2.2-macos-arm64-dc4125399b8bfefe
+      - name: Install verified official Blender release
+        run: |
+          test "$(uname -m)" = arm64
+          BLENDER_BIN="$HOME/blender/Blender.app/Contents/MacOS/Blender"
+          if ! test -x "$BLENDER_BIN"; then
+            curl --fail --location --retry 3 --output "$RUNNER_TEMP/blender.dmg" "https://download.blender.org/release/Blender5.2/blender-${BLENDER_VERSION}-macos-arm64.dmg"
+            printf '%s  %s\n' "$BLENDER_SHA256" "$RUNNER_TEMP/blender.dmg" | shasum -a 256 --check --strict
+            mkdir -p "$RUNNER_TEMP/blender-volume"
+            hdiutil attach "$RUNNER_TEMP/blender.dmg" -mountpoint "$RUNNER_TEMP/blender-volume" -nobrowse -readonly
+            trap 'hdiutil detach "$RUNNER_TEMP/blender-volume"' EXIT
+            mkdir -p "$HOME/blender"
+            ditto "$RUNNER_TEMP/blender-volume/Blender.app" "$HOME/blender/Blender.app"
+          fi
+          "$BLENDER_BIN" --version
+          "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python-expr "import bpy,numpy,platform; assert bpy.app.version == (5,2,2); assert platform.system() == 'Darwin' and platform.machine() == 'arm64'; print('numpy',numpy.__version__)"
+      - name: Rebuild and verify native Blender assets
+        run: |
+          BLENDER_BIN="$HOME/blender/Blender.app/Contents/MacOS/Blender"
+          "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python scripts/test-blender.py
+          for script in scripts/test-*.py; do
+            if test "$script" != scripts/test-blender.py; then
+              "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python "$script"
+            fi
+          done
+      - run: pnpm check:assets
+      - name: Compare decoded fingerprints with committed canonical assets
+        run: pnpm assets:fingerprint
+      - name: Compress and verify committed runtime assets
+        run: |
+          pnpm assets:compress
+          git diff --exit-code -- public/assets
+          test -z "$(git ls-files --others --exclude-standard public/assets)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rebuilt-blender-assets
+          path: |
+            assets/export
+            public/assets
+            artifacts/asset-fingerprint-diff.json
+            artifacts/blender-*.json

@@ -75,7 +75,9 @@ def plane_height(tri,x,y):
 
 def full_cliff_bottom(obj,land):
     obj.data.calc_loop_triangles()
-    caps=[t for t in obj.data.loop_triangles if all(i<12 for i in t.vertices)]
+    cap_count=int(obj.get('groundCapVertices',12))
+    assert cap_count>=3, ('Invalid closed rock footprint',obj.name)
+    caps=[t for t in obj.data.loop_triangles if all(i<cap_count for i in t.vertices)]
     expected=coverage=0;gaps=[];patches=0
     for t in caps:
         bottom=[tuple(obj.matrix_world@obj.data.vertices[i].co) for i in t.vertices]
@@ -94,7 +96,7 @@ def full_cliff_bottom(obj,land):
                 coverage+=clipped_area;patches+=1
                 gaps.extend(p[2]-plane_height(tri,p[0],p[1]) for p in poly)
     result={'name':obj.name,'bottomCapTriangles':len(caps),'patches':patches,'projectedBottomArea':expected,'coveredArea':coverage,'coverageFraction':coverage/expected if expected else 0,'maxBottomGap':max(gaps) if gaps else None,'minBottomGap':min(gaps) if gaps else None}
-    result['pass']=bool(gaps) and len(caps)==10 and abs(coverage/expected-1)<2e-4 and max(gaps)<-.0998
+    result['pass']=bool(gaps) and len(caps)==cap_count-2 and abs(coverage/expected-1)<2e-4 and max(gaps)<-.1498
     return result
 
 for source,root_name in [('endless-course.blend','EndlessRoadCourse'),('valley-layout.blend','EndlessValley')]:
@@ -108,8 +110,8 @@ for source,root_name in [('endless-course.blend','EndlessRoadCourse'),('valley-l
     grounds=[o for o in all_objects if o.type=='MESH' and (o.get('surfaceRole')=='terrain' or o.name=='ValleyTerrain')]
     land=terrain(grounds)
     bases=[o for o in all_objects if o.type=='MESH' and o.get('building')]
-    cliffs=[o for o in all_objects if o.type=='MESH' and o.get('kind')=='cliff']
-    distant_hills=[o for o in all_objects if o.type=='MESH' and o.parent and o.parent.name=='ValleyFoothills']
+    cliffs=[o for o in all_objects if o.type=='MESH' and (o.get('kind')=='cliff' or str(o.get('kind','')) in ['rock'+chr(65+i) for i in range(6)])]
+    distant_hills=[o for o in all_objects if o.type=='MESH' and o.parent and o.parent.name in ('ValleyFoothills','ValleyFoothillsB')]
     distant_land=terrain(distant_hills)
     hill_land={o.name:terrain([o]) for o in distant_hills}
     foundations=[]
@@ -129,6 +131,7 @@ for source,root_name in [('endless-course.blend','EndlessRoadCourse'),('valley-l
     print('INDEPENDENT_NATIVE_SOURCE',source,'foundations',len(foundations),'failed',len([x for x in foundations if not x['pass']]),'cliffs',len(cliff_bases),'failed',len([x for x in cliff_bases if not x['pass']]))
 report['failures']=[{'source':s['file'],**r} for s in report['sources'] for r in s['foundations']+s['cliffs'] if not r['pass']]
 report['pass']=not report['failures']
+OUT.parent.mkdir(parents=True,exist_ok=True)
 OUT.write_text(json.dumps(report,indent=2)+'\n')
 print('INDEPENDENT_NATIVE_REPORT',json.dumps({'pass':report['pass'],'failures':report['failures'],'out':str(OUT)}))
 assert report['pass'], 'Native scenery has unsupported foundation or cliff surfaces; see '+str(OUT)

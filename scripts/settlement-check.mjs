@@ -23,7 +23,7 @@ try{
         const on=pixels();
         const batches=groups=>v.valleyTiles.flatMap(t=>groups.map(name=>t.getObjectByName(v.valleyBatches[name].name)));
         const town=[...batches(['ValleyVillageHouse','ValleyVillageLonghouse','ValleyTower','ValleyFoundations']),...['ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower','ValleyPanoramaFoundations'].map(n=>v.valleyBatches[n])];town.forEach(m=>m.visible=false);const noTown=pixels();town.forEach(m=>m.visible=true);
-        const woods=[...batches(['ValleyForest','ValleyPalms']),v.valleyBatches.ValleyPanoramaForest];woods.forEach(m=>m.visible=false);const noForest=pixels();woods.forEach(m=>m.visible=true);pixels();
+        const woods=[...batches(['ValleyForest','ValleyForestFar','ValleyPalms']),v.valleyBatches.ValleyPanoramaForest];woods.forEach(m=>m.visible=false);const noForest=pixels();woods.forEach(m=>m.visible=true);pixels();
         const changed=off=>{let n=0;for(let i=0;i<on.length;i+=4)if(Math.abs(on[i]-off[i])+Math.abs(on[i+1]-off[i+1])+Math.abs(on[i+2]-off[i+2])>5)n++;return n;};
         return {distance:s,renderDistance:g.s,width:w,height:h,townPixels:changed(noTown),forestPixels:changed(noForest),buildings:v.valleyBatches.ValleyFoundations.count,trees:v.valleyBatches.ValleyForest.count,panoramaBuildings:v.valleyBatches.ValleyPanoramaFoundations.count,panoramaTrees:v.valleyBatches.ValleyPanoramaForest.count};
       },distance);

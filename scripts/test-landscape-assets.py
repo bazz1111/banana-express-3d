@@ -36,12 +36,12 @@ open_source('endless-course.blend')
 if '--baseline' in sys.argv:
     assert not BASE.exists(), 'Keep the original lane baseline'
     BASE.write_text(json.dumps({'surfaces': protected_surfaces(),
-        'courseHash': hashlib.sha256((ROOT / 'public/assets/course.json').read_bytes()).hexdigest()}, indent=2))
+        'courseHash': hashlib.sha256((ROOT / 'assets/export/course.json').read_bytes()).hexdigest()}, indent=2))
     print('LANDSCAPE_NATIVE_BASELINE_SAVED', len(protected_surfaces()))
 else:
     before = json.loads(BASE.read_text())
     assert before['surfaces'] == protected_surfaces(), 'Art edit changed the playable lane, UV or guards'
-    assert before['courseHash'] == hashlib.sha256((ROOT / 'public/assets/course.json').read_bytes()).hexdigest()
+    assert before['courseHash'] == hashlib.sha256((ROOT / 'assets/export/course.json').read_bytes()).hexdigest()
     vertices, faces = [], []
     for chunk in bpy.data.objects['EndlessRoadCourse'].children:
         for obj in chunk.children:
@@ -50,7 +50,7 @@ else:
                 vertices.extend(obj.matrix_world @ v.co for v in obj.data.vertices)
                 faces.extend(tuple(offset + i for i in p.vertices) for p in obj.data.polygons)
     bvh = BVHTree.FromPolygons(vertices, faces, all_triangles=True)
-    course = json.loads((ROOT / 'public/assets/course.json').read_text())
+    course = json.loads((ROOT / 'assets/export/course.json').read_text())
     bank = []
     for s in (40, 200, 400, 800, 1000, 1400, 1560):
         sample = course['points'][s // 2]
@@ -62,25 +62,28 @@ else:
     failures = []
     if not all(p['heightAboveLane'] >= 5 for p in bank):
         failures.append('The right bank is still a shallow grass slope instead of the reference red-rock wall')
-    cliffs = [o for c in bpy.data.objects['EndlessRoadCourse'].children for o in c.children if o.get('kind') == 'cliff']
+    cliffs = [o for c in bpy.data.objects['EndlessRoadCourse'].children for o in c.children if o.get('kind') in ['rock'+chr(65+i) for i in range(6)]]
     heights = [max(v.co.z for v in o.data.vertices) - min(v.co.z for v in o.data.vertices) for o in cliffs]
     if not heights or max(heights) > 8:
         failures.append('The separate red rocks still form tall isolated pillars')
     open_source('valley-layout.blend')
     rings = {}
-    for name, minimum in (('ValleyMountains', 20), ('ValleyFoothills', 16), ('ValleyClouds', 20)):
-        group = bpy.data.objects.get(name)
-        if not group:
-            failures.append('Missing native panorama group ' + name)
+    for names, count in [(('ValleyMountains','ValleyMountainsB'),24), (('ValleyMidMountains','ValleyMidMountainsB'),16), (('ValleyFoothills','ValleyFoothillsB'),18), (('ValleyClouds','ValleyCloudsB','ValleyCloudsC'),24)]:
+        name=names[0]
+        groups=[bpy.data.objects.get(n) for n in names]
+        if not all(groups):
+            failures.append('Missing native panorama variant in ' + name)
             continue
-        meshes = [o for o in group.children if o.type == 'MESH']
+        meshes = [o for group in groups for o in group.children if o.type == 'MESH']
+        if any(len({o.data.as_pointer() for o in group.children if o.type=='MESH'})!=1 for group in groups):
+            failures.append(name+' discarded sharing within a variant')
         angles = sorted(math.atan2(o.location.x, -o.location.y) % math.tau for o in meshes)
         gaps = [angles[(i + 1) % len(angles)] + (math.tau if i == len(angles) - 1 else 0) - angles[i] for i in range(len(angles))]
         max_gap = max(gaps) if gaps else math.tau
         geometry_count = len({o.data.as_pointer() for o in meshes})
         rings[name] = {'instances': len(meshes), 'maxAngularGap': max_gap, 'sharedGeometries': geometry_count,
                        'positiveScale': all(min(o.scale) > 0 for o in meshes)}
-        if len(meshes) < minimum or max_gap > .41 or geometry_count != 1 or not rings[name]['positiveScale']:
+        if len(meshes) != count or max_gap > .41 or geometry_count != len(names) or not rings[name]['positiveScale']:
             failures.append('The native ' + name + ' leaves a panorama gap or discards sharing')
     report = {'status': 'pass' if not failures else 'fail', 'protectedSurfaces': len(before['surfaces']),
               'bank': bank, 'cliffHeights': heights, 'rings': rings, 'failures': failures,
