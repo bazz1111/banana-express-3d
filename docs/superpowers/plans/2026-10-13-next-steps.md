@@ -66,7 +66,7 @@
 **Files:** 主角/环境/货物校验、`verification/next-steps-*`、README、BLOCKERS。
 - [x] 所有单元测试、类型检查、规范资产检查、压缩检查、生产构建。
 - [x] Blender源和运行GLB对应，实际完整跑局/取景/动画/触控/资源有界检查。
-- [ ] 更新每个建议状态：完成、部分完成、待真实设备或参考确认；提交可审查 PR，附改前后图。
+- [x] 更新每个建议状态：完成、部分完成、待真实设备或参考确认；提交可审查 PR #3，附改前后图。
 
 ## Rulings
 
@@ -77,4 +77,4 @@
 
 ## Integration evidence
 
-See `docs/NEXT-STEPS-RESULTS.md` and `verification/next-*`. Full native repeat and strict fingerprints pass;94unit tests and production build pass.2rig ×3viewport,48Qwindows/2736frames,876cargo samples and4actual truck framing sweeps pass. Original art pixel thresholds remain RED in some27samples and are reported, not loosened; marking implementation/checking steps does not mark overall image-A fidelity achieved. Performance comparison completed: peak1.398M/0.795M triangles and183/123 GL calls;180Hz M6 results, long stalls retained. Publication remains pending.
+See `docs/NEXT-STEPS-RESULTS.md` and `verification/next-*`. Full local native repeat and strict fingerprints pass;94unit tests and production build pass.2rig ×3viewport,48Qwindows/2736frames,876cargo samples and4actual truck framing sweeps pass. Original art pixel thresholds remain RED in some27samples and are reported, not loosened; marking implementation/checking steps does not mark overall image-A fidelity achieved. Performance comparison completed: peak1.398M/0.795M triangles and183/123 GL calls;180Hz M6 results, long stalls retained. Published draft [PR #3](https://github.com/bazz1111/banana-express-3d/pull/3). Initial Linux x64 native rebuild changed 32 course yaw values and 23 GLB fingerprints; canonical rebuild now pins macOS ARM64 while retaining all exact checks. Remote CI outcome is tracked on the PR.

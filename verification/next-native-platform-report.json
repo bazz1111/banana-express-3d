@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "run": "https://github.com/bazz1111/banana-express-3d/actions/runs/38444906297",
+  "commit": "9c7291bb25685d3b5c90752e6cec354991ce4961",
+  "local": {
+    "os": "macOS 27.0.1",
+    "architecture": "arm64",
+    "blender": "5.2.2 LTS"
+  },
+  "firstCI": {
+    "os": "ubuntu-24.04",
+    "architecture": "x64",
+    "blender": "5.2.2 LTS",
+    "status": "failed",
+    "failure": "scripts/test-landscape-assets.py: original course.json SHA256 differed after regeneration"
+  },
+  "course": {
+    "differentValues": 32,
+    "fields": [
+      "yaw"
+    ],
+    "maxAbsoluteDifference": 2.220446049250313e-16,
+    "protectedHash": "729f6a7ecddbfef8b28566d8694d9a7fd3c8b75b5707f528195c82282687c169",
+    "linuxHash": "15cf37b72267c4e3bb69061fc232e986e7e77608855e4e6f123db513071d93a7"
+  },
+  "glb": {
+    "differentFingerprints": 23,
+    "files": [
+      "banana.glb",
+      "bananaB.glb",
+      "bananaC.glb",
+      "bananaD.glb",
+      "bananaRack.glb",
+      "bicycle.glb",
+      "boost.glb",
+      "car.glb",
+      "forestTree.glb",
+      "forestTreeLOD1.glb",
+      "goat.glb",
+      "looseBanana.glb",
+      "riderSkinned.glb",
+      "roadCourse.glb",
+      "roadTile.glb",
+      "shield.glb",
+      "sign.glb",
+      "sky.glb",
+      "stall.glb",
+      "tree.glb",
+      "truck.glb",
+      "valley.glb",
+      "villageHouse.glb"
+    ],
+    "scope": "Decoded-buffer and glTF metadata fingerprints; differences include floating values, vertex/channel ordering and derived AO hashes. This is not a vertex-to-vertex physical displacement measurement."
+  },
+  "nativeChecksBeforeFailure": [
+    "standing support",
+    "obstacle dimensions",
+    "seated/standing motion",
+    "valley layout and foundations",
+    "curved road support and seams",
+    "hero assets",
+    "exact protected road and guard surface hashes"
+  ],
+  "resolution": {
+    "canonicalRunner": "macos-26 (ARM64)",
+    "officialBlenderSHA256": "dc4125399b8bfefe283cc1624d6cfc7809d1cac20ace51072127eb371f31f210",
+    "runnerReference": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+    "releaseChecksums": "https://download.blender.org/release/Blender5.2/blender-5.2.2.sha256",
+    "checks": "Original protected course/road/guard baselines and exact decoded fingerprints unchanged; pin the native authoring platform rather than introduce tolerances.",
+    "linuxRole": "Unit tests, committed fingerprints, lossless compression, build and browser smoke remain on Ubuntu.",
+    "crossPlatformBitIdentity": false,
+    "remoteOutcome": "See current PR checks; this file records the initial failure and diagnosis."
+  }
+}
