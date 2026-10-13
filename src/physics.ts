@@ -6,6 +6,8 @@ import {roadAt,roadPosition,roadQuaternion,frameQuaternion,cyclePosition,rebaseP
 export interface CollisionSurface {vertices:Float32Array;indices:Uint32Array;segment?:number}
 interface Pose {position:XYZ;rotation:XYZW}
 let initialized:Promise<void>|undefined;
+// m/s per unit mass. A lower, rolling arc keeps the flip inside the chase camera for ~1 s instead of leaving the top edge.
+export const KICK_IMPULSE=Object.freeze({outward:5.5,up:7.5,forward:6,roll:5.5});
 const zero={x:0,y:0,z:0};
 const pose=(g:GameState,o?:ObstacleState):Pose=>{
   const q=roadQuaternion(g.course,o?.s??g.s,g.s);
@@ -92,14 +94,16 @@ export class ScenePhysics {
     this.moveGround(g.s);this.reconcile(g);snap(this.player,pose(g));
     this.world.propagateModifiedBodyPositionsToColliders();
   }
-  release(id:string,side:1|-1){
+  // carry: rider speed, so the launched vehicle tumbles ahead of the chase camera instead of falling behind it.
+  release(id:string,side:1|-1,carry=0){
     const body=this.vehicles.get(id);if(!body||this.launched.has(id))return;
     const yaw=(this.roadHeadings.get(id)??0)-roadAt(this.course,this.lastDistance).yaw;
     const c=Math.cos(yaw),s=Math.sin(yaw);
     body.setEnabled(true);body.setBodyType(RAPIER.RigidBodyType.Dynamic,true);
     body.recomputeMassPropertiesFromColliders();const mass=body.mass(),inertia=body.principalInertia();
-    body.applyImpulse({x:(-side*9*c+6*s)*mass,y:12*mass,z:(side*9*s+6*c)*mass},true);
-    const tx=inertia.x*1.2,tz=inertia.z*4.4*side;
+    const forward=KICK_IMPULSE.forward+Math.max(0,carry),out=KICK_IMPULSE.outward;
+    body.applyImpulse({x:(-side*out*c+forward*s)*mass,y:KICK_IMPULSE.up*mass,z:(side*out*s+forward*c)*mass},true);
+    const tx=inertia.x*1.2,tz=inertia.z*KICK_IMPULSE.roll*side;
     body.applyTorqueImpulse({x:tx*c+tz*s,y:inertia.y*1.6*side,z:-tx*s+tz*c},true);
     this.launched.add(id);
   }
@@ -116,7 +120,7 @@ export class ScenePhysics {
     for(const o of g.obstacles){
       const body=this.vehicles.get(o.id);if(!body)continue;
       this.roadHeadings.set(o.id,roadAt(this.course,o.s).yaw);
-      if(o.kicked&&!this.launched.has(o.id)){snap(body,pose(g,o));this.release(o.id,o.kickSide??1);}
+      if(o.kicked&&!this.launched.has(o.id)){snap(body,pose(g,o));this.release(o.id,o.kickSide??1,g.speed);}
       if(this.launched.has(o.id)){body.setEnabled(o.flight<3);continue;}
       const nearby=o.s-g.s>-60&&o.s-g.s<240;
       if(nearby&&!body.isEnabled())snap(body,pose(g,o));

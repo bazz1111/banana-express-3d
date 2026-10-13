@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import RAPIER from '@dimforge/rapier3d-compat';
 import {createGame,roadAt} from '../src/game.ts';
-import {ScenePhysics} from '../src/physics.ts';
+import {ScenePhysics,KICK_IMPULSE as K} from '../src/physics.ts';
 
 const course={mode:'endless',seed:2817,procedural:false,
   obstacles:[{id:'truck',type:'truck',s:6,lane:1.3,speed:0}]};
@@ -168,7 +168,7 @@ test('kick impulses follow the nearby vehicle road direction on either side',asy
     const p=await ScenePhysics.create(curve,[]),g=createGame(curve);g.phase='racing';g.s=2;
     try{
       p.reset(g);g.obstacles[0].kicked=true;g.obstacles[0].kickSide=side;p.sync(g,0);
-      nearObject(p.vehicles.get('car').linvel(),{x:(-side*9+6)*Math.SQRT1_2,y:12,z:(side*9+6)*Math.SQRT1_2});
+      nearObject(p.vehicles.get('car').linvel(),{x:(-side*K.outward+K.forward)*Math.SQRT1_2,y:K.up,z:(side*K.outward+K.forward)*Math.SQRT1_2});
     }finally{p.dispose();}
   }
 });
@@ -183,7 +183,7 @@ test('oncoming vehicles keep their reverse pose when released while the kick sti
         z:Math.cos(Math.PI/8)*Math.sin(pitch),w:-Math.sin(Math.PI/8)*Math.cos(pitch)});
       const before=body.rotation();g.obstacles[0].kicked=true;g.obstacles[0].kickSide=side;p.sync(g,0);
       nearObject(body.rotation(),before);
-      nearObject(body.linvel(),{x:(-side*9+6)*Math.SQRT1_2,y:12,z:(side*9+6)*Math.SQRT1_2});
+      nearObject(body.linvel(),{x:(-side*K.outward+K.forward)*Math.SQRT1_2,y:K.up,z:(side*K.outward+K.forward)*Math.SQRT1_2});
     }finally{p.dispose();}
   }
 });
@@ -216,5 +216,25 @@ test('unsegmented legacy ground stays fixed even when a curved rider origin chan
     assert.equal(p.world.bodies.getAll().filter(b=>b.isFixed()).length,0);
     const collider=p.world.colliders.getAll().find(c=>c.shape.type===RAPIER.ShapeType.TriMesh);
     nearObject(collider.translation(),{x:0,y:0,z:0});nearObject(collider.rotation(),{x:0,y:0,z:0,w:1});
+  }finally{p.dispose();}
+});
+
+test('a kicked vehicle carries the rider speed forward so it tumbles ahead of the chase camera',async()=>{
+  for(const side of [-1,1]){
+    const p=await ScenePhysics.create(curve,[]),g=createGame(curve);g.phase='racing';g.s=2;g.speed=20;
+    try{
+      p.reset(g);g.obstacles[0].kicked=true;g.obstacles[0].kickSide=side;p.sync(g,0);
+      nearObject(p.vehicles.get('car').linvel(),{x:(-side*K.outward+K.forward+20)*Math.SQRT1_2,y:K.up,z:(side*K.outward+K.forward+20)*Math.SQRT1_2});
+    }finally{p.dispose();}
+  }
+});
+
+test('a charged truck kick stays low enough to remain in the chase camera while it rolls',async()=>{
+  const p=await ScenePhysics.create(course,[ground]);const g=racing();g.speed=14;
+  try{
+    p.reset(g);g.obstacles[0].kicked=true;g.obstacles[0].kickSide=1;
+    let peak=0;for(let i=0;i<60;i++){p.sync(g,1/60);peak=Math.max(peak,p.vehicles.get('truck').worldCom().y);}
+    assert.ok(peak>3.5&&peak<6,`Centre-of-mass apex must stay on screen, got ${peak}`);
+    assert.ok(Math.hypot(...Object.values(p.vehicles.get('truck').angvel()))>1,'The truck must still tumble');
   }finally{p.dispose();}
 });
