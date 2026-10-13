@@ -1,0 +1,37 @@
+{
+  "seconds": 25,
+  "viewport": "1280x720",
+  "tiers": {
+    "high": {
+      "loadMs": 4436,
+      "transferMB": 20.726478576660156,
+      "frames": 18,
+      "fps": 0.7190709603192674,
+      "p50": 1383.2000000000044,
+      "p95": 1516.5999999999985,
+      "p99": 1516.5999999999985,
+      "quality": "high",
+      "distance": 21.599999999999955,
+      "phase": "racing",
+      "memoryMB": 57.64181423187256,
+      "geometries": 80,
+      "textures": 6
+    },
+    "low": {
+      "loadMs": 4346,
+      "transferMB": 20.726478576660156,
+      "frames": 24,
+      "fps": 0.9697361509555943,
+      "p50": 1000,
+      "p95": 1200,
+      "p99": 1233.300000000003,
+      "quality": "low",
+      "distance": 28.79999999999993,
+      "phase": "racing",
+      "memoryMB": 57.51004886627197,
+      "geometries": 80,
+      "textures": 4
+    }
+  },
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+}
