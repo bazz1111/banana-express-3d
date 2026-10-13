@@ -98,6 +98,8 @@ GAME_URL=http://127.0.0.1:4173/ pnpm smoke
 
 浏览器QA需另装Playwright；设置 `PLAYWRIGHT_MODULE` 可使用已有ESM入口。冒烟支持 `PLAYWRIGHT_BROWSER=chromium|firefox|webkit`；Chromium默认Chrome，空 `PLAYWRIGHT_CHANNEL` 使用安装的Playwright Chromium。Firefox/WebKit无WebGL2时报告明确跳过，不冒称兼容通过。竖屏Chromium检查实际持续触控。
 
+冒烟默认高档；软件GL的CI明确设置 `SMOKE_QUALITY=low`，高档实机测量见性能报告。临时飞踢夹具在真实松手输入送达前冻结位置，再恢复正常规则并要求命中，避免慢速软件渲染期间测试车辆已被越过。报告记录档位、浏览器版本和此夹具冻结；1.2秒松手延迟的失败/通过回归见 `verification/next-smoke-latency-report.json`。
+
 完整玩法、HUD/输入、WebGL恢复、路面周期、动态货物和角色投影分别使用 `browser-check.mjs`、`fidelity-check.mjs`、`context-check.mjs`、`valley-check.mjs`、`cargo-clearance-check.mjs`、`hero-check.mjs`、`kick-camera-check.mjs`。注入100蕉、距离或盾的夹具都单独标注，不能当玩家成绩或真机性能。
 
 ```sh

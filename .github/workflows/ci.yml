@@ -42,6 +42,9 @@ jobs:
           GAME_URL: http://127.0.0.1:4173/
           SHOT_DIR: artifacts/shots/${{ matrix.browser }}
           SHOT_SIZES: 960x540:desktop,390x844:touch
+          # CPU software GL validates gameplay at the shipped low tier; GPU/high
+          # measurements and full framing/cargo checks are separate artifacts.
+          SMOKE_QUALITY: low
         run: |
           pnpm preview --port 4173 --strictPort > preview.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/ > /dev/null && break; sleep 1; done

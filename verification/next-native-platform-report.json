@@ -69,6 +69,14 @@
     "checks": "Original protected course/road/guard baselines and exact decoded fingerprints unchanged; pin the native authoring platform rather than introduce tolerances.",
     "linuxRole": "Unit tests, committed fingerprints, lossless compression, build and browser smoke remain on Ubuntu.",
     "crossPlatformBitIdentity": false,
-    "remoteOutcome": "See current PR checks; this file records the initial failure and diagnosis."
+    "remoteOutcome": "See current PR checks; this file records the initial failure and diagnosis.",
+    "verifiedCanonicalRun": {
+      "url": "https://github.com/bazz1111/banana-express-3d/actions/runs/38447447376",
+      "commit": "93daef2b109c656ca1a40f82ad3470a9ace6fbdc",
+      "status": "success",
+      "decodedFingerprints": 62,
+      "nativeChecks": "All ten readonly native checks plus full default rebuild",
+      "compressedRuntimeDiff": "No changes"
+    }
   }
 }
