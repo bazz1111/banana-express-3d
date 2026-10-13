@@ -75,8 +75,8 @@ export class GameView {
   constructor(canvas,onProgress){
     this.canvas=canvas;this.onProgress=onProgress;this.assets={};this.obstacleModels=new Map();this.pool=new Map();
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-    this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure=1.12;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFShadowMap;
+    this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.NeutralToneMapping;
+    this.renderer.toneMappingExposure=1.0;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFShadowMap;
     this.renderer.autoClear=false;
     this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#8dcff1');this.scene.fog=new THREE.Fog('#c3e0e6',110,460);
     this.camera=new THREE.PerspectiveCamera(52,1,.1,1800);this.panoramaCamera=this.camera.clone();this.panoramaCamera.layers.set(1);
@@ -207,7 +207,7 @@ export class GameView {
     for(const [group,mesh] of Object.entries(this.valleyBatches))if(!panoramaGroups.includes(group))valleyTile.add(mesh);
     const nextValley=valleyTile.clone(true);nextValley.name='ValleyTile_1';this.scene.add(nextValley);this.valleyTiles=[valleyTile,nextValley];
     this.farPanorama=new THREE.Group();this.scene.add(this.farPanorama);this.farPanorama.add(...panoramaGroups.map(group=>this.valleyBatches[group]));
-    this.panoramaFog=new THREE.Fog('#9fcde0',480,1750);
+    this.panoramaFog=new THREE.Fog('#a8d4e6',560,2000);
     this.valleyBatches.ValleyClouds.receiveShadow=false;
     this.player=new THREE.Group();this.bike=this.clone('bicycle');this.rider=this.clone('rider');this.player.add(this.bike,this.rider);this.scene.add(this.player);
     this.wheels=['WheelFront','WheelRear'].map(n=>this.bike.getObjectByName(n));this.crank=this.bike.getObjectByName('Crank');
