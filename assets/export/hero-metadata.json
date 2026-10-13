@@ -1,0 +1,205 @@
+{
+  "source": "rider-hero.blend",
+  "reference": "style-a.png",
+  "referenceStatus": "authored draft, not user-confirmed",
+  "rig": "Native Rigify basic.super_copy controls baked to deformation armature",
+  "rigifyAvailable": true,
+  "fps": 60,
+  "triangles": 10896,
+  "vertices": 5912,
+  "bones": 15,
+  "maxInfluences": 2,
+  "clips": [
+    {
+      "name": "Rider_Idle_Ready",
+      "seconds": 2.0,
+      "frames": 120,
+      "impact": null
+    },
+    {
+      "name": "Rider_Ride_SeatedPedal",
+      "seconds": 1.0,
+      "frames": 60,
+      "impact": null
+    },
+    {
+      "name": "Rider_Ride_StandingBalance",
+      "seconds": 2.0,
+      "frames": 120,
+      "impact": null
+    },
+    {
+      "name": "Rider_Trans_SitToStand",
+      "seconds": 0.35,
+      "frames": 21,
+      "impact": null
+    },
+    {
+      "name": "Rider_Trans_StandToSit",
+      "seconds": 0.35,
+      "frames": 21,
+      "impact": null
+    },
+    {
+      "name": "Rider_Jump_Takeoff",
+      "seconds": 0.15,
+      "frames": 9,
+      "impact": null
+    },
+    {
+      "name": "Rider_Jump_Air",
+      "seconds": 0.5,
+      "frames": 30,
+      "impact": null
+    },
+    {
+      "name": "Rider_Jump_Land",
+      "seconds": 0.25,
+      "frames": 15,
+      "impact": null
+    },
+    {
+      "name": "Rider_Kick_Charge_L",
+      "seconds": 0.4,
+      "frames": 24,
+      "impact": null
+    },
+    {
+      "name": "Rider_Kick_Charge_R",
+      "seconds": 0.4,
+      "frames": 24,
+      "impact": null
+    },
+    {
+      "name": "Rider_Kick_Strike_L",
+      "seconds": 0.7,
+      "frames": 42,
+      "impact": 8
+    },
+    {
+      "name": "Rider_Kick_Strike_R",
+      "seconds": 0.7,
+      "frames": 42,
+      "impact": 8
+    },
+    {
+      "name": "Rider_Lean_L",
+      "seconds": 0.016666666666666666,
+      "frames": 1,
+      "impact": null
+    },
+    {
+      "name": "Rider_Lean_R",
+      "seconds": 0.016666666666666666,
+      "frames": 1,
+      "impact": null
+    },
+    {
+      "name": "Rider_Hit_Shield",
+      "seconds": 0.4,
+      "frames": 24,
+      "impact": null
+    },
+    {
+      "name": "Rider_Crash",
+      "seconds": 1.0,
+      "frames": 60,
+      "impact": null
+    }
+  ],
+  "coordinateConvention": "Blender Z up, forward -Y. GLB Y up, forward +Z. Runtime bone rest world quaternion is retained when applying legacy delta rotations.",
+  "restPositions": {
+    "BalanceBody": [
+      0.0,
+      0.03999999910593033,
+      1.8600000143051147
+    ],
+    "Spine": [
+      0.0,
+      0.014999999664723873,
+      2.0999999046325684
+    ],
+    "Head": [
+      0.0,
+      -0.05999999865889549,
+      2.4600000381469727
+    ],
+    "Leg_L": [
+      -0.17000000178813934,
+      0.03999999910593033,
+      1.8600000143051147
+    ],
+    "Knee_L": [
+      -0.19126975536346436,
+      -0.49205195903778076,
+      1.7701761722564697
+    ],
+    "Foot_L": [
+      -0.30000001192092896,
+      -0.5799999833106995,
+      1.3109999895095825
+    ],
+    "Arm_L": [
+      -0.27000001072883606,
+      -0.02500000037252903,
+      2.309999942779541
+    ],
+    "Elbow_L": [
+      -0.47999998927116394,
+      -0.05999999865889549,
+      2.180000066757202
+    ],
+    "Hand_L": [
+      -0.6800000071525574,
+      -0.11999999731779099,
+      2.2300000190734863
+    ],
+    "Leg_R": [
+      0.17000000178813934,
+      0.03999999910593033,
+      1.8600000143051147
+    ],
+    "Knee_R": [
+      0.07581940293312073,
+      -0.2363978773355484,
+      1.4057598114013672
+    ],
+    "Foot_R": [
+      0.03999999910593033,
+      0.20999999344348907,
+      1.2330000400543213
+    ],
+    "Arm_R": [
+      0.27000001072883606,
+      -0.02500000037252903,
+      2.309999942779541
+    ],
+    "Elbow_R": [
+      0.47999998927116394,
+      -0.05999999865889549,
+      2.180000066757202
+    ],
+    "Hand_R": [
+      0.6800000071525574,
+      -0.11999999731779099,
+      2.2300000190734863
+    ]
+  },
+  "parents": {
+    "BalanceBody": null,
+    "Spine": "BalanceBody",
+    "Head": "Spine",
+    "Leg_L": null,
+    "Knee_L": "Leg_L",
+    "Foot_L": "Knee_L",
+    "Arm_L": "BalanceBody",
+    "Elbow_L": "Arm_L",
+    "Hand_L": "Elbow_L",
+    "Leg_R": null,
+    "Knee_R": "Leg_R",
+    "Foot_R": "Knee_R",
+    "Arm_R": "BalanceBody",
+    "Elbow_R": "Arm_R",
+    "Hand_R": "Elbow_R"
+  }
+}

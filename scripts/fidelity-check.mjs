@@ -18,9 +18,9 @@ try{
       view.update(game,0);view.scene.updateMatrixWorld(true);
       const feet=view.feet.map(o=>view.player.position.clone().setFromMatrixPosition(o.matrixWorld).applyMatrix4(view.player.matrixWorld.clone().invert()).toArray());
       const forest=view.valleyBatches.ValleyForest;
-      let cargoRendered=false;view.cargo.onAfterRender=()=>{cargoRendered=true;};
-      game.bananas=30;view.update(game,0);const cargoBounds=view.cargo.boundingSphere.radius;
-      game.bananas=0;view.update(game,0);view.cargo.onAfterRender=()=>{};
+      let cargoRendered=false;for(const mesh of view.cargoGroups)mesh.onAfterRender=()=>{cargoRendered=true;};
+      game.bananas=30;view.update(game,0);const cargoBounds=Math.max(...view.cargoGroups.filter(m=>m.count).map(m=>m.boundingSphere.radius));
+      game.bananas=0;view.update(game,0);for(const mesh of view.cargoGroups)mesh.onAfterRender=()=>{};
       return {feet,cargoRendered,cargoBounds,forest:forest.count,scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
     });
     assert.ok(result.forest>500,'Imported forest must sit on actual layer-1 hills');

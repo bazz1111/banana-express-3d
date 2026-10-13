@@ -9,17 +9,21 @@ const before=hashes(),course=JSON.parse(fs.readFileSync('public/assets/course.js
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const errors=[],url=process.env.GAME_URL||'http://127.0.0.1:5173/';
-const artifactTag=process.env.HERO_ARTIFACT_TAG||'current';
-const sizes=[['desktop',1440,900],['medium',960,900],['portrait',390,844]];
+const baseTag=process.env.HERO_ARTIFACT_TAG||'current';
+const rigs=(process.env.HERO_RIGS||'skinned,legacy').split(',');let currentRig=rigs[0],artifactTag=baseTag;
+fs.mkdirSync('artifacts',{recursive:true});
+const sizes=[['desktop',1440,900],['medium',960,900],['portrait',390,844]].filter(s=>!process.env.HERO_SIZES||process.env.HERO_SIZES.split(',').includes(s[0]));
+const frameFailures=[],runs=[];
 async function open(width,height){
   const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(url);await page.locator('#start:not([disabled])').waitFor({timeout:45000});await page.clock.install();await page.clock.pauseAt(new Date());
+  const target=new URL(url);if(currentRig==='legacy')target.searchParams.set('rig','legacy');else target.searchParams.delete('rig');
+  await page.goto(target.href);await page.locator('#start:not([disabled])').waitFor({timeout:45000});await page.clock.install();await page.clock.pauseAt(new Date());
   await page.click('#start');await page.clock.runFor(3200);return page;
 }
 async function observe(page){
   const distance=await page.evaluate(()=>window.__bananaGame.game.s);
   return page.evaluate(expected=>{
-    const {game:g,view:v}=window.__bananaGame;v.scene.updateMatrixWorld(true);
+    const {game:g,view:v}=window.__bananaGame;v.scene.updateMatrixWorld(true);v.rider.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.update();});
     const Vector=v.player.position.constructor,Matrix=v.player.matrix.constructor,w=v.canvas.clientWidth,h=v.canvas.clientHeight;
     const project=point=>{const p=point.clone().project(v.camera);return {x:(p.x+1)*w/2,y:(1-p.y)*h/2,z:p.z};};
     const empty=()=>({left:Infinity,right:-Infinity,top:Infinity,bottom:-Infinity,vertices:0});
@@ -28,30 +32,31 @@ async function observe(page){
       const bounds=empty();root.traverse(mesh=>{
         if(!mesh.isMesh)return;let parent=mesh;while(parent){if(!parent.visible)return;parent=parent.parent;}
         const p=mesh.geometry.attributes.position;
-        for(let i=0;i<p.count;i++)add(bounds,project(new Vector().fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld)));
+        for(let i=0;i<p.count;i++)add(bounds,project(mesh.getVertexPosition(i,new Vector()).applyMatrix4(mesh.matrixWorld)));
       });return bounds;
     };
     const bike=boundsFor(v.bike),rider=boundsFor(v.rider),cargo=empty(),matrix=new Matrix(),world=new Matrix();
-    for(let i=0;i<v.cargo.count;i++){
-      v.cargo.getMatrixAt(i,matrix);world.multiplyMatrices(v.cargo.matrixWorld,matrix);
-      const p=v.cargo.geometry.attributes.position;for(let k=0;k<p.count;k++)add(cargo,project(new Vector().fromBufferAttribute(p,k).applyMatrix4(world)));
+    for(const group of v.cargoGroups)for(let i=0;i<group.count;i++){
+      group.getMatrixAt(i,matrix);world.multiplyMatrices(group.matrixWorld,matrix);
+      const p=group.geometry.attributes.position;for(let k=0;k<p.count;k++)add(cargo,project(new Vector().fromBufferAttribute(p,k).applyMatrix4(world)));
     }
     const wheels=v.wheels.map(wheel=>({center:project(new Vector().setFromMatrixPosition(wheel.matrixWorld)),bounds:boundsFor(wheel)}));
     const rack=v.assets.bananaRack?.getObjectByName('BananaCargo');
     const sources=rack?.children.filter(mesh=>mesh.isMesh).sort((a,b)=>a.name.localeCompare(b.name))??[];
-    let nativeMatrixError=0;
-    for(let i=0;i<Math.min(sources.length,v.cargo.instanceMatrix.count);i++){
-      v.cargo.getMatrixAt(i,matrix);nativeMatrixError=Math.max(nativeMatrixError,...matrix.elements.map((n,k)=>Math.abs(n-sources[i].matrixWorld.elements[k])));
+    let nativeMatrixError=0,nativeGeometry=true,nativeMaterial=true;const sampleMatrices=[],globalIndices=[];
+    for(const group of v.cargoGroups)for(let i=0;i<group.instanceMatrix.count;i++){
+      const global=group.userData.globalIndices[i],source=sources[global];globalIndices.push(global);
+      group.getMatrixAt(i,matrix);nativeMatrixError=Math.max(nativeMatrixError,...matrix.elements.map((n,k)=>Math.abs(n-source.matrixWorld.elements[k])));
+      nativeGeometry&&=group.geometry===source.geometry;nativeMaterial&&=group.material===source.material;if(global<2)sampleMatrices.push([...matrix.elements]);
     }
-    const sampleMatrices=[];for(let i=0;i<Math.min(2,v.cargo.instanceMatrix.count);i++){v.cargo.getMatrixAt(i,matrix);sampleMatrices.push([...matrix.elements]);}
     const flat=[];v.rider.traverse(mesh=>{if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])flat.push(material.flatShading);});
     const forward=new Vector(0,0,1).applyQuaternion(v.player.quaternion),expectedForward=new Vector(0,0,1).applyQuaternion(new v.player.quaternion.constructor().copy(expected));
     const foot=v.feet[g.kickSide>0?0:1].getWorldPosition(new Vector()),burst=v.burst.getWorldPosition(new Vector());
-    return {phase:g.phase,s:g.s,viewTime:v.time,lane:g.lane,stance:g.stance,stanceBlend:v.stanceBlend,bananas:g.bananas,jump:g.jumpHeight,kickPose:g.kickPose,kickSide:g.kickSide,cooldown:g.cooldowns.kick,
+    return {rigMode:v.rigMode,globalIndices,phase:g.phase,s:g.s,viewTime:v.time,lane:g.lane,stance:g.stance,stanceBlend:v.stanceBlend,bananas:g.bananas,jump:g.jumpHeight,kickPose:g.kickPose,kickSide:g.kickSide,cooldown:g.cooldowns.kick,
       width:w,height:h,camera:v.camera.position.toArray(),target:v.lookTarget.toArray(),fov:v.camera.fov,cameraSide:v.player.position.x-v.camera.position.x,cameraBack:-v.camera.position.z,
       bike,rider,cargo,burstBounds:v.burst.visible?boundsFor(v.burst):null,wheels,wheelGapX:Math.abs(wheels[0].center.x-wheels[1].center.x),forwardError:forward.distanceTo(expectedForward),
-      capacity:v.cargo.instanceMatrix.count,count:v.cargo.count,ropesVisible:v.bike.getObjectByName('CargoRopes').visible,sourceBundles:sources.length,bundleNames:sources.map(mesh=>mesh.name),
-      nativeGeometry:sources.length>0&&v.cargo.geometry===sources[0].geometry,nativeMaterial:sources.length>0&&v.cargo.material===sources[0].material,
+      capacity:v.cargoGroups.reduce((n,m)=>n+m.instanceMatrix.count,0),count:v.cargo.count,ropesVisible:v.bike.getObjectByName('CargoRopes').visible,sourceBundles:sources.length,bundleNames:sources.map(mesh=>mesh.name),
+      nativeGeometry,nativeMaterial,
       sourceGeometries:new Set(sources.map(mesh=>mesh.geometry)).size,burstVisible:v.burst.visible,burstDistance:burst.distanceTo(foot),burstFacingError:1-Math.abs(v.burst.quaternion.dot(v.camera.quaternion)),footPosition:foot.toArray(),burstPosition:burst.toArray(),
       nativeMatrixError:sources.length?nativeMatrixError:null,sampleMatrices,riderFlatShading:flat.some(Boolean),worldFlatShading:v.roadTiles[0].children.find(mesh=>mesh.userData.surfaceRole==='road').material.flatShading};
   },roadQuaternion(course,distance,distance));
@@ -65,6 +70,7 @@ function checkFrame(frame,label){
   assert.ok(frame.wheelGapX>frame.width*.035,label+' must expose both wheel silhouettes');
   if(frame.kickPose>.24&&frame.kickPose<.56){assert.equal(frame.burstVisible,true);assert.ok(frame.burstDistance<.3,label+' burst must follow the kicking foot, distance='+frame.burstDistance);assert.ok(frame.burstFacingError<1e-6,label+' burst must face the current camera');}
 }
+function recordFrame(frame,label){try{checkFrame(frame,label);}catch(error){const failure={rig:currentRig,label,message:error.message,frame:compact(frame)};frameFailures.push(failure);console.log('HERO_FRAME_DEFECT',JSON.stringify(failure));}}
 function compact(frame){const {sampleMatrices,...rest}=frame;return rest;}
 const edges=box=>box?[box.left,box.right,box.top,box.bottom]:null;
 const margin=(box,frame)=>Math.min(box.left,frame.width-box.right,box.top,frame.height-box.bottom);
@@ -83,11 +89,11 @@ async function kickWindow(page,viewport,stance,side,jump){
   for(let ms=0;ms<=900;ms+=16){
     const frame=await observe(page);
     if(lastViewTime!==null)maxViewGap=Math.max(maxViewGap,frame.viewTime-lastViewTime);lastViewTime=frame.viewTime;
-    try{checkFrame(frame,viewport+' '+stance+' Q '+side+(jump?' +Space':'')+' @'+ms+'ms');}catch(error){failures.push({ms,message:error.message});}
+    try{recordFrame(frame,viewport+' '+stance+' Q '+side+(jump?' +Space':'')+' @'+ms+'ms');}catch(error){failures.push({ms,message:error.message});}
     if(frame.burstVisible){
       visibleFrames++;const burstMargin=margin(frame.burstBounds,frame);
       if(burstMargin<worstBurst.margin){
-        Object.assign(worstBurst,{margin:burstMargin,viewport,stance,side,jump,ms,s:frame.s,kickPose:frame.kickPose,minNDCX:frame.burstBounds.left/frame.width*2-1,maxNDCX:frame.burstBounds.right/frame.width*2-1,burstBounds:edges(frame.burstBounds),camera:frame.camera,burstToFoot:frame.burstDistance,screenshot:`artifacts/hero-view-q-window-${artifactTag}-worst.png`});
+        Object.assign(worstBurst,{rig:currentRig,margin:burstMargin,viewport,stance,side,jump,ms,s:frame.s,kickPose:frame.kickPose,minNDCX:frame.burstBounds.left/frame.width*2-1,maxNDCX:frame.burstBounds.right/frame.width*2-1,burstBounds:edges(frame.burstBounds),camera:frame.camera,burstToFoot:frame.burstDistance,screenshot:`artifacts/hero-view-q-window-${artifactTag}-worst.png`});
         await page.screenshot({path:worstBurst.screenshot});
       }
     }
@@ -102,12 +108,15 @@ async function kickWindow(page,viewport,stance,side,jump){
   return {viewport,stance,side,jump,visibleFrames,maxViewGap,failures,frames};
 }
 try{
+ for(currentRig of rigs){
+  artifactTag=baseTag+'-'+currentRig;
   const page=await open(1440,900),initial=await observe(page);
-  await page.screenshot({path:'artifacts/hero-view-baseline.png'});
+  await page.screenshot({path:`artifacts/hero-view-${artifactTag}-baseline.png`});
   console.log('HERO_VIEW_BASELINE',JSON.stringify(initial));
   assert.equal(initial.capacity,20,'Runtime cargo must use twenty authored bundle transforms, not the old six programmed positions');
   assert.equal(initial.sourceBundles,20);assert.ok(initial.nativeGeometry&&initial.nativeMaterial,'Use unbaked native bundle geometry/material');
-  assert.equal(initial.sourceGeometries,1,'Native cargo bundles share one geometry');
+  assert.equal(initial.rigMode,currentRig);assert.equal(initial.sourceGeometries,4,'Native cargo bundles share four geometries');
+  assert.deepEqual([...initial.globalIndices].sort((a,b)=>a-b),Array.from({length:20},(_,i)=>i),'Grouped cargo preserves every global bundle index');
   assert.deepEqual(initial.bundleNames,Array.from({length:20},(_,i)=>'CargoBundle'+String(i).padStart(2,'0')));
   assert.ok(initial.nativeMatrixError<1e-4,'Native cargo matrices must not be replaced or double transformed');
   assert.equal(initial.bananas,0);assert.equal(initial.count,0,'Start with an empty native rack');assert.equal(initial.ropesVisible,false);
@@ -133,23 +142,23 @@ try{
         v.resize();v.reset(g);for(let i=0;i<4;i++)v.update(g,.1);
       },pose);
       await page.clock.runFor(17);
-      const frame=await observe(page);checkFrame(frame,name+' fixture '+action);
-      await page.screenshot({path:`artifacts/hero-view-${name}-fixture-${action}.png`});fixtures.push({viewport:name,action,...compact(frame)});
+      const frame=await observe(page);recordFrame(frame,name+' fixture '+action);
+      await page.screenshot({path:`artifacts/hero-view-${artifactTag}-${name}-fixture-${action}.png`});fixtures.push({viewport:name,action,...compact(frame)});
     }
   }
   await page.close();
   const inputs=[];
   for(const [name,width,height] of sizes){
     const input=await open(width,height);
-    await input.keyboard.press('KeyC');await input.clock.runFor(800);let frame=await observe(input);assert.equal(frame.stance,'standing');assert.ok(frame.stanceBlend>.99);checkFrame(frame,name+' C');
-    await input.screenshot({path:`artifacts/hero-view-${name}-input-standing.png`});inputs.push({viewport:name,action:'real C',...compact(frame)});
+    await input.keyboard.press('KeyC');await input.clock.runFor(800);let frame=await observe(input);assert.equal(frame.stance,'standing');assert.ok(frame.stanceBlend>.99);recordFrame(frame,name+' C');
+    await input.screenshot({path:`artifacts/hero-view-${artifactTag}-${name}-input-standing.png`});inputs.push({viewport:name,action:'real C',...compact(frame)});
     await input.keyboard.down('KeyA');await input.clock.runFor(1900);await input.keyboard.down('Space');await input.clock.runFor(450);await input.keyboard.up('Space');
-    frame=await observe(input);assert.ok(frame.lane< -4.5&&frame.jump>.8);checkFrame(frame,name+' real left boundary jump');
-    await input.screenshot({path:`artifacts/hero-view-${name}-input-left-jump.png`});inputs.push({viewport:name,action:'real A+Space',...compact(frame)});await input.keyboard.up('KeyA');
+    frame=await observe(input);assert.ok(frame.lane< -4.5&&frame.jump>.8);recordFrame(frame,name+' real left boundary jump');
+    await input.screenshot({path:`artifacts/hero-view-${artifactTag}-${name}-input-left-jump.png`});inputs.push({viewport:name,action:'real A+Space',...compact(frame)});await input.keyboard.up('KeyA');
     await input.keyboard.down('KeyD');await input.clock.runFor(3300);await input.keyboard.down('Space');await input.clock.runFor(450);await input.keyboard.up('Space');
-    frame=await observe(input);assert.ok(frame.lane>4.5&&frame.jump>.8);checkFrame(frame,name+' real right boundary jump');
-    await input.screenshot({path:`artifacts/hero-view-${name}-input-right-jump.png`});inputs.push({viewport:name,action:'real D+Space',...compact(frame)});await input.keyboard.up('KeyD');
-    await input.keyboard.press('KeyC');await input.clock.runFor(800);frame=await observe(input);assert.equal(frame.stance,'seated');checkFrame(frame,name+' seated');
+    frame=await observe(input);assert.ok(frame.lane>4.5&&frame.jump>.8);recordFrame(frame,name+' real right boundary jump');
+    await input.screenshot({path:`artifacts/hero-view-${artifactTag}-${name}-input-right-jump.png`});inputs.push({viewport:name,action:'real D+Space',...compact(frame)});await input.keyboard.up('KeyD');
+    await input.keyboard.press('KeyC');await input.clock.runFor(800);frame=await observe(input);assert.equal(frame.stance,'seated');recordFrame(frame,name+' seated');
     inputs.push({viewport:name,action:'real C to seated',...compact(frame)});await input.close();
     for(const stance of ['seated','standing'])for(const side of [-1,1]){
       const kick=await open(width,height);
@@ -157,9 +166,9 @@ try{
       // Only the target is an isolated fixture; charge, release, kick side and flight use real Q input/rules.
       await kick.evaluate(side=>{const g=window.__bananaGame.game;g.obstacles.push({id:'hero-kick-target',type:'truck',s:g.s+18,lane:g.lane+side,originalLane:g.lane+side,kicked:false,hit:false,passed:false,flight:0});},side);
       await kick.keyboard.down('KeyQ');await kick.clock.runFor(850);await kick.keyboard.up('KeyQ');await kick.clock.runFor(350);
-      frame=await observe(kick);assert.equal(frame.stance,stance);assert.equal(frame.kickSide,side);assert.ok(frame.kickPose>.24&&frame.kickPose<.56&&frame.cooldown>17);checkFrame(frame,name+' real Q '+stance+' '+side);
+      frame=await observe(kick);assert.equal(frame.stance,stance);assert.equal(frame.kickSide,side);assert.ok(frame.kickPose>.24&&frame.kickPose<.56&&frame.cooldown>17);recordFrame(frame,name+' real Q '+stance+' '+side);
       assert.equal(await kick.evaluate(()=>window.__bananaGame.game.obstacles.find(o=>o.id==='hero-kick-target').kicked),true);
-      await kick.screenshot({path:`artifacts/hero-view-${name}-input-${stance}-kick-${side}.png`});inputs.push({viewport:name,action:'real Q '+stance+' with isolated truck target',...compact(frame)});await kick.close();
+      await kick.screenshot({path:`artifacts/hero-view-${artifactTag}-${name}-input-${stance}-kick-${side}.png`});inputs.push({viewport:name,action:'real Q '+stance+' with isolated truck target',...compact(frame)});await kick.close();
     }
   }
   const sequences=[];
@@ -171,5 +180,9 @@ try{
   assert.equal(errors.length,0,errors.join('\n'));assert.deepEqual(hashes(),before,'Protected core files must remain unchanged');
   console.log('HERO_Q_SEQUENCE_REPORT',JSON.stringify({url,artifactTag,sequences,worstBurst,errors,protectedHashes:before}));
   assert.equal(sequences.flatMap(sequence=>sequence.failures).length,0,'Q full animation must stay within the frame');
-  console.log('HERO_VIEW_PASS',JSON.stringify({countFixtures,fixtures,inputs,sequenceWindows:sequences.length,sequenceFrames:sequences.reduce((n,sequence)=>n+sequence.frames.length,0),worstBurst,errors,protectedHashes:before}));
-}finally{await browser.close();}
+  runs.push({rig:currentRig,countFixtures,fixtures,inputs,sequences,worstBurst:{...worstBurst}});
+  console.log('HERO_VIEW_CHECKED',JSON.stringify({countFixtures,fixtures,inputs,sequenceWindows:sequences.length,sequenceFrames:sequences.reduce((n,sequence)=>n+sequence.frames.length,0),worstBurst,errors,protectedHashes:before}));
+ }
+ assert.equal(frameFailures.length,0,'Hero framing defects: '+JSON.stringify(frameFailures.map(f=>({rig:f.rig,label:f.label,message:f.message}))));
+ console.log('HERO_VIEW_PASS',JSON.stringify({rigs,errors,frameFailures:0}));
+}finally{await browser.close();fs.writeFileSync(`artifacts/hero-view-${baseTag}.json`,JSON.stringify({url,rigs,runs,frameFailures,errors,browserClosed:!browser.isConnected()},null,2));}

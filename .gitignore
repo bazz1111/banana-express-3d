@@ -5,3 +5,5 @@ dist/
 artifacts/
 artifacts-blender.log
 art/
+__pycache__/
+*.pyc

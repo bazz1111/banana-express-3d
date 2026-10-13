@@ -10,10 +10,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = ROOT / 'tests/fixtures/blender/light-assets-baseline.json'
 (ROOT / 'artifacts').mkdir(parents=True, exist_ok=True)
-FILES = ['asset-library.blend', 'endless-course.blend', 'standing-motion.blend', 'valley-layout.blend']
+FILES = ['asset-library.blend', 'endless-course.blend', 'standing-motion.blend', 'valley-layout.blend', 'rock-kit.blend', 'rider-hero.blend']
 TARGETS = ['rider', 'bicycle', 'banana', 'looseBanana', 'truck', 'car', 'hut', 'villageHouse',
            'villageLonghouse', 'stall', 'tower', 'foundation', 'palm', 'tree', 'forestTree',
-           'bananaPlant', 'bush', 'rock', 'cliff']
+           'bananaPlant', 'bush', 'rock', 'cliff', 'bananaB', 'bananaC', 'bananaD', 'rockA', 'rockB', 'rockC', 'rockD', 'rockE', 'rockF']
 
 def colors(mesh, name):
     attr = mesh.color_attributes.get(name)
@@ -46,17 +46,21 @@ def glb_accessor(blob, gltf, index):
         result /= 65535 if accessor['componentType'] == 5123 else 255
     return result
 
-def exported_color_check(manifest):
+def exported_color_check(manifest, source_file):
     triangle_cache, vertices_checked, triangles_checked = {}, 0, 0
     for name, item in manifest['models'].items():
-        blob = (ROOT / 'public/assets' / item['file']).read_bytes()
+        if Path(item['source']).name != source_file:
+            continue
+        blob = (ROOT / 'assets/export' / item['file']).read_bytes()
         gltf = json.loads(blob[20:20 + int.from_bytes(blob[12:16], 'little')])
         seen = set()
         for node in gltf['nodes']:
             if 'mesh' not in node or node['mesh'] in seen:
                 continue
             seen.add(node['mesh'])
-            source = bpy.data.objects[node['name']].data
+            native = bpy.data.objects.get(node['name'])
+            assert native is not None and native.type == 'MESH', (name, node['name'], 'missing mesh in declared native source', source_file)
+            source = native.data
             key = source.as_pointer()
             if key not in triangle_cache:
                 source.calc_loop_triangles()
@@ -92,13 +96,16 @@ def exported_color_check(manifest):
 def snapshot():
     bpy.context.view_layer.update()
     objects, mesh_cache = {}, {}
+    widgets = {bone.custom_shape.as_pointer() for obj in bpy.data.objects if obj.type == 'ARMATURE' for bone in obj.pose.bones if bone.custom_shape is not None}
     for obj in bpy.data.objects:
         item = {'parent': obj.parent.name if obj.parent else '',
                 'transform': digest(np.asarray(obj.matrix_basis, dtype=np.float32))}
         if obj.type == 'MESH':
             key = obj.data.as_pointer()
             if key not in mesh_cache:
-                mesh_cache[key] = {'geometry': geometry(obj.data), 'color': digest(colors(obj.data, 'Color'))}
+                mesh_cache[key] = {'geometry': geometry(obj.data)}
+                if obj.as_pointer() not in widgets:
+                    mesh_cache[key]['color'] = digest(colors(obj.data, 'Color'))
             item.update(mesh_cache[key])
         objects[obj.name] = item
     poses = {}
@@ -118,19 +125,19 @@ if '--baseline' in sys.argv:
     BASELINE.write_text(json.dumps(baseline, separators=(',', ':')))
     print('LIGHT_ASSETS_BASELINE_SAVED', str(BASELINE))
 else:
-    manifest = json.loads((ROOT / 'public/assets/manifest.json').read_text())
+    manifest = json.loads((ROOT / 'assets/export/manifest.json').read_text())
     assert manifest.get('vertexAO'), 'Missing local BVH vertex AO metadata'
     assert 'sky' in manifest['models'], 'Missing native SkyDome GLB'
     assert set(manifest['vertexAO']['assets']) == set(TARGETS)
-    assert len(manifest['models']) == 41
+    assert {'forestTreeLOD1', 'forestTreeLOD2', 'riderSkinned'} <= set(manifest['models'])
+    assert set(FILES) == {Path(file).name for file in manifest['sourceFiles']}
     baseline = json.loads(BASELINE.read_text())
     changed, checked, geometry_checks = 0, 0, 0
     for file in FILES:
         bpy.ops.wm.open_mainfile(filepath=str(ROOT / 'assets/blender' / file))
-        if file == 'asset-library.blend':
-            exported_color_check(manifest)
+        exported_color_check(manifest, file)
         current = snapshot()
-        if '--historical' in sys.argv:
+        if '--historical' in sys.argv and file in baseline:
             for name, before in baseline[file]['objects'].items():
                 after = current['objects'][name]
                 assert before['parent'] == after['parent'] and before['transform'] == after['transform'], (file, name, 'pose changed')
@@ -139,7 +146,7 @@ else:
                     data = bpy.data.objects[name].data
                     original = 'AOBaseColor' if data.get('vertexAO') else 'Color'
                     assert digest(colors(data, original)) == before['color'], (file, name, 'palette baseline changed')
-        assert current['poses'] == baseline[file]['poses'], (file, 'wheel/foot/hand motion changed')
+        assert current['poses'] == baseline.get(file, {'poses': {}})['poses'], (file, 'wheel/foot/hand motion changed')
         seen = set()
         for obj in bpy.data.objects:
             if obj.type != 'MESH' or obj.data.as_pointer() in seen or not obj.data.get('vertexAO'):
@@ -175,5 +182,5 @@ else:
             assert colors(sphere.data, 'Color')[:, 3].min() == 1
     assert changed > 100, 'Short-distance BVH rays did not darken any real crevices'
     print('LIGHT_ASSETS_PASS', json.dumps({'checkedMeshes': checked, 'changedLoops': changed,
-        'aoGeometryChecks': geometry_checks, 'sources': 4, 'assets': 41,
+        'aoGeometryChecks': geometry_checks, 'sources': len(FILES), 'assets': len(manifest['models']),
         'historicalModelComparison': '--historical' in sys.argv}))

@@ -1,0 +1,11 @@
+{
+  "fixture": true,
+  "naturalPlay": false,
+  "distance": 200,
+  "bananas": 85,
+  "size": [
+    1440,
+    900
+  ],
+  "scope": "Same frozen art fixture; body/scene changes, no player-earned score"
+}

@@ -1,0 +1,31 @@
+{
+  "status": "rendered implementation draft, not independent art approval",
+  "source": "artifacts/hero-drafts/source/rider-hero.blend",
+  "canonicalSource": "assets/blender/rider-hero.blend",
+  "sourceSnapshot": true,
+  "pose": "Bicycle-support rest; no authored A-pose is claimed",
+  "orthographic": true,
+  "heightPixels": 2048,
+  "gridMeters": 0.1,
+  "scaleMeters": 1,
+  "outputs": [
+    "assets/reference/ref_char_rider-turnaround_v01_front-three-quarter.png",
+    "assets/reference/ref_char_rider-turnaround_v01_front.png",
+    "assets/reference/ref_char_rider-turnaround_v01_rear-three-quarter.png",
+    "assets/reference/ref_char_rider-turnaround_v01_rear.png",
+    "assets/reference/ref_char_rider-turnaround_v01_seated-side.png",
+    "assets/reference/ref_char_rider-turnaround_v01_side.png"
+  ],
+  "renderedViews": [
+    "assets/reference/ref_char_rider-turnaround_v01_front.png",
+    "assets/reference/ref_char_rider-turnaround_v01_side.png",
+    "assets/reference/ref_char_rider-turnaround_v01_rear.png",
+    "assets/reference/ref_char_rider-turnaround_v01_front-three-quarter.png",
+    "assets/reference/ref_char_rider-turnaround_v01_rear-three-quarter.png",
+    "assets/reference/ref_char_rider-turnaround_v01_seated-side.png"
+  ],
+  "protectedSha256": {
+    "/Users/bazzi/Developer/codex/game/artifacts/hero-drafts/source/rider-hero.blend": "fde5ffb51b5ba46eeeceaff1abba2f0ce866bfa467de47547608f2b9a6c5d10a",
+    "/Users/bazzi/Developer/codex/game/artifacts/hero-drafts/source/riderSkinned.glb": "32a6f1d8e971d65bc5267b83cee6fce5fd2f87c5d1cb809e78a468fb0eae1d51"
+  }
+}

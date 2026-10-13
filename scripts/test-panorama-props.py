@@ -14,12 +14,14 @@ assert not missing, 'Missing native panorama props: '+', '.join(missing)
 forest=bpy.data.objects[names[0]].children
 assert len(forest)==3600, 'The full native distant grove set must be retained'
 assert len({o.data.as_pointer() for o in forest})==1, 'Distant canopies must share one native mesh'
-assert forest[0].data.as_pointer()==bpy.data.objects['ValleyForest'].children[0].data.as_pointer(), 'Far and near forests must reuse the existing native template'
+assert forest[0].data.as_pointer()!=bpy.data.objects['ValleyForest'].children[0].data.as_pointer(), 'Panorama must use its dedicated native LOD mesh'
 forest[0].data.calc_loop_triangles()
 triangles=len(forest[0].data.loop_triangles)
-assert triangles<180, 'Far canopy template exceeds the performance budget'
+assert triangles==12, 'Far canopy template exceeds the performance budget'
 vertices=[];faces=[]
-for hill in bpy.data.objects['ValleyFoothills'].children:
+hills=list(bpy.data.objects['ValleyFoothills'].children)+list(bpy.data.objects['ValleyFoothillsB'].children)
+assert len(hills)==18
+for hill in hills:
     offset=len(vertices);vertices.extend(hill.matrix_world@v.co for v in hill.data.vertices)
     faces.extend(tuple(offset+i for i in p.vertices) for p in hill.data.polygons)
 bvh=BVHTree.FromPolygons(vertices,faces)
@@ -43,7 +45,7 @@ for house in houses:
 assert compact/len(houses)>=.70, 'Reference A village silhouettes need mostly broad low roofs, not tall narrow houses'
 assert len(bpy.data.objects['ValleyPanoramaTower'].children)<=6, 'Repeated bell towers dominate the distant villages'
 report={'pass':True,'trees':len(forest),'templateTriangles':triangles,'sharedForestMeshes':1,'maxRootError':max(errors),
-        'buildings':len(bases),'hills':18,'compactHouseFraction':compact/len(houses),'towers':len(bpy.data.objects['ValleyPanoramaTower'].children),
+        'buildings':len(bases),'hills':len(hills),'compactHouseFraction':compact/len(houses),'towers':len(bpy.data.objects['ValleyPanoramaTower'].children),
         'scope':'Saved native far-forest and buildings; full foundation clipping and actual runtime pixels checked separately.'}
 (root/'artifacts/panorama-props-native-report.json').write_text(json.dumps(report,indent=2)+'\n')
 print('PANORAMA_PROPS_NATIVE_PASS',json.dumps(report))

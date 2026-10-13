@@ -6,7 +6,9 @@
     "assets/blender/asset-library.blend",
     "assets/blender/endless-course.blend",
     "assets/blender/standing-motion.blend",
-    "assets/blender/valley-layout.blend"
+    "assets/blender/valley-layout.blend",
+    "assets/blender/rock-kit.blend",
+    "assets/blender/rider-hero.blend"
   ],
   "vertexAO": {
     "method": "local BVH cosine hemisphere",
@@ -32,7 +34,16 @@
       "bananaPlant",
       "bush",
       "rock",
-      "cliff"
+      "cliff",
+      "bananaB",
+      "bananaC",
+      "bananaD",
+      "rockA",
+      "rockB",
+      "rockC",
+      "rockD",
+      "rockE",
+      "rockF"
     ]
   },
   "models": {
@@ -53,7 +64,7 @@
     },
     "rider": {
       "file": "rider.glb",
-      "triangles": 6562,
+      "triangles": 10896,
       "source": "assets/blender/asset-library.blend",
       "vertexAO": {
         "method": "local BVH cosine hemisphere",
@@ -61,8 +72,8 @@
         "distance": 0.28,
         "strength": 0.3,
         "meshes": 13,
-        "minFactor": 0.7000234723091125,
-        "changedLoops": 8111,
+        "minFactor": 0.7000013589859009,
+        "changedLoops": 14828,
         "templatesOnly": false
       }
     },
@@ -96,9 +107,9 @@
         "templatesOnly": false
       }
     },
-    "truck": {
-      "file": "truck.glb",
-      "triangles": 14104,
+    "bananaB": {
+      "file": "bananaB.glb",
+      "triangles": 1432,
       "source": "assets/blender/asset-library.blend",
       "vertexAO": {
         "method": "local BVH cosine hemisphere",
@@ -106,8 +117,53 @@
         "distance": 0.28,
         "strength": 0.3,
         "meshes": 1,
+        "minFactor": 0.7000074982643127,
+        "changedLoops": 2558,
+        "templatesOnly": false
+      }
+    },
+    "bananaC": {
+      "file": "bananaC.glb",
+      "triangles": 1232,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7000100612640381,
+        "changedLoops": 2072,
+        "templatesOnly": false
+      }
+    },
+    "bananaD": {
+      "file": "bananaD.glb",
+      "triangles": 1472,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.7000083923339844,
+        "changedLoops": 2593,
+        "templatesOnly": false
+      }
+    },
+    "truck": {
+      "file": "truck.glb",
+      "triangles": 14128,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 16,
         "minFactor": 0.7066644430160522,
-        "changedLoops": 10367,
+        "changedLoops": 10419,
         "templatesOnly": false
       }
     },
@@ -226,6 +282,16 @@
         "templatesOnly": false
       }
     },
+    "forestTreeLOD1": {
+      "file": "forestTreeLOD1.glb",
+      "triangles": 32,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "forestTreeLOD2": {
+      "file": "forestTreeLOD2.glb",
+      "triangles": 12,
+      "source": "assets/blender/asset-library.blend"
+    },
     "foundation": {
       "file": "foundation.glb",
       "triangles": 12,
@@ -286,6 +352,96 @@
         "templatesOnly": false
       }
     },
+    "rockA": {
+      "file": "rockA.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.9995470643043518,
+        "changedLoops": 27,
+        "templatesOnly": false
+      }
+    },
+    "rockB": {
+      "file": "rockB.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.9993783831596375,
+        "changedLoops": 15,
+        "templatesOnly": false
+      }
+    },
+    "rockC": {
+      "file": "rockC.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.9887896776199341,
+        "changedLoops": 339,
+        "templatesOnly": false
+      }
+    },
+    "rockD": {
+      "file": "rockD.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.9962611794471741,
+        "changedLoops": 318,
+        "templatesOnly": false
+      }
+    },
+    "rockE": {
+      "file": "rockE.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.8279489278793335,
+        "changedLoops": 762,
+        "templatesOnly": false
+      }
+    },
+    "rockF": {
+      "file": "rockF.glb",
+      "triangles": 380,
+      "source": "assets/blender/asset-library.blend",
+      "vertexAO": {
+        "method": "local BVH cosine hemisphere",
+        "samples": 24,
+        "distance": 0.28,
+        "strength": 0.3,
+        "meshes": 1,
+        "minFactor": 0.9323472380638123,
+        "changedLoops": 669,
+        "templatesOnly": false
+      }
+    },
     "rock": {
       "file": "rock.glb",
       "triangles": 20,
@@ -321,9 +477,24 @@
       "triangles": 16,
       "source": "assets/blender/asset-library.blend"
     },
+    "burstGlow": {
+      "file": "burstGlow.glb",
+      "triangles": 144,
+      "source": "assets/blender/asset-library.blend"
+    },
     "cloud": {
       "file": "cloud.glb",
       "triangles": 60,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "cloudB": {
+      "file": "cloudB.glb",
+      "triangles": 80,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "cloudC": {
+      "file": "cloudC.glb",
+      "triangles": 80,
       "source": "assets/blender/asset-library.blend"
     },
     "sign": {
@@ -363,12 +534,32 @@
     },
     "mountain": {
       "file": "mountain.glb",
-      "triangles": 1820,
+      "triangles": 828,
       "source": "assets/blender/asset-library.blend"
     },
     "forestHill": {
       "file": "forestHill.glb",
-      "triangles": 2064,
+      "triangles": 992,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "mountainB": {
+      "file": "mountainB.glb",
+      "triangles": 828,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "forestHillB": {
+      "file": "forestHillB.glb",
+      "triangles": 992,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "midMountain": {
+      "file": "midMountain.glb",
+      "triangles": 828,
+      "source": "assets/blender/asset-library.blend"
+    },
+    "midMountainB": {
+      "file": "midMountainB.glb",
+      "triangles": 828,
       "source": "assets/blender/asset-library.blend"
     },
     "barrier": {
@@ -413,22 +604,22 @@
     },
     "roadCourse": {
       "file": "roadCourse.glb",
-      "triangles": 90870,
+      "triangles": 92870,
       "source": "assets/blender/asset-library.blend",
       "vertexAO": {
         "method": "local BVH cosine hemisphere",
         "samples": 24,
         "distance": 0.28,
         "strength": 0.3,
-        "meshes": 9,
+        "meshes": 14,
         "minFactor": 0.7023082375526428,
-        "changedLoops": 3771,
+        "changedLoops": 5796,
         "templatesOnly": true
       }
     },
     "valley": {
       "file": "valley.glb",
-      "triangles": 18060,
+      "triangles": 20044,
       "source": "assets/blender/asset-library.blend",
       "vertexAO": {
         "method": "local BVH cosine hemisphere",
@@ -448,18 +639,43 @@
     },
     "bananaRack": {
       "file": "bananaRack.glb",
-      "triangles": 1532,
+      "triangles": 5668,
       "source": "assets/blender/asset-library.blend",
       "vertexAO": {
         "method": "local BVH cosine hemisphere",
         "samples": 24,
         "distance": 0.28,
         "strength": 0.3,
-        "meshes": 1,
+        "meshes": 4,
         "minFactor": 0.7000025510787964,
-        "changedLoops": 2587,
+        "changedLoops": 9810,
         "templatesOnly": true
       }
+    },
+    "riderSkinned": {
+      "file": "riderSkinned.glb",
+      "triangles": 10896,
+      "source": "assets/blender/rider-hero.blend",
+      "bones": 15,
+      "maxInfluences": 2,
+      "clips": [
+        "Rider_Idle_Ready",
+        "Rider_Ride_SeatedPedal",
+        "Rider_Ride_StandingBalance",
+        "Rider_Trans_SitToStand",
+        "Rider_Trans_StandToSit",
+        "Rider_Jump_Takeoff",
+        "Rider_Jump_Air",
+        "Rider_Jump_Land",
+        "Rider_Kick_Charge_L",
+        "Rider_Kick_Charge_R",
+        "Rider_Kick_Strike_L",
+        "Rider_Kick_Strike_R",
+        "Rider_Lean_L",
+        "Rider_Lean_R",
+        "Rider_Hit_Shield",
+        "Rider_Crash"
+      ]
     }
   }
 }

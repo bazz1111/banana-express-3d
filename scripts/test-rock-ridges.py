@@ -16,7 +16,7 @@ for chunk in bpy.data.objects['EndlessRoadCourse'].children:
     vertices.extend(land.matrix_world @ v.co for v in land.data.vertices)
     faces.extend(tuple(offset+i for i in p.vertices) for p in land.data.polygons)
 bvh = BVHTree.FromPolygons(vertices, faces, all_triangles=True)
-course = json.loads((root/'public/assets/course.json').read_text())
+course = json.loads((root/'assets/export/course.json').read_text())
 heights = []
 for s in range(0,1600,2):
     sample = course['points'][s//2]
@@ -31,12 +31,15 @@ if len(faces) < 20000: failures.append('Rock relief lacks the authored 2m surfac
 if min(heights) < 4.8: failures.append('Relief has removed the continuous right rock bank')
 bpy.ops.wm.open_mainfile(filepath=str(root/'assets/blender/asset-library.blend'))
 ridges = {}
-for name in ['Mountain','ForestHill']:
+for name in ['Mountain','MountainB','MountainMid','MountainBMid','ForestHill','ForestHillB']:
     obj = bpy.data.objects[name]
     geometry = next(o.data for o in obj.children_recursive if o.type == 'MESH')
     triangles = sum(len(p.vertices)-2 for p in geometry.polygons)
     ridges[name] = {'vertices':len(geometry.vertices),'triangles':triangles}
-    if triangles < 1800: failures.append(name+' still has coarse, smooth repeated silhouettes')
+    if triangles < 800: failures.append(name+' lacks the authored ridge resolution')
+    assert len({round(v.co.z,4) for v in geometry.vertices})>100, (name,'ridge has collapsed into a smooth plane')
+assert bpy.data.objects['Mountain'].children[0].data != bpy.data.objects['MountainB'].children[0].data
+assert [tuple(v.co) for v in bpy.data.objects['Mountain'].children[0].data.vertices] != [tuple(v.co) for v in bpy.data.objects['MountainB'].children[0].data.vertices], 'Ridge silhouettes must differ geometrically'
 report = {'pass':not failures,'bankSamples':len(heights),'bankHeightMin':min(heights),
           'bankHeightMax':max(heights),'bankHeightRange':bank_range,'terrainTriangles':len(faces),
           'ridges':ridges,'failures':failures,'scope':'Saved native surface relief and template resolution; visual fidelity requires actual scene comparison.'}

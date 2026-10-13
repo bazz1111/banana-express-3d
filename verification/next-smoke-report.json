@@ -1,0 +1,38 @@
+{
+  "desktop": {
+    "status": "passed",
+    "browser": "chromium",
+    "input": "keyboard",
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 86,
+    "hud": "86",
+    "callsPerFrame": 119.07692307692308,
+    "msPerFrame": 15.946153844778355,
+    "loadMs": 318
+  },
+  "portrait": {
+    "status": "passed",
+    "browser": "chromium",
+    "input": "real touch",
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 86,
+    "hud": "86",
+    "callsPerFrame": 118.41666666666667,
+    "msPerFrame": 16.94166666517655,
+    "loadMs": 290
+  },
+  "narrow": {
+    "status": "passed",
+    "browser": "chromium",
+    "input": "real touch",
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 87,
+    "hud": "87",
+    "callsPerFrame": 118.66666666666667,
+    "msPerFrame": 16.941666667660076,
+    "loadMs": 352
+  }
+}

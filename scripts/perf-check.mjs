@@ -1,33 +1,76 @@
-// Real-clock performance sample (no virtual clock). Run it on the target mid-range machine with a GPU:
-//   pnpm build && pnpm preview  # then
-//   GAME_URL=http://127.0.0.1:4173/ PERF_SECONDS=60 node scripts/perf-check.mjs
-// A shield buff is refreshed as a fixture so the run is not cut short by collisions; it is not a player result.
+// Actual rAF timing on the available GPU. Shield refresh is a survival fixture,
+// not natural-play evidence. No virtual clock, rolling window or slow-frame filtering.
 import fs from 'node:fs';
 import path from 'node:path';
-const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const seconds=Number(process.env.PERF_SECONDS||30),[width,height]=(process.env.PERF_SIZE||'1920x1080').split('x').map(Number);
-const out=path.resolve(process.env.PERF_REPORT||'artifacts/perf-report.json');fs.mkdirSync(path.dirname(out),{recursive:true});
-const channel=process.env.PLAYWRIGHT_CHANNEL??'chrome';
-const browser=await chromium.launch({...(channel?{channel}:{}),headless:process.env.HEADED!=='1',args:['--ignore-gpu-blocklist']});
-const report={seconds,viewport:`${width}x${height}`,tiers:{}};
-try{
-  for(const quality of ['high','low']){
-    const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
-    const url=new URL(process.env.GAME_URL||'http://127.0.0.1:5173/');url.searchParams.set('quality',quality);
-    const start=Date.now();await page.goto(url.href);
-    await page.locator('#start:not([disabled])').waitFor({timeout:600000});
-    const loadMs=Date.now()-start;
-    const transfer=await page.evaluate(()=>performance.getEntriesByType('resource').reduce((n,e)=>n+(e.transferSize||e.encodedBodySize||0),0));
-    report.renderer??=await page.evaluate(()=>{const gl=document.createElement('canvas').getContext('webgl2'),ext=gl?.getExtension('WEBGL_debug_renderer_info');return ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):'unknown';});
-    await page.evaluate(()=>document.getElementById('start').click());
-    await page.waitForFunction(()=>window.__bananaGame.game.phase==='racing',null,{timeout:600000});
-    const keep=setInterval(()=>page.evaluate(()=>{const g=window.__bananaGame.game;g.buffs.shield=8;}).catch(()=>{}),500);
-    await page.waitForTimeout(seconds*1000);clearInterval(keep);
-    const stats=await page.evaluate(()=>({...window.__bananaGame.perf(),distance:window.__bananaGame.game.s,phase:window.__bananaGame.game.phase,
-      memoryMB:performance.memory?performance.memory.usedJSHeapSize/1048576:null,geometries:window.__bananaGame.view.renderer.info.memory.geometries,textures:window.__bananaGame.view.renderer.info.memory.textures}));
-    report.tiers[quality]={loadMs,transferMB:transfer/1048576,...stats};
-    await page.close();
+import os from 'node:os';
+import { pathToFileURL } from 'node:url';
+
+export function summarizeFrames(frames) {
+  const intervals=frames.map(f=>f.intervalMs).filter(v=>v!==null&&Number.isFinite(v)&&v>0).sort((a,b)=>a-b);
+  const mean=values=>values.reduce((sum,n)=>sum+n,0)/Math.max(1,values.length),percentile=q=>intervals[Math.min(intervals.length-1,Math.floor(intervals.length*q))]??0;
+  const calls=frames.map(f=>f.calls),triangles=frames.map(f=>f.triangles),phases={};for(const frame of frames)phases[frame.phase]=(phases[frame.phase]??0)+1;
+  return {frames:frames.length,intervals:intervals.length,fps:intervals.length?1000/mean(intervals):0,p50:percentile(.5),p95:percentile(.95),p99:percentile(.99),maxFrameMs:intervals.at(-1)??0,calls:mean(calls),maxCalls:calls.reduce((max,n)=>Math.max(max,n),0),triangles:mean(triangles),maxTriangles:triangles.reduce((max,n)=>Math.max(max,n),0),phases};
+}
+// Executed in the page before any application code creates its WebGL renderer.
+export function instrumentPerformance() {
+  const sample=window.__bananaPerf={mode:'idle',frames:[],lastTime:null,calls:0,triangles:0};
+  for(const prototype of [window.WebGLRenderingContext?.prototype,window.WebGL2RenderingContext?.prototype].filter(Boolean)){
+    for(const name of ['drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced']){
+      const original=prototype[name];if(!original)continue;
+      prototype[name]=function(...args){
+        sample.calls++;
+        const count=name.startsWith('drawArrays')?args[2]:args[1],instances=name.endsWith('Instanced')?args[name.startsWith('drawArrays')?3:4]:1;
+        sample.triangles+=(args[0]===4?count/3:[5,6].includes(args[0])?Math.max(0,count-2):0)*instances;
+        return original.apply(this,args);
+      };
+    }
   }
-  fs.writeFileSync(out,JSON.stringify(report,null,2));
-  console.log('PERF_REPORT',JSON.stringify(report,null,2));
-}finally{await browser.close();}
+  const raf=window.requestAnimationFrame.bind(window);
+  window.requestAnimationFrame=callback=>raf(time=>{
+    const calls=sample.calls,triangles=sample.triangles;
+    callback(time);
+    if(sample.mode==='sample'){
+      sample.frames.push({timestampMs:time,intervalMs:sample.lastTime===null?null:time-sample.lastTime,calls:sample.calls-calls,triangles:sample.triangles-triangles,phase:window.__bananaGame?.game.phase??'startup'});
+      sample.lastTime=time;
+    }
+  });
+}
+export async function runPerf() {
+  const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+  const seconds=Number(process.env.PERF_SECONDS||60),warmupSeconds=Number(process.env.PERF_WARMUP_SECONDS||5),repeats=Number(process.env.PERF_REPEATS||1),[width,height]=(process.env.PERF_SIZE||'1920x1080').split('x').map(Number);
+  const qualities=process.env.PERF_QUALITY?[process.env.PERF_QUALITY]:['high','low'];
+  if(qualities.some(q=>!['high','low'].includes(q)))throw new Error('PERF_QUALITY must be high or low');
+  if(!(seconds>0&&warmupSeconds>=0&&Number.isInteger(repeats)&&repeats>0&&width>0&&height>0))throw new Error('Invalid performance sample configuration');
+  const out=path.resolve(process.env.PERF_REPORT||'artifacts/perf-report.json');fs.mkdirSync(path.dirname(out),{recursive:true});
+  const channel=process.env.PLAYWRIGHT_CHANNEL??'chrome';
+  const browser=await chromium.launch({...(channel?{channel}:{}),headless:process.env.HEADED!=='1',args:['--ignore-gpu-blocklist']});
+  const report={testedAt:new Date().toISOString(),seconds,warmupSeconds,repeats,viewport:`${width}x${height}`,platform:{os:os.platform(),release:os.release(),arch:os.arch(),cpu:os.cpus()[0]?.model},browser:await browser.version(),fixture:{shieldRefreshed:true,naturalGameplay:false,virtualClock:false},method:'All rAF intervals in the complete sample; all WebGL render passes including shadows; no slow-frame filtering',tiers:{}};
+  try{
+    for(const quality of qualities)for(let repeat=0;repeat<repeats;repeat++){
+      const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1}),errors=[];
+      page.on('pageerror',error=>errors.push(error.message));page.on('response',response=>{if(response.status()>=400)errors.push(`${response.status()} ${response.url()}`);});
+      await page.addInitScript(instrumentPerformance);
+      const url=new URL(process.env.GAME_URL||'http://127.0.0.1:4173/');url.searchParams.set('quality',quality);
+      const start=Date.now();await page.goto(url.href);await page.locator('#start:not([disabled])').waitFor({timeout:600000});
+      const loadMs=Date.now()-start;
+      const resources=await page.evaluate(()=>performance.getEntriesByType('resource').map(e=>({name:new URL(e.name).pathname,transferSize:e.transferSize,encodedBodySize:e.encodedBodySize,decodedBodySize:e.decodedBodySize})));
+      const gpu=await page.evaluate(()=>{const gl=window.__bananaGame.view.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),vendor:ext?gl.getParameter(ext.UNMASKED_VENDOR_WEBGL):gl.getParameter(gl.VENDOR),version:gl.getParameter(gl.VERSION),userAgent:navigator.userAgent,dpr:devicePixelRatio};});
+      report.renderer??=gpu.renderer;report.gpu??=gpu;
+      await page.evaluate(()=>{window.__bananaPerfFixture=setInterval(()=>{const game=window.__bananaGame.game;if(game.phase==='racing')game.buffs.shield=8;},100);});
+      await page.locator('#start').click();
+      await page.waitForFunction(()=>window.__bananaGame.game.phase==='racing',null,{timeout:600000});
+      await page.waitForTimeout(warmupSeconds*1000);
+      await page.evaluate(()=>{const m=window.__bananaPerf;m.frames=[];m.lastTime=null;m.startedAt=performance.now();m.mode='sample';});
+      await page.waitForTimeout(seconds*1000);
+      const sample=await page.evaluate(()=>{const m=window.__bananaPerf;m.mode='idle';m.endedAt=performance.now();clearInterval(window.__bananaPerfFixture);const {game,view}=window.__bananaGame;return {frames:m.frames,actualSeconds:(m.endedAt-m.startedAt)/1000,distance:game.s,phase:game.phase,quality:view.quality,memoryMB:performance.memory?performance.memory.usedJSHeapSize/1048576:null,geometries:view.renderer.info.memory.geometries,textures:view.renderer.info.memory.textures};});
+      const {frames,...state}=sample,stats=summarizeFrames(frames),transferBytes=resources.reduce((sum,e)=>sum+e.transferSize,0),encodedBodyBytes=resources.reduce((sum,e)=>sum+e.encodedBodySize,0),decodedBodyBytes=resources.reduce((sum,e)=>sum+e.decodedBodySize,0);
+      const result={loadMs,transferMB:transferBytes/1048576,encodedBodyMB:encodedBodyBytes/1048576,decodedBodyMB:decodedBodyBytes/1048576,...state,...stats,gpu,resources,frameSamples:frames,errors};
+      report.tiers[quality]=result;if(repeats>1)(report.runs??=[]).push({quality,repeat,...result});
+      fs.writeFileSync(out,JSON.stringify(report,null,2));await page.close();
+      if(errors.length||!stats.frames||state.phase!=='racing'||Object.keys(stats.phases).some(phase=>phase!=='racing'))throw new Error(`Invalid ${quality} performance sample: ${errors.join('; ')||JSON.stringify(stats.phases)}`);
+    }
+    console.log('PERF_REPORT',JSON.stringify({...report,runs:report.runs?.map(({frameSamples,resources,...summary})=>summary),tiers:Object.fromEntries(Object.entries(report.tiers).map(([quality,result])=>[quality,{...result,frameSamples:undefined,resources:undefined}]))},null,2));
+    return report;
+  }finally{await browser.close();}
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href)await runPerf();

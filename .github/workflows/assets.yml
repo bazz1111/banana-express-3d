@@ -1,0 +1,93 @@
+name: Blender asset rebuild
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build-*.py'
+      - 'scripts/test-*.py'
+      - 'scripts/*assets.mjs'
+      - 'scripts/check-compressed.mjs'
+      - 'scripts/asset-fingerprint.mjs'
+      - 'assets/blender/**'
+      - 'assets/export/**'
+      - 'public/assets/**'
+      - 'tests/fixtures/blender/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/assets.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-*.py'
+      - 'scripts/test-*.py'
+      - 'scripts/*assets.mjs'
+      - 'scripts/check-compressed.mjs'
+      - 'scripts/asset-fingerprint.mjs'
+      - 'assets/blender/**'
+      - 'assets/export/**'
+      - 'public/assets/**'
+      - 'tests/fixtures/blender/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/assets.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 1'
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      BLENDER_VERSION: 5.2.2
+      # https://download.blender.org/release/Blender5.2/blender-5.2.2.sha256
+      BLENDER_SHA256: 84098912789dc450e95697c4184fb8a90acbe5111c2ba4aede3fecb57806a168
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install Blender runtime libraries
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libegl1 libxi6 libxrender1 libxfixes3 libxxf86vm1 libxkbcommon0 libsm6
+      - uses: actions/cache@v4
+        with:
+          path: ~/blender
+          key: blender-5.2.2-linux-x64-84098912789dc450
+      - name: Install verified official Blender release
+        run: |
+          if ! test -x "$HOME/blender/blender"; then
+            curl --fail --location --retry 3 --output "$RUNNER_TEMP/blender.tar.xz" "https://download.blender.org/release/Blender5.2/blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+            printf '%s  %s\n' "$BLENDER_SHA256" "$RUNNER_TEMP/blender.tar.xz" | sha256sum --check --strict
+            mkdir -p "$HOME/blender"
+            tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$HOME/blender" --strip-components=1
+          fi
+          "$HOME/blender/blender" --version
+          "$HOME/blender/blender" --background --factory-startup --python-exit-code 1 --python-expr "import bpy,numpy; assert bpy.app.version == (5,2,2); print('numpy',numpy.__version__)"
+      - name: Rebuild and verify native Blender assets
+        run: |
+          "$HOME/blender/blender" --background --factory-startup --python-exit-code 1 --python scripts/test-blender.py
+          for script in scripts/test-*.py; do
+            if test "$script" != scripts/test-blender.py; then
+              "$HOME/blender/blender" --background --factory-startup --python-exit-code 1 --python "$script"
+            fi
+          done
+      - run: pnpm check:assets
+      - name: Compare decoded fingerprints with committed canonical assets
+        run: pnpm assets:fingerprint
+      - name: Compress and verify committed runtime assets
+        run: |
+          pnpm assets:compress
+          git diff --exit-code -- public/assets
+          test -z "$(git ls-files --others --exclude-standard public/assets)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rebuilt-blender-assets
+          path: |
+            assets/export
+            public/assets
+            artifacts/asset-fingerprint-diff.json
+            artifacts/blender-*.json
