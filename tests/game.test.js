@@ -347,3 +347,22 @@ test('collectibles avoid all obstacle volumes across varied seeds and later chun
     }
   }
 });
+
+test('E sprint is edge-triggered, boosts for 1.5 s and then waits a six-second cooldown', () => {
+  const g = racer();
+  const events = ticks(g, 1, { dash: true });
+  assert.equal(events.filter(e => e.type === 'dash').length, 1, 'Holding E must not retrigger');
+  assert.equal(g.speed, 15); near(g.cooldowns.dash, 6 - 59 / 60, 1e-6); near(g.buffs.boost, 1.5 - 59 / 60, 1e-6);
+  ticks(g, .6); assert.equal(g.speed, 12);
+  assert.equal(ticks(g, 1, { dash: true }).filter(e => e.type === 'dash').length, 0, 'Cooldown blocks a new sprint');
+  ticks(g, 3.5); assert.equal(g.cooldowns.dash, 0);
+  assert.equal(ticks(g, 1 / 60, { dash: true }).filter(e => e.type === 'dash').length, 1);
+});
+
+test('E sprint never shortens a longer boost pickup and freezes with pause', () => {
+  const g = racer(); g.buffs.boost = 4;
+  ticks(g, 1 / 60, { dash: true }); near(g.buffs.boost, 4 - 1 / 60, 1e-9);
+  core.togglePause(g); assert.equal(g.held.dash, false);
+  const cooldown = g.cooldowns.dash; ticks(g, 3, { dash: true });
+  assert.equal(g.cooldowns.dash, cooldown);
+});
