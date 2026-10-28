@@ -4,6 +4,7 @@ import { GameView } from './view.js';
 import { GameAudio } from './audio.js';
 import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH } from './game.ts';
 import { createSessionCourse, readPreferences, savePreferences } from './session.js';
+import { ActionBuffer } from './inputBuffer.js';
 
 const $ = id => document.getElementById(id);
 const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
@@ -12,6 +13,7 @@ const audio = new GameAudio();
 audio.enabled = preferences.sound;
 const keys = new Set();
 const pointers = new Map();
+const actions = new ActionBuffer();
 const bestKey = 'banana-endless-best';
 const RACK_CAPACITY = 100, KICK_COOLDOWN = 18;
 // Presentation-only freeze on a landed kick; the fixed-step simulation simply receives no time.
@@ -66,6 +68,7 @@ function bestText() {
 function clearInput() {
   keys.clear();
   pointers.clear();
+  actions.clear();
   hitStop = 0;
   for (const id of ['touch-left', 'touch-right', 'touch-jump', 'touch-kick', 'touch-dash', 'kick-skill', 'dash-skill']) {
     $(id).classList.remove('pressed');
@@ -144,6 +147,7 @@ $('sound').addEventListener('click', async () => {
   preferences.sound = audio.enabled;
   savePreferences(preferences);
   updateSound();
+  if (running()) $('game-canvas').focus({ preventScroll: true });
 });
 $('quality').addEventListener('click', () => {
   if (!view || contextLost) return;
@@ -151,6 +155,7 @@ $('quality').addEventListener('click', () => {
   setQuality(view.quality === 'high' ? 'low' : 'high');
   preferences.quality = view.quality;
   savePreferences(preferences);
+  if (running()) $('game-canvas').focus({ preventScroll: true });
 });
 
 for (const [id, code] of [
@@ -162,13 +167,15 @@ for (const [id, code] of [
     event.preventDefault();
     if (!canInteract() || game?.phase !== 'racing') return;
     pointers.set(event.pointerId, code);
+    actions.press(code);
     button.classList.add('pressed');
     button.setPointerCapture(event.pointerId);
     audio.start();
   });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
     button.addEventListener(type, event => {
-      pointers.delete(event.pointerId);
+      const wasHeld = pointers.delete(event.pointerId);
+      if (type !== 'pointerup' && wasHeld) actions.cancel(code, held(code));
       button.classList.remove('pressed');
     });
   }
@@ -193,7 +200,10 @@ window.addEventListener('keydown', event => {
   }
   if (['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyQ', 'KeyE'].includes(event.code)) {
     event.preventDefault();
-    if (game.phase === 'racing') keys.add(event.code);
+    if (game.phase === 'racing') {
+      keys.add(event.code);
+      if (!event.repeat) actions.press(event.code);
+    }
   }
 });
 window.addEventListener('keyup', event => keys.delete(event.code));
@@ -365,10 +375,7 @@ async function boot() {
       hitStop = Math.max(0, hitStop - dt);
       const activeDt = running() && canInteract() && !stopped ? dt : 0;
       if (!contextLost) {
-        advance(game, {
-          steer: (held('KeyD') || held('ArrowRight') ? 1 : 0) - (held('KeyA') || held('ArrowLeft') ? 1 : 0),
-          jump: held('Space'), kick: held('KeyQ'), dash: held('KeyE'),
-        }, activeDt);
+        actions.consume(advance(game, actions.sample(held), activeDt));
         feedback();
         view.update(game, activeDt, canInteract()?dt:0);
       }

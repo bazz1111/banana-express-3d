@@ -17,7 +17,7 @@ export interface Course {
   points?:RoadPoint[];step?:number;
   road?:{period:number;advance:{x:number;y:number;z:number}};
 }
-export interface PlayerInput {steer?:number;jump?:boolean;kick?:boolean;dash?:boolean}
+export interface PlayerInput {steer?:number;jump?:boolean;kick?:boolean;dash?:boolean;cancelKick?:boolean;jumpPressed?:boolean;dashPressed?:boolean}
 export type GameEvent =
   |{type:'pickup';kind:PickupKind;count:number;points:number}
   |{type:'kick';id:string;charged:boolean}|{type:'miss';charged:boolean}
@@ -164,14 +164,15 @@ function step(g:GameState, input:PlayerInput, dt:number) {
   for (const key of ['boost','shield','double'] as const) g.buffs[key] = remaining(g.buffs[key],dt);
 
   const oldS = g.s, oldLane = g.lane, oldHeight = g.jumpHeight;
+  if (input.cancelKick) g.charge = 0;
   if (input.kick && !g.cooldowns.kick) g.charge = Math.min(1.2, g.charge + dt);
   if (!input.kick && g.charge > 0) kick(g);
-  if (input.jump && !g.held.jump && !g.jumpHeight) {
+  if (input.jump && (input.jumpPressed || !g.held.jump) && !g.jumpHeight) {
     g.jumpVelocity = g.handling.jumpVelocity; g.jumpHeight = .01; g.airTime = 0;
     g.events.push({type:'jump'});
   }
   g.held.jump = !!input.jump;
-  if (input.dash && !g.held.dash && !g.cooldowns.dash) {
+  if (input.dash && (input.dashPressed || !g.held.dash) && !g.cooldowns.dash) {
     g.buffs.boost = Math.max(g.buffs.boost, DASH.duration); g.cooldowns.dash = DASH.cooldown;
     g.events.push({type:'dash'});
   }
@@ -291,13 +292,18 @@ function rollCourse(g:GameState) {
 
 export function advance(g:GameState, input:PlayerInput, delta:number) {
   g.events = [];
-  if (g.phase === 'paused' || g.phase === 'ready' || g.phase === 'finished') {g.accumulator = 0; return;}
-  if (!Number.isFinite(delta) || delta <= 0) return;
+  if (g.phase === 'paused' || g.phase === 'ready' || g.phase === 'finished') {g.accumulator = 0; return 0;}
+  if (!Number.isFinite(delta) || delta <= 0) return 0;
   g.accumulator += Math.min(delta,.25);
+  let steps = 0, tickInput = input;
   while (g.accumulator+1e-10 >= FIXED_STEP) {
-    step(g,input,FIXED_STEP); g.accumulator = Math.max(0,g.accumulator-FIXED_STEP);
+    step(g,tickInput,FIXED_STEP); steps++; g.accumulator = Math.max(0,g.accumulator-FIXED_STEP);
+    // Physical edges/commands occur once, even when this render catches up several ticks.
+    if(tickInput.jumpPressed||tickInput.dashPressed||tickInput.cancelKick)
+      tickInput={...tickInput,jumpPressed:false,dashPressed:false,cancelKick:false};
     if (g.endReason) {g.accumulator = 0; break;}
   }
+  return steps;
 }
 
 export function resultFor(g:GameState) {

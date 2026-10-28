@@ -56,14 +56,15 @@ stateDiagram-v2
 
 - Course：`mode:'endless'`, `seed:number`, `chunkLength:80`, `lookAhead:480`，原生道路 `step:2, points:[{s,x,y,z,yaw}], road:{period:1600,advance:{x,y,z}}`；可选 `procedural:false, obstacles:[], pickups:[]` 用于规则夹具，不作为正常关卡配置。
 - Phase：`ready | countdown | racing | paused | finished`；`resumePhase` 保存暂停前状态。
-- Input：`steer:number (-1..1), jump:boolean, kick:boolean, dash:boolean`；没有 load/launch/throttle/brake/brace/deliver。
+- Input：`steer:number (-1..1), jump:boolean, kick:boolean, dash:boolean`；可选 `jumpPressed,dashPressed,cancelKick:boolean` 是一次性物理按下/取消命令。没有 load/launch/throttle/brake/brace/deliver。
+- 输入适配：`src/inputBuffer.js` 的 `ActionBuffer` 共用键盘/触控意图。短按保留到真实模拟步；`advance` 返回实际步数，0步不能清缓冲。物理按下/取消只应用于本次追赶的首个tick，不能跨多个tick重复触发；普通持续按住由 `held` 去重。触控取消在事件发生时检查其他输入源，最后一个源取消则清蓄力、不踢击/不扣冷却；其他源仍按住时不能擦除其随后正常松手。暂停、失焦、结束和重开清全部意图。
 - GameState：`course,handling,phase,resumePhase,stance:'seated'|'standing',s,lane,lateralSpeed,speed,baseSpeed,elapsed,score,bananas,combo,chain,chainTimer,countdown,accumulator,jumpHeight,jumpVelocity,airTime,charge,kickPose,kickSide,kickedCount,invulnerable,cooldowns:{kick,dash},buffs:{boost,shield,double},held:{jump,dash},events,failure,endReason:'collision'|'quit'|'',obstacles,pickups,nextChunk`。
 - Obstacle：`id,type,s,lane,originalLane,kicked,hit,passed,jumpCleared,flight,kickSide?,crossing?,seed?,frequency?,speed?,lift?`。拾取物：`id,type:'banana'|'boost'|'shield'|'double',s,lane,height,collected`。height 为道路上方香蕉/道具中心高度。
 - `obstacleSpecs[type]`：`width,length,height,jumpable`，width/length 为全尺寸。
 - Event：`pickup`（`kind,count,points`）；`kick`（`id,charged`）；`miss`（`charged`）；`collision`（`id`）；`shield`（`id`）；`stunt`（`points,label`）；`jump | launch | go | finish | dash`。
 - 接口的完整类型以 `src/game.ts` 为准。
 - `resultFor(g)`：`total` 整数分、`distance` 整数米、`bananas`、`elapsed`、`reason`。不再输出通关排名或配送奖章。
-- View：`new GameView(canvas,onProgress)`, `await view.load()`, `view.course`, `view.update(g,dt)`, `view.events(events,g)`, `view.reset(g)`。main 保留显式重开 reset 和 WebGL 丢失恢复。调试只暴露读取 `window.__bananaGame={get game(){…},view}`，不要增加奖励作弊到生产代码。
+- View：`new GameView(canvas,onProgress)`, `await view.load()`, `view.course`, `view.update(g,dt)`, `view.events(events,g)`, `view.reset(g)`。main 保留显式重开 reset 和 WebGL 丢失恢复。相同游戏在paused首次绘制后停止重复提交，resize/画质/上下文恢复标记重绘；继续、结算及新局不命中暂停缓存。调试只暴露读取 `window.__bananaGame={get game(){…},view}`，不要增加奖励作弊到生产代码。
 
 ## 资产、动作与场景合同
 
@@ -102,10 +103,12 @@ stateDiagram-v2
 - 会话：正常每局新种子，显式 `?seed=2817` 等用于确定性重放，结算显示种子。画质/声音/最高纪录保存在localStorage；损坏、禁用或写失败不能阻止开局。
 - 性能目标：中端桌面60fps、每帧完整GL调用<300、首屏运行资源<30MB。使用真实rAF统计所有长帧；虚拟时钟功能检查不代表FPS。Apple M6结果不替代GTX1650/IrisXe或手机真机验收。
 - 生产：构建后预生成Brotli/gzip，内置Node服务器按浏览器能力传输；CI固定Node/Playwright/官方Blender版本与SHA，原生源只读重导并严格比对指纹。未使用KTX2、完整lightmap或在线排行榜。
+- 首用准备：加载期对高/低档和前景/远景分别预编译，并实际进行1像素默认framebuffer绘制；不能只把远景关闭太阳投影当作低档关闭shadowMap。完成后恢复全部对象可见/裁剪、阴影与当前画布尺寸，首击帧时及启动时间分别复验。
 
 | 模块 | 关键文件 |
 |---|---|
 | 状态/速度/生成/扫掠碰撞/计分 | `src/game.ts` |
+| 跨帧动作意图、输入源取消、模拟消费 | `src/inputBuffer.js`、`src/main.js` |
 | 会话种子/偏好与存储容错 | `src/session.js`、`src/main.js` |
 | GLB/LOD/池化/材质/镜头/特效 | `src/view.js`、`src/kickCamera.js` |
 | 蒙皮动作与真实接触IK | `src/mixamoRiderAnimation.js` |
@@ -115,7 +118,9 @@ stateDiagram-v2
 | WebAudio与缓存 | `src/audio.js` |
 | 来源/导出/无损压缩/门禁 | `scripts/banana-tripo/`、`scripts/export-saved-assets.py`、`.github/workflows/assets.yml` |
 
-最新资源体积、帧时、截图和检查结果统一记录在 [2026-10-28检查报告](banana-audit-20261028.md)，旧版本数字不再作为当前验收结论。
+关卡存在性采样用 `pnpm check:course`：12种子×3里程区间，每段12秒、0.1秒控制决策、128个候选状态，随后正式60Hz扫掠规则重放。排除拾取物与防御技能，保留加速压力和入口车位夹具；高里程可以从三个候选车位选择。不能由单个障碍宽度或这些有限样本推断全部随机布局、入口连通性或真人可读性。
+
+最新架构/输入/关卡/暂停及性能检查见 [技能复审报告](banana-reaudit-20261028.md)，未修改的资源/动作制作证据见 [资产重制报告](banana-audit-20261028.md)。不同版本和测量方式的数字不混作同一验收结论。
 
 ## 删除/修改清单
 

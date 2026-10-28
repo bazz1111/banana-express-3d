@@ -120,8 +120,10 @@ export class GameView {
     this.quality='high';this.motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;this.time=0;this.shake=0;
     this.effects=[];this.windTime={value:0};this.cameraReady=false;this.lastDistance=0;
     this.lookTarget=new THREE.Vector3();this.resize();window.addEventListener('resize',()=>this.resize());
+    this.canvas.addEventListener('webglcontextrestored',()=>{this.needsRender=true;});
   }
   resize(){
+    this.needsRender=true;
     const w=Math.max(1,this.canvas.clientWidth),h=Math.max(1,this.canvas.clientHeight);
     this.renderer.setPixelRatio(this.quality==='high'?Math.min(devicePixelRatio,1.5):.8);this.renderer.setSize(w,h,false);
     this.camera.aspect=w/h;this.camera.updateProjectionMatrix();
@@ -172,8 +174,32 @@ export class GameView {
       const p=geometry.getAttribute('position'),vertices=new Float32Array(p.count*3);for(let i=0;i<p.count;i++){vertices[i*3]=p.getX(i);vertices[i*3+1]=p.getY(i);vertices[i*3+2]=p.getZ(i);}return {segment:chunk.segment,vertices,
         indices:geometry.index?new Uint32Array(geometry.index.array):Uint32Array.from({length:p.count},(_,i)=>i)};
     }));
-    const {ScenePhysics}=await physicsModule;this.physics=await ScenePhysics.create(this.course,surfaces);this.debrisView=new VehicleDebris(this.physics,this.scene);await this.renderer.compileAsync(this.scene,this.camera);
-    this.sun.castShadow=false;await this.renderer.compileAsync(this.scene,this.panoramaCamera);this.sun.castShadow=true;return this.course;
+    const {ScenePhysics}=await physicsModule;this.physics=await ScenePhysics.create(this.course,surfaces);this.debrisView=new VehicleDebris(this.physics,this.scene);
+    // The low tier disables the shadow renderer but keeps the sun as a shadow
+    // light. That is a different shader variant from the panorama's shadowless
+    // sun. Compile both shipped tiers, including actors not yet on the road.
+    const actors=new THREE.Group(),shadows=this.renderer.shadowMap.enabled,warmCamera=this.camera.clone();
+    warmCamera.layers.enableAll();
+    for(const name of ['truck','car','pedestrian','goat','barrier','crate','wall','train'])actors.add(this.clone(name));
+    this.scene.add(actors);
+    const visibility=[];
+    this.scene.traverse(object=>{visibility.push([object,object.visible,object.frustumCulled]);object.visible=true;object.frustumCulled=false;});
+    try{
+      for(const enabled of [true,false]){
+        this.renderer.shadowMap.enabled=enabled;
+        for(const castShadow of [true,false]){
+          this.sun.castShadow=castShadow;
+          await this.renderer.compileAsync(this.scene,warmCamera);
+          // compileAsync visits every mesh, so the first-use draw must also
+          // include both layers; otherwise an impact variant stays unexercised.
+          this.renderer.setSize(1,1,false);this.renderer.clear();this.renderer.render(this.scene,warmCamera);
+        }
+      }
+    }finally{
+      for(const [object,visible,frustumCulled] of visibility){object.visible=visible;object.frustumCulled=frustumCulled;}
+      this.sun.castShadow=true;this.renderer.shadowMap.enabled=shadows;this.scene.remove(actors);this.resize();
+    }
+    return this.course;
   }
   clone(name){return name==='riderSkinned'?cloneSkeleton(this.assets[name]):this.assets[name].clone(true);}
   geometry(name){
@@ -288,6 +314,7 @@ export class GameView {
     this.particleMeshes={};for(const name of ['dust','spark','rock']){const m=this.instances(name,48);m.frustumCulled=false;m.castShadow=false;this.particleMeshes[name]=m;}
   }
   reset(g){
+    this.needsRender=true;this.lastRenderedPhase=null;
     this.lastGame=g;this.lastDistance=g.s;this.effects=[];this.shake=0;this.cameraReady=false;this.time=0;this.stanceBlend=g.stance==='standing'?1:0;this.kickBlend=[0,0];
     this.debrisView?.reset();this.pendingDebris.clear();this.landingPlayed.clear();this.kickCamera.reset();this.riderAnimator?.reset(g.stance);
     // Procedural ids repeat across seeds; an early restart can change their kinds.
@@ -339,6 +366,7 @@ export class GameView {
     for(const [name,mesh] of Object.entries(this.sceneryShadows)){mesh.visible=this.quality==='high';this.finishInstances(mesh,shadowCounts[name]);}
   }
   update(g,dt,visualDt=dt){
+    if(g.phase==='paused'&&this.lastGame===g&&this.lastRenderedPhase==='paused'&&!this.needsRender)return;
     if(this.lastGame!==g)this.reset(g);
     const active=g.phase!=='paused'&&g.phase!=='finished',delta=active?Math.min(dt,.1):0,previousDistance=this.lastDistance;this.lastDistance=g.s;
     for(const p of this.effects){p.p.copy(rebasePosition(this.course,p.p,previousDistance,g.s));p.v.copy(rebaseVector(this.course,p.v,previousDistance,g.s));}
@@ -444,5 +472,6 @@ export class GameView {
     const fog=this.scene.fog,sky=this.scene.background;this.scene.fog=this.panoramaFog;this.sun.castShadow=false;
     this.renderer.render(this.scene,this.panoramaCamera);this.sun.castShadow=true;this.scene.fog=fog;this.renderer.clearDepth();this.scene.background=null;
     this.renderer.render(this.scene,this.camera);this.scene.background=sky;
+    this.lastRenderedPhase=g.phase;this.needsRender=false;
   }
 }

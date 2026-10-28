@@ -1,0 +1,81 @@
+{
+  "metrics": {
+    "calls": 116,
+    "triangles": 2000770,
+    "medianFrameMs": 16.699999999999818,
+    "p95FrameMs": 16.700000000000273
+  },
+  "phases": {
+    "ready": {
+      "frames": 125,
+      "maxCalls": 116,
+      "maxTriangles": 2000770
+    },
+    "countdown": {
+      "frames": 376,
+      "maxCalls": 117,
+      "maxTriangles": 2001002
+    },
+    "racing": {
+      "frames": 13227,
+      "maxCalls": 180,
+      "maxTriangles": 2326066
+    },
+    "paused": {
+      "frames": 134,
+      "maxCalls": 115,
+      "maxTriangles": 2132128
+    },
+    "finished": {
+      "frames": 153,
+      "maxCalls": 131,
+      "maxTriangles": 2197781
+    }
+  },
+  "final": {
+    "phase": "racing",
+    "s": 3602.924999999839,
+    "lane": -2.726420520477027,
+    "lateralSpeed": 3.0542795096041284,
+    "speed": 26,
+    "baseSpeed": 26,
+    "bananas": 158,
+    "score": 6979.108333332971,
+    "elapsed": 200.11666666671806,
+    "stance": "seated",
+    "charge": 0,
+    "jumpHeight": 0,
+    "kicks": 3,
+    "cd": 15.533333333333424,
+    "buffs": {
+      "boost": 0,
+      "shield": 0,
+      "double": 0
+    },
+    "models": 7,
+    "bodies": 2,
+    "children": 65
+  },
+  "peakModels": 8,
+  "peakBodies": 5,
+  "peakSpeed": 32.5,
+  "kicked": true,
+  "paused": true,
+  "jumped": true,
+  "stood": true,
+  "satAgain": true,
+  "dashed": true,
+  "shieldSeen": true,
+  "boostSeen": true,
+  "doubleSeen": true,
+  "collisionEnd": true,
+  "errors": [],
+  "method": "Actual keyboard/UI input and naturally generated obstacles/pickups; virtual clock accelerates functional validation; metrics/phases are diagnostics, not FPS evidence",
+  "url": "http://127.0.0.1:4183/?seed=2817",
+  "fixture": {
+    "virtualClock": true,
+    "injectedDistance": false,
+    "injectedBananas": false,
+    "injectedShield": false
+  }
+}

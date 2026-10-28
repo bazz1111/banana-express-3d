@@ -1,0 +1,185 @@
+{
+  "desktop": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "quality": "high",
+    "input": "keyboard",
+    "fixture": {
+      "trafficDisabledForControls": true,
+      "temporaryReleaseFreeze": true,
+      "s": 57.699999999999974,
+      "charge": 1.016666666666668,
+      "lane": 0
+    },
+    "cancellationChecks": null,
+    "shaders": {
+      "newImpactPrograms": 0,
+      "firstUseQueries": 0
+    },
+    "paused": {
+      "unchangedDrawCalls": 0,
+      "resizeRedrawn": true,
+      "simulationFrozen": true
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 85,
+    "hud": "85",
+    "flight": 0.39999999999999997,
+    "vehicleBounds": {
+      "min": [
+        -0.27394558292950605,
+        0.27587860080035587
+      ],
+      "max": [
+        0.1574081304482262,
+        0.8758205919635034
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.27394558292950605,
+        0.27587860080035587
+      ],
+      "max": [
+        0.1574081304482262,
+        0.8758205919635034
+      ]
+    },
+    "camera": [
+      2.5352021966761256,
+      2.2498982064191972,
+      -3.681428616279887
+    ],
+    "fov": 56.10693326306167,
+    "callsPerFrame": 106.66666666666667,
+    "msPerFrame": 16.858333349227905,
+    "loadMs": 1008
+  },
+  "touch": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "quality": "high",
+    "input": "real touch",
+    "fixture": {
+      "trafficDisabledForControls": true,
+      "temporaryReleaseFreeze": true,
+      "s": 79.10000000000026,
+      "charge": 1.0000000000000013,
+      "lane": 0
+    },
+    "cancellationChecks": {
+      "touchCancelPreservedCooldown": true,
+      "keyboardReleaseAfterTouchCancel": true
+    },
+    "shaders": {
+      "newImpactPrograms": 0,
+      "firstUseQueries": 0
+    },
+    "paused": {
+      "unchangedDrawCalls": 0,
+      "resizeRedrawn": true,
+      "simulationFrozen": true
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 85,
+    "hud": "85",
+    "flight": 0.3833333333333333,
+    "vehicleBounds": {
+      "min": [
+        -0.7222168962108011,
+        0.1316557181627332
+      ],
+      "max": [
+        0.600888388566543,
+        0.5735211791189795
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.7222168962108007,
+        0.1316557181627332
+      ],
+      "max": [
+        0.6008883885665433,
+        0.5735211791189793
+      ]
+    },
+    "camera": [
+      4.047791472908628,
+      2.7037955768190898,
+      -6.1730485315172645
+    ],
+    "fov": 56.1070387147037,
+    "callsPerFrame": 104.75,
+    "msPerFrame": 16.991666674613953,
+    "loadMs": 988
+  },
+  "small-touch": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "quality": "high",
+    "input": "real touch",
+    "fixture": {
+      "trafficDisabledForControls": true,
+      "temporaryReleaseFreeze": true,
+      "s": 78.70000000000026,
+      "charge": 1.0000000000000013,
+      "lane": 0
+    },
+    "cancellationChecks": {
+      "touchCancelPreservedCooldown": true,
+      "keyboardReleaseAfterTouchCancel": true
+    },
+    "shaders": {
+      "newImpactPrograms": 0,
+      "firstUseQueries": 0
+    },
+    "paused": {
+      "unchangedDrawCalls": 0,
+      "resizeRedrawn": true,
+      "simulationFrozen": true
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 85,
+    "hud": "85",
+    "flight": 0.3833333333333333,
+    "vehicleBounds": {
+      "min": [
+        -0.7231102792635553,
+        0.1317995187406157
+      ],
+      "max": [
+        0.6015683731407186,
+        0.5736472615280476
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.7231102792635552,
+        0.1317995187406157
+      ],
+      "max": [
+        0.6015683731407184,
+        0.5736472615280477
+      ]
+    },
+    "camera": [
+      4.047780605252359,
+      2.705884706719639,
+      -6.173055606781649
+    ],
+    "fov": 56.10702796481573,
+    "callsPerFrame": 104.66666666666667,
+    "msPerFrame": 16.916666666666668,
+    "loadMs": 953
+  }
+}

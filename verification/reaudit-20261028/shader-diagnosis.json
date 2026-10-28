@@ -1,0 +1,337 @@
+{
+  "method": "CPU Profiler + Long Animation Frame diagnostics; profiling adds overhead and is not the FPS benchmark",
+  "bundle": "index-BCvPyEms.js",
+  "before": {
+    "high": {
+      "kicks": 1,
+      "longAnimationFrames": [
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 9161,
+          "duration": 117.39999985694885,
+          "navigationId": 538,
+          "paintTime": 9278.399999856949,
+          "presentationTime": 9296,
+          "renderStart": 9269.099999904633,
+          "styleAndLayoutStart": 9277.700000047684,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 0,
+          "scripts": [
+            {
+              "name": "script",
+              "entryType": "script",
+              "startTime": 9269.099999904633,
+              "duration": 8.600000143051147,
+              "navigationId": 538,
+              "invoker": "FrameRequestCallback",
+              "invokerType": "user-callback",
+              "windowAttribution": "self",
+              "executionStart": 9269.099999904633,
+              "forcedStyleAndLayoutDuration": 0,
+              "pauseDuration": 0,
+              "sourceURL": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+              "sourceFunctionName": "e",
+              "sourceCharPosition": 737999
+            }
+          ]
+        },
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 9278.799999952316,
+          "duration": 50.09999990463257,
+          "navigationId": 538,
+          "paintTime": 9328.899999856949,
+          "presentationTime": 9360,
+          "renderStart": 9279.200000047684,
+          "styleAndLayoutStart": 9328.599999904633,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 0,
+          "scripts": [
+            {
+              "name": "script",
+              "entryType": "script",
+              "startTime": 9279.200000047684,
+              "duration": 49.299999952316284,
+              "navigationId": 538,
+              "invoker": "FrameRequestCallback",
+              "invokerType": "user-callback",
+              "windowAttribution": "self",
+              "executionStart": 9279.200000047684,
+              "forcedStyleAndLayoutDuration": 0,
+              "pauseDuration": 0,
+              "sourceURL": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+              "sourceFunctionName": "e",
+              "sourceCharPosition": 737999
+            }
+          ]
+        },
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 10423.200000047684,
+          "duration": 62.5,
+          "navigationId": 538,
+          "paintTime": 10485.700000047684,
+          "presentationTime": 10508,
+          "renderStart": 10424.799999952316,
+          "styleAndLayoutStart": 10485.200000047684,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 10.9,
+          "scripts": [
+            {
+              "name": "script",
+              "entryType": "script",
+              "startTime": 10424.899999856949,
+              "duration": 60.30000019073486,
+              "navigationId": 538,
+              "invoker": "FrameRequestCallback",
+              "invokerType": "user-callback",
+              "windowAttribution": "self",
+              "executionStart": 10424.899999856949,
+              "forcedStyleAndLayoutDuration": 0,
+              "pauseDuration": 0,
+              "sourceURL": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+              "sourceFunctionName": "e",
+              "sourceCharPosition": 737999
+            }
+          ]
+        }
+      ],
+      "topCpuSamples": [
+        {
+          "function": "(idle)",
+          "url": "",
+          "line": 0,
+          "milliseconds": 2381.865
+        },
+        {
+          "function": "(program)",
+          "url": "",
+          "line": 0,
+          "milliseconds": 613.775
+        },
+        {
+          "function": "applyBoneTransform",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 545.372
+        },
+        {
+          "function": "multiplyMatrices",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 167.649
+        },
+        {
+          "function": "applyMatrix4",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 95.655
+        },
+        {
+          "function": "em",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4224,
+          "milliseconds": 87.984
+        },
+        {
+          "function": "Ct",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4220,
+          "milliseconds": 81.607
+        },
+        {
+          "function": "W",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 81.466
+        },
+        {
+          "function": "h",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4169,
+          "milliseconds": 70.547
+        },
+        {
+          "function": "getVertexPosition",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 60.975
+        },
+        {
+          "function": "Eu.renderBufferDirect",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4220,
+          "milliseconds": 55.109
+        },
+        {
+          "function": "update",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4224,
+          "milliseconds": 52.252
+        }
+      ],
+      "newColorProgramsOnRelease": 0
+    },
+    "low": {
+      "kicks": 1,
+      "longAnimationFrames": [
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 9057.5,
+          "duration": 118.09999990463257,
+          "navigationId": 2119,
+          "paintTime": 9175.599999904633,
+          "presentationTime": 9208,
+          "renderStart": 9172.099999904633,
+          "styleAndLayoutStart": 9175.200000047684,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 0,
+          "scripts": []
+        },
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 9175.899999856949,
+          "duration": 67.10000014305115,
+          "navigationId": 2119,
+          "paintTime": 9243,
+          "presentationTime": 9276,
+          "renderStart": 9176.5,
+          "styleAndLayoutStart": 9242.599999904633,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 16.4,
+          "scripts": [
+            {
+              "name": "script",
+              "entryType": "script",
+              "startTime": 9176.700000047684,
+              "duration": 65.89999985694885,
+              "navigationId": 2119,
+              "invoker": "FrameRequestCallback",
+              "invokerType": "user-callback",
+              "windowAttribution": "self",
+              "executionStart": 9176.700000047684,
+              "forcedStyleAndLayoutDuration": 0,
+              "pauseDuration": 0,
+              "sourceURL": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+              "sourceFunctionName": "e",
+              "sourceCharPosition": 737999
+            }
+          ]
+        },
+        {
+          "name": "long-animation-frame",
+          "entryType": "long-animation-frame",
+          "startTime": 10337,
+          "duration": 140.29999995231628,
+          "navigationId": 2119,
+          "paintTime": 10477.299999952316,
+          "presentationTime": 10508,
+          "renderStart": 10343.099999904633,
+          "styleAndLayoutStart": 10477,
+          "firstUIEventTimestamp": 0,
+          "blockingDuration": 84.4,
+          "scripts": [
+            {
+              "name": "script",
+              "entryType": "script",
+              "startTime": 10343.200000047684,
+              "duration": 133.79999995231628,
+              "navigationId": 2119,
+              "invoker": "FrameRequestCallback",
+              "invokerType": "user-callback",
+              "windowAttribution": "self",
+              "executionStart": 10343.200000047684,
+              "forcedStyleAndLayoutDuration": 0,
+              "pauseDuration": 0,
+              "sourceURL": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+              "sourceFunctionName": "e",
+              "sourceCharPosition": 737999
+            }
+          ]
+        }
+      ],
+      "topCpuSamples": [
+        {
+          "function": "(idle)",
+          "url": "",
+          "line": 0,
+          "milliseconds": 2626.53
+        },
+        {
+          "function": "(program)",
+          "url": "",
+          "line": 0,
+          "milliseconds": 663.143
+        },
+        {
+          "function": "applyBoneTransform",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 538.391
+        },
+        {
+          "function": "multiplyMatrices",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 156.435
+        },
+        {
+          "function": "em",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4224,
+          "milliseconds": 81.622
+        },
+        {
+          "function": "W",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 77.633
+        },
+        {
+          "function": "Ct",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 4220,
+          "milliseconds": 77.494
+        },
+        {
+          "function": "applyMatrix4",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 68.749
+        },
+        {
+          "function": "getVertexPosition",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 68.144
+        },
+        {
+          "function": "texSubImage2D",
+          "url": "",
+          "line": 0,
+          "milliseconds": 62.986
+        },
+        {
+          "function": "fromBufferAttribute",
+          "url": "http://127.0.0.1:4183/assets/index-BCvPyEms.js",
+          "line": 1,
+          "milliseconds": 55.926
+        },
+        {
+          "function": "getShaderInfoLog",
+          "url": "",
+          "line": 0,
+          "milliseconds": 54.52
+        }
+      ],
+      "newColorProgramsOnRelease": 3
+    }
+  },
+  "finding": "First use queried shader/program logs and parameters during impact. Low tier also created three new basic shader variants; disabling shadow rendering while retaining the shadow-casting sun differs from the panorama sun being shadowless. compileAsync alone did not remove first-use work.",
+  "fix": "Compile both tier/pass configurations and perform first-use draws on a one-pixel loading canvas, then restore visibility, culling, shadow configuration and size. No shader-error checks disabled."
+}

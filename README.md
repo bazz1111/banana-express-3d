@@ -2,7 +2,7 @@
 
 Tripo H3.1 资产、本地 Blender 精修与动作、Three.js 展示的无尽骑行游戏。红衫骑手驾驶二八大杠，沿热带山道自动前进、拾取香蕉、跳跃避障和蓄力踢飞卡车。美术以图 A 为基准；实际截图与验证范围见本轮报告。
 
-最新修复及验证范围见 [本轮检查报告](docs/banana-audit-20261028.md)，剩余事项见 [卡点报告](docs/BLOCKERS.md)。[图 A 与实现草稿索引](assets/reference/README.md) 保留已确认与未确认状态。
+最新架构、玩法、关卡与性能复审见 [技能复审报告](docs/banana-reaudit-20261028.md)；模型和动作制作证据见 [资产重制报告](docs/banana-audit-20261028.md)，剩余事项见 [卡点报告](docs/BLOCKERS.md)。[图 A 与实现草稿索引](assets/reference/README.md) 保留已确认与未确认状态。
 
 ![当前可玩版本（货量和卡车为展示夹具）](verification/tripo-20261028/desktop-kick.png)
 
@@ -81,7 +81,7 @@ pnpm build
 
 GLTFLoader注册MeshoptDecoder；SkeletonUtils独立克隆蒙皮角色。四种蕉束、植被、远山和粒子用InstancedMesh；路边树796三角面、谷地树94面、远景树20面，均从真实源轮廓和颜色派生。低档两份滚动场景均保留45%森林密度，谷地树进一步切换20面版本。
 
-60Hz固定规则、扫掠碰撞和自由横移保持不变。Rapier接收实际Blender路面，驱动踢车与最多12个、寿命3秒的表现零件；回收卡车恢复门/尾板/箱子，旧零件不影响复用后的模型。它们不参与积分判定。
+60Hz固定规则、扫掠碰撞和自由横移保持不变。键盘/触控动作保留到下一次实际模拟步，短按不会因落在两个渲染帧之间而消失；触控取消不当作正常松手踢击。Rapier接收实际Blender路面，驱动踢车与最多12个、寿命3秒的表现零件；回收卡车恢复门/尾板/箱子，旧零件不影响复用后的模型。它们不参与积分判定。
 
 手绘基础色、三层Toon明暗、暖光、雾、近景动态阴影、速度线和速度FOV。材质保留源透明/裁切设置，冲击星保留生成的绘制纹理；HUD图标由同一模型在Blender渲染。背景/前景两次渲染；发光面片采用加法混合，不增加Bloom全屏通道。竖屏飞踢采用实际凸包、必要视野与路内侧镜头，人、车、货架与两轮轮廓都校验；减少动态效果和暂停设置生效。
 
@@ -95,13 +95,20 @@ pnpm typecheck
 pnpm check:assets
 pnpm check:compressed
 pnpm assets:fingerprint
+pnpm check:course
 pnpm build
 GAME_URL=http://127.0.0.1:4173/ pnpm smoke
 ```
 
 浏览器QA需另装Playwright；设置 `PLAYWRIGHT_MODULE` 可使用已有ESM入口。冒烟支持 `PLAYWRIGHT_BROWSER=chromium|firefox|webkit`；Chromium默认Chrome，空 `PLAYWRIGHT_CHANNEL` 使用安装的Playwright Chromium。Firefox/WebKit无WebGL2时报告明确跳过，不冒称兼容通过。竖屏Chromium检查实际持续触控。
 
-冒烟默认高档；软件GL的CI明确设置 `SMOKE_QUALITY=low`，高档实机测量见性能报告。临时飞踢夹具在真实松手输入送达前冻结位置，再恢复正常规则并要求命中，避免慢速软件渲染期间测试车辆已被越过。报告记录档位、浏览器版本和此夹具冻结；1.2秒松手延迟的失败/通过回归见 `verification/next-smoke-latency-report.json`。
+冒烟默认高档；软件GL的CI明确设置 `SMOKE_QUALITY=low`，本机可加 `SMOKE_SOFTWARE_GL=1` 强制Chromium使用SwiftShader。自然开局到30m后，输入检查使用明确清空交通的夹具，避免慢速渲染/协议调用期间无关障碍结束本局。临时飞踢夹具在真实松手输入送达前冻结位置，再恢复正常规则并要求命中。报告记录档位、实际渲染器、夹具、触控取消及暂停检查；这些不是自然游玩成绩或FPS证据。
+
+`pnpm check:course` 对12个种子、0/4000/1000000m共36组局部区间搜索连续转向路径，并通过生产规则重放；不使用跳跃、踢击、护盾或无敌，最高加速速度与入口位置为夹具。高里程允许三个候选入口。它验证有限样本存在通路，不证明全部种子可通行、各区间彼此连通或真人难度适宜。Chromium CI执行该检查并保留路线报告。
+
+暂停后的静止3D场景按需重绘，resize、画质切换和WebGL恢复仍触发刷新；UI继续响应。冒烟检查暂停时0新增GL调用、模拟冻结及resize后重绘。
+
+加载期预热高/低档的前景、远景及未来障碍，并在1像素画布实际绘制，覆盖Three.js延迟到首次使用的shader日志、uniform和纹理开销；随后恢复全部可见/裁剪状态和完整画布。冒烟检查尺寸恢复和首击0新增色彩program，性能收益另用真实rAF复测，不由program数量推断。
 
 完整玩法、HUD/输入、WebGL恢复、路面周期、动态货物和角色投影分别使用 `browser-check.mjs`、`fidelity-check.mjs`、`context-check.mjs`、`valley-check.mjs`、`cargo-clearance-check.mjs`、`hero-check.mjs`、`kick-camera-check.mjs`。注入100蕉、距离或盾的夹具都单独标注，不能当玩家成绩或真机性能。
 

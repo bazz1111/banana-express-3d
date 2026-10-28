@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "method": "Production build; real WEBGL_lose_context/restoreContext with a virtual clock for functional validation; explicit resume required",
+  "url": "http://127.0.0.1:4183/?seed=2817",
+  "virtualClock": true
+}
