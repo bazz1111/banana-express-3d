@@ -1,0 +1,145 @@
+{
+  "testedAt": "2026-10-27T22:59:29.311Z",
+  "seconds": 90,
+  "warmupSeconds": 5,
+  "repeats": 1,
+  "viewport": "1920x1080",
+  "platform": {
+    "os": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpu": "Apple M6"
+  },
+  "browser": "156.0.8078.48",
+  "fixture": {
+    "shieldRefreshed": true,
+    "naturalGameplay": false,
+    "virtualClock": false,
+    "stagedKicks": 6,
+    "initialDistance": 3750,
+    "lane": 4.6,
+    "bananas": 100,
+    "maximumSpeed": true,
+    "resetKickCooldown": true,
+    "trafficDisabled": true
+  },
+  "method": "All rAF intervals in the complete sample; all WebGL render passes including shadows; no slow-frame filtering",
+  "tiers": {
+    "high": {
+      "loadMs": 949,
+      "transferMB": 16.814597129821777,
+      "encodedBodyMB": 16.8057279586792,
+      "decodedBodyMB": 31.19133186340332,
+      "actualSeconds": 90.00590000009537,
+      "distance": 6073.533333333658,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "high",
+      "memoryMB": 74.07437801361084,
+      "geometries": 134,
+      "textures": 32,
+      "frames": 10773,
+      "intervals": 10772,
+      "fps": 119.68822395430878,
+      "p50": 8.30000000000291,
+      "p95": 9.900000000008731,
+      "p99": 10.30000000000291,
+      "maxFrameMs": 141.60000000000036,
+      "calls": 123.49364151118537,
+      "maxCalls": 181,
+      "triangles": 2170887.636313005,
+      "maxTriangles": 2297106,
+      "phases": {
+        "racing": 10773
+      },
+      "impact": {
+        "frames": 905,
+        "intervals": 905,
+        "fps": 117.03998758470847,
+        "p50": 8.300000000001091,
+        "p95": 9.900000000001455,
+        "p99": 10.30000000000291,
+        "maxFrameMs": 141.60000000000036,
+        "calls": 151.67734806629835,
+        "maxCalls": 160,
+        "triangles": 2237110.932596685,
+        "maxTriangles": 2297106,
+        "phases": {
+          "racing": 905
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "errors": []
+    },
+    "low": {
+      "loadMs": 954,
+      "transferMB": 16.814597129821777,
+      "encodedBodyMB": 16.8057279586792,
+      "decodedBodyMB": 31.19133186340332,
+      "actualSeconds": 90.00429999995232,
+      "distance": 6075.700000000325,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "low",
+      "memoryMB": 78.64662075042725,
+      "geometries": 133,
+      "textures": 30,
+      "frames": 10789,
+      "intervals": 10788,
+      "fps": 119.86653348162753,
+      "p50": 8.30000000000291,
+      "p95": 9.69999999999709,
+      "p99": 10.19999999999709,
+      "maxFrameMs": 33.899999999999636,
+      "calls": 82.86087681898229,
+      "maxCalls": 115,
+      "triangles": 1516973.7352859394,
+      "maxTriangles": 1581902,
+      "phases": {
+        "racing": 10789
+      },
+      "impact": {
+        "frames": 909,
+        "intervals": 909,
+        "fps": 118.79868262846983,
+        "p50": 8.300000000001091,
+        "p95": 9.800000000001091,
+        "p99": 10.300000000001091,
+        "maxFrameMs": 33.899999999999636,
+        "calls": 97.61056105610561,
+        "maxCalls": 107,
+        "triangles": 1567132.3388338834,
+        "maxTriangles": 1581902,
+        "phases": {
+          "racing": 909
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "errors": []
+    }
+  },
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+  "gpu": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "vendor": "Google Inc. (Apple)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "dpr": 1
+  }
+}

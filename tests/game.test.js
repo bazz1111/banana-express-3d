@@ -252,6 +252,38 @@ test('charged kicks launch trucks and award simulation points with an eighteen-s
   assert.ok(g.obstacles[0].flight > .4); assert.equal(g.charge, 0);
 });
 
+test('charge previews the release target side before a vehicle enters the nine-metre kick range', () => {
+  for (const fps of [30, 60, 120]) for (const side of [-1, 1]) for (const type of ['truck', 'car']) {
+    const g = racer(course([obstacle(type, 18.5, side * 2)])); g.kickSide = -side;
+    assert.ok(g.obstacles[0].s - g.s > 9);
+    for (let frame = 0; frame < fps * .8; frame++) {
+      advance(g, { kick: true }, 1 / fps);
+      if (g.charge > 0) assert.equal(g.kickSide, side, `${type}, frame ${frame}: preview must use the approached target`);
+      assert.equal(g.obstacles[0].kicked, false);
+    }
+    const chargedSide = g.kickSide;
+    assert.ok(g.obstacles[0].s - g.s <= 9);
+    advance(g, {}, 1 / 60);
+    assert.equal(g.kickSide, chargedSide); assert.equal(g.obstacles[0].kickSide, chargedSide);
+    assert.equal(g.kickedCount, 1); assert.equal(g.cooldowns.kick, 18);
+    assert.deepEqual(g.events.find(event => event.type === 'kick'), { type: 'kick', id: type, charged: true });
+  }
+});
+
+test('wind-up uses the same vehicle eligibility and nearest-target ordering as release', () => {
+  const g = racer(course([obstacle('truck', -3, -2, 'behind'), obstacle('train', 1, -2, 'train'),
+    obstacle('truck', 2, -2, 'kicked'), obstacle('car', 3, -2, 'hit'), obstacle('car', 4, -4, 'outside'),
+    obstacle('truck', 100, -2, 'distant'), obstacle('car', 18.55, -2, 'other-eligible'), obstacle('truck', 18.5, 2, 'chosen')]));
+  g.obstacles.find(vehicle => vehicle.id === 'kicked').kicked = true;
+  g.obstacles.find(vehicle => vehicle.id === 'hit').hit = true;
+  g.kickSide = -1;
+  ticks(g, .8, { kick: true }); assert.equal(g.kickSide, 1);
+  advance(g, {}, 1 / 60);
+  assert.deepEqual(g.events.find(event => event.type === 'kick'), { type: 'kick', id: 'chosen', charged: true });
+  assert.equal(g.obstacles.find(vehicle => vehicle.id === 'other-eligible').kicked, false);
+  assert.equal(g.kickedCount, 1);
+});
+
 test('a car accepts a tap while short truck charges and tall obstacles consume a miss cooldown', () => {
   const car = racer(course([obstacle('car', 6, 2)]));
   advance(car, { kick: true }, 1 / 60); advance(car, {}, 1 / 60);

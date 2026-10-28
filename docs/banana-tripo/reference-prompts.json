@@ -1,0 +1,501 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Independent original Imagegen 2D modelling references only; these images do not constitute 3D models.",
+  "styleReference": "assets/reference/style-a-2026-10-28.png",
+  "tool": "built-in image_gen__imagegen",
+  "originalOutputsPreserved": true,
+  "generationPolicy": "One independent built-in Imagegen call per listed asset; no rerolls or substitute tools.",
+  "assets": [
+    {
+      "id": "banana-single",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE single whole unpeeled banana, plump gently curved golden-yellow fruit, short green-brown stem and dark small tip, charming natural slight irregularity and restrained painted warm highlights. No peel flaps, no bunch, no extra bananas. Composition: horizontal diagonal three-quarter product view showing the banana's thickness.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/banana-single.png",
+      "status": "generated",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-0ac03d2f-5152-4e2e-b287-7dc990c03fba.png",
+      "sha256": "e3d7b90aa520adfed413223b95f962d0667c6ed318300082ea84b2842e66f303",
+      "sizeBytes": 1517919,
+      "tool": "built-in image_gen__imagegen",
+      "attempts": 1,
+      "visualCheck": "Full single banana silhouette, plump gold shape; suitable reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/banana-single.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "car",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE cream/off-white vintage compact two-box hatchback car, rounded rectangular 1960s/1970s body, four black tires with simple steel hubs, modest chrome bumpers, dark windows and readable door outlines. Unoccupied, no roof luggage, no license text, no logos. Composition: landscape horizontal full vehicle, three-quarter front/side view facing left, both visible wheels fully clear and grounded, believable consistent axles.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/car.png",
+      "status": "generated",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-22533a0f-5144-465f-95c4-2984bd25a5e2.png",
+      "sha256": "872128cb7924293efab987449ee716496adf64b0b15801d4623047b475a5801c",
+      "sizeBytes": 1688603,
+      "tool": "built-in image_gen__imagegen",
+      "attempts": 1,
+      "visualCheck": "Full cream hatchback silhouette, dark windows, wheel structure visible; suitable reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/car.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "pedestrian",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE adult male tropical roadside pedestrian with medium-brown skin, natural lean adult proportions, short dark hair, neutral friendly face, light cream short-sleeve shirt, gray knee-length shorts, woven tan straw sun hat and simple dark shoes. Full-body relaxed symmetric A-pose, arms 35 degrees out and fingers separated enough to read, legs slightly apart, both hands EMPTY, no tools or bags. Composition: near-frontal three-quarter full-body view, entire hat, hands and shoes visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/pedestrian.png",
+      "status": "generated",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-e9e87f2e-6ab0-4e8d-872d-074e087613bc.png",
+      "sha256": "ae65a88d40a00b26403dee2822f8467692b71993a632cee1df508be62c517600",
+      "sizeBytes": 1450158,
+      "tool": "built-in image_gen__imagegen",
+      "attempts": 1,
+      "visualCheck": "Full adult A-pose with empty hands, cream shirt, gray shorts, straw hat and shoes; suitable reference.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/pedestrian.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "goat",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE small adult goat with warm ivory/cream body fur, brown head and neck, short brown swept-back horns, long pointed ears, small beard, four distinct slim legs with dark hooves, small upward tail. Natural goat anatomy, calm standing pose. Composition: clean side-dominant three-quarter view facing left, all four legs discernible, full horns and tail visible, no collar or bell.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/goat.png",
+      "status": "generated",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-009137da-9ab2-4d74-88f9-ad4098903bea.png",
+      "sha256": "9b702f305acd1f56e1d5967e07a9fb04c7936339d230f514c6c5282db3b44ee2",
+      "sizeBytes": 1587502,
+      "tool": "built-in image_gen__imagegen",
+      "attempts": 1,
+      "visualCheck": "Cream body and brown head with four distinct legs; generated swept horns are longer than requested short horns, so shorten in downstream 3D refinement without regenerating this reference.",
+      "dimensions": {
+        "width": 1402,
+        "height": 1122
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/goat.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "barrier",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE low portable road barrier, a stout horizontal rectangular beam painted alternating yellow-and-black diagonal warning stripes, supported by two simple short A-frame legs. Worn painted metal, chunky readable construction. The support legs are part of the obstacle, no separate base platform. Composition: full horizontal barrier in three-quarter view, both ends and legs visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/barrier.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-d3ab6ff4-2aae-40b3-ad0d-55158dbf5f1c.png",
+      "sha256": "af5bfa827cacc5305b5bb03d2e0028e5b4ec09fd925f4d1792d365efa5a3e749",
+      "sizeBytes": 1494391,
+      "visualCheck": "Full low striped beam and A-frame supports visible; suitable reference, reconstruct the gap beneath the beam as open.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/barrier.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "crate",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE closed wooden cargo crate, roughly cubic, honey-brown weathered planks with horizontal and diagonal reinforcing battens and a few dark iron nails. Chunky sound construction, subtle wood grain, slight softened wear, no printed stamps or labels. Composition: centered three-quarter view with front, side and lid visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/crate.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-8c5e7f1d-d198-4468-ab12-ad2a554f48b1.png",
+      "sha256": "f2ee607026dc53d7040b171b432ab120235caf56816f406c8e31fbe9961789b6",
+      "sizeBytes": 1803052,
+      "visualCheck": "Full closed wooden box with diagonal battens; suitable reference.",
+      "dimensions": {
+        "width": 1310,
+        "height": 1200
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/crate.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "wall",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE tall straight freestanding rectangular obstacle wall module built from warm red-earth/terracotta bricks with pale dusty mortar, about twice as wide as tall and substantial thickness, flat top and clean vertical ends. Slight chipped edges and matte uneven masonry, no openings, no pillars, no attached ground. Composition: three-quarter view showing the long front and one end, full rectangular outline.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/wall.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-594123ff-e6b9-49e4-af40-cf2f4b2997c3.png",
+      "sha256": "f669893fc14e6a751ee9d4bf7f780cea18ba94493c2f011fd0bc9f3fb2c01433",
+      "sizeBytes": 1920583,
+      "visualCheck": "Red brick wall module with visible thickness, flat top and clean ends; suitable reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/wall.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "train",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE long vintage passenger railway coach as a longitudinal game obstacle, teal-blue lower body and warm cream upper band, a simple row of dark windows, gently curved cream roof, black undercarriage and two compact wheel bogies. Single carriage only, no locomotive, no rails, no smoke, no markings. Composition: landscape horizontal full coach, side-dominant three-quarter view from one end; preserve a clearly long narrow vehicle silhouette.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/train.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-5a346aa6-04a7-444b-b53e-a8560ccc36ac.png",
+      "sha256": "7862a9559dcf2a09aa31b267d16db3aa49edd43025a05689a935331b0751552d",
+      "sizeBytes": 1605618,
+      "visualCheck": "Single long teal/cream passenger coach, full wheels and couplers visible; keep it a longitudinal obstacle and check undercarriage cleanup in 3D.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/train.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "boost",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE solid cyan/turquoise three-dimensional lightning-bolt arrow collectible, a crisp zigzag bolt with a pointed arrow-like lower end, visibly thick extrusion and softly bevelled edges. Matte painted toy-like teal surface with brighter cyan front and darker teal side, matching the comic game art. Composition: floating isolated near-frontal three-quarter view, full bolt visible. No sphere, particles or pedestal.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/boost.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-9440a918-87e9-4648-970f-7efb0eb9fd73.png",
+      "sha256": "24c5d49756366ece13ad8da965ab89b4301a2e48d4c5a49e6775e8ed7e0c6a10",
+      "sizeBytes": 1238133,
+      "visualCheck": "Full cyan solid lightning arrow with obvious extrusion; suitable reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/boost.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "shield",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE thick cobalt-blue shield collectible with a single warm golden-yellow raised rim, classic broad curved top and pointed lower tip, visibly deep solid body with bevelled front. Blue matte painted front, gold edge, no emblem or lettering. Composition: isolated near-frontal three-quarter view revealing side thickness; no handles protruding into the silhouette, no effects.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/shield.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-2ce51e65-da9f-4b44-af9c-b7ff5d2e542b.png",
+      "sha256": "f099b93491c1d148708768cc2110bfb2e74139ae1141887a1597bd9d5604a72b",
+      "sizeBytes": 1609250,
+      "visualCheck": "Full cobalt shield with gold rim and visible thickness; suitable reference.",
+      "dimensions": {
+        "width": 1347,
+        "height": 1167
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/shield.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "double",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE coherent volumetric purple x2 collectible symbol: the exact characters x2, a lowercase multiplication-style x directly followed by digit 2. Both characters must be readable with thick extruded depth, softly bevelled edges, purple front and darker violet sides, with their nearest edges touching to make one connected sculpture. This symbol is the only permitted text. Composition: isolated front-dominant three-quarter view, no coin, disc, frame, pedestal or particles.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/double.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-d98d8899-2df7-4a3c-b7d0-99a4dc5482c3.png",
+      "sha256": "1c98213cccd4afbe0b1a4efa2d2b2cbb81e4e55f50072f59bf14aa457bd2c8d5",
+      "sizeBytes": 1628238,
+      "visualCheck": "Purple thick x2 is readable and forms a connected silhouette; suitable reference, preserve x/2 inner gap in reconstruction.",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/double.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "palm",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE tropical feather palm tree, a gently curved slender ringed brown trunk and a broad airy crown of long arching green pinnate fronds, each frond showing narrow leaflets. Natural asymmetry, sun-warmed green tones. Entire crown and trunk foot visible, no coconuts, no soil mound, no ground platform. Composition: full-height three-quarter view, a clear palm silhouette.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/palm.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-25195caf-274b-4efe-a4dd-f3109c2ad0e2.png",
+      "sha256": "72ae9ad173fc45ca1871862e96829be77e696035b7212e0361991ccbfe8979a3",
+      "sizeBytes": 1717468,
+      "visualCheck": "Curved ringed trunk and complete feather-frond crown; suitable reference, thin leaflets require topology and silhouette review after 3D generation.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/palm.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "tree",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE tropical broadleaf shade tree with a gently irregular brown branching trunk and a broad rounded umbrella-like crown formed from overlapping lush medium-green leafy clusters. Natural round-canopy tree, some readable branches beneath the crown, warm painted bark. Entire foliage and trunk foot visible. NOT a pine, fir, conifer, cone, topiary or spherical lollipop. No ground platform or soil mound. Composition: full-tree three-quarter view.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/tree.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-35ccdb47-02b4-4ea9-ba50-cd33a8e9a3aa.png",
+      "sha256": "aef05d274a3bc233c6b5d5e90508d6fa2d8b415dc062a243f9966216f9189d07",
+      "sizeBytes": 2110496,
+      "visualCheck": "Broad rounded tropical leafy crown with exposed branching trunk; no conifer silhouette. Fine leaves and crown negative spaces need 3D cleanup.",
+      "dimensions": {
+        "width": 1312,
+        "height": 1199
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/tree.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "banana-plant",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE tropical banana plant clump with a few closely joined short green pseudostems and many very large broad paddle-shaped banana leaves, arcing upward and outward, deep green with light central ribs and occasional natural split edges. The plant is the asset, no visible fruit bunch, no pot, no dirt mound, no ground platform. Composition: full isolated plant in three-quarter view, every main leaf tip and stem base in frame.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/banana-plant.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-36a47114-0668-4488-a522-cd11bd54c28d.png",
+      "sha256": "96e48d512841eb49a1161a19f4af65ed1a8a329019c05c541c0b48abee04002e",
+      "sizeBytes": 1815725,
+      "visualCheck": "Broad green banana leaves and joined pseudostems, full leaf tips visible; check thin leaf surfaces after 3D generation.",
+      "dimensions": {
+        "width": 1310,
+        "height": 1200
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/banana-plant.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "rock",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE chunky weathered red-ochre roadside rock boulder, irregular rounded angular mass with layered warm rust-red and terracotta surfaces, a few broad cracks and softened chips, matte hand-painted stone. Wide stable body with clear volume, no vegetation, no separate rubble pieces, no ground platform. Composition: centered three-quarter view revealing top and two sides.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/rock.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-faa1fd10-fbf4-4272-8bc6-4ea9446f8e1c.png",
+      "sha256": "850be05fda474d10fedfa970d2072918244afde7089fe0b8e4922b4e4964fb81",
+      "sizeBytes": 1911367,
+      "visualCheck": "One coherent red-ochre weathered rock with clear depth; suitable reference.",
+      "dimensions": {
+        "width": 1528,
+        "height": 1029
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/rock.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "bush",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE dense low tropical roadside shrub with a wide rounded organic silhouette, clustered broad oval dark- and yellow-green leaves over a few short woody stems, rich warm painted leaf forms. No flowers or fruit, no pot, no soil mound, no ground platform. Composition: centered three-quarter view showing full width and the plant's stem base.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/bush.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-62497e41-83bd-4751-97cb-7507311a0c95.png",
+      "sha256": "5f5a4fef10171ba01b4ae23b4b6c506fe25158cc37cb4a694988298fecaec384",
+      "sizeBytes": 1846593,
+      "visualCheck": "Broadleaf low woody shrub, isolated full silhouette; suitable reference, preserve grouped foliage rather than filling the whole outline as a solid block.",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/bush.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "hut",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE small two-storey Mediterranean/tropical coastal hill-town house, warm chalk-white plaster walls, terracotta-red pitched tile roof with generous eaves, simple dark wooden doors and shutters, a few modest windows, a little weathering. Rectangular compact architecture, flat building foot at ground level, no steps spreading out as a base, no balcony props, no scenery, no people, no yard, no landscaping. Composition: full house in three-quarter view, roof ridge and all wall corners visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/hut.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-f6319f74-3d4e-429d-8a5d-0abf12d12f5a.png",
+      "sha256": "4d641357dc3c03e935f6bdaa911e86af02cc0812ced77a601a3de28505af719e",
+      "sizeBytes": 1850218,
+      "visualCheck": "Complete two-storey white-plaster red-tile house with ground-level foot; a small attached doorway lamp is present, no unrelated scene props.",
+      "dimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/hut.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "stall",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE rustic wooden roadside banana stall with four upright timber posts, a simple sloping corrugated tan-rust roof and a waist-high plank counter. A few plump golden-yellow banana bunches arranged on the counter are integral stall contents and permitted. Brown wood, warm faded materials, open sides, no vendor, no signs, no text, no hanging extra tools, no surrounding road or ground platform. Composition: full stall in three-quarter view, every post foot and roof corner visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/stall.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-6d33a954-292a-4fb8-a89e-933180ca7673.png",
+      "sha256": "acf83aa5388b405a91cb8de04c17dfbc2ce7da23b137d4db0b81e25d4a8b9608",
+      "sizeBytes": 1892042,
+      "visualCheck": "Complete wooden banana stall, integral banana counter contents and open sides; check roof/beam voids in 3D reconstruction.",
+      "dimensions": {
+        "width": 1426,
+        "height": 1103
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/stall.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "foundation",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE straight low roadside parapet/guard wall module made of gray-white roughly squared stone blocks with a simple pale stone cap. Long low rectangular form, approximately five times as long as high, thick enough to read as roadside protection, clean vertical ends and flat lower edge for tiling. Slight warm weathering, no road, no attached terrain, no foliage, no extra columns or base platform. Composition: three-quarter view along the module showing its front face, top cap and one end.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/foundation.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-c21ea3f1-73bd-4058-8b3e-c9eaf22a6640.png",
+      "sha256": "3b063d146a4a0d6a6f01cb8ede417a0f91f04385fca6d4e4eba19d0b6b03b488",
+      "sizeBytes": 1648988,
+      "visualCheck": "Straight low pale stone parapet with cap and flat clean ends; suitable modular reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/foundation.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "sign",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE road warning sign consisting of a rectangular yellow panel with a bold simple black LEFT SHARP-TURN arrow mounted high on a single narrow dark-gray metal post. The arrow bends sharply left and must read clearly; no other text or symbols. Slight sun-faded painted metal, full post ends visibly without a concrete block or ground platform. Composition: near-frontal three-quarter view, entire sign and post visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/sign.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-31bb21ae-ea1b-4744-8f6d-e12c47e14ad7.png",
+      "sha256": "1bfdd2023eee7ec75bf4b2e4357255d74c88a06dffb45f73065ff75537d0d201",
+      "sizeBytes": 1234997,
+      "visualCheck": "Clear black left sharp-turn arrow on yellow panel, complete single metal post, no base; suitable reference.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/sign.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "mountain",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE self-contained distant mountain landform with multiple overlapping ridges and peaks connected into a single coherent mass, blue-green/teal atmospheric palette, softly painted rocky slopes and dark forest-green patches. It must be a volumetric terrain mass with varied silhouette, NOT a flat backdrop card and NOT a conical single peak. No water, houses, roads, sky, separate islands or base plinth. Composition: wide three-quarter elevated view, full mountain silhouette and natural lower perimeter isolated against the gray background.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/mountain.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-b4485fdd-5f48-4c3e-8170-ae56efb4b89e.png",
+      "sha256": "e2294ee411daca46716cc8dda872f9cf5315589930d43ffcb6b79b390b80fa24",
+      "sizeBytes": 2275519,
+      "visualCheck": "Connected multi-ridge blue-green terrain mass with full perimeter and no sky; suitable distant mountain reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/mountain.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "cliff",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE straight modular red layered cliff segment for a tropical mountain road, broad rusty-red/terracotta rock face with horizontal sedimentary bands, weathered ledges and vertical fractures, a little irregularity at top. Thick coherent terrain volume, roughly rectangular overall, with readable end face for tiling. No road, no plants, no buildings, no separate fallen rocks, no pedestal. Composition: three-quarter view of the long cliff face and one side, entire top and lower edge visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/cliff.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-f5885c53-0edf-42ef-a1bc-f4a8514bc859.png",
+      "sha256": "9421d7ae0b835a4a614ac117b4dd6cd3afd1e732507f8381d676937b1396d992",
+      "sizeBytes": 1947218,
+      "visualCheck": "Thick red layered straight cliff module, complete outline and end face; suitable reference, tiling ends will need alignment in Blender.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/cliff.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "road-module",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE straight rectangular two-way asphalt road module made as an isolated mesh-ready strip, seen from elevated three-quarter view. Exactly straight parallel sides and flat ends, dark warm gray pavement, continuous YELLOW DOUBLE CENTER LINES and WHITE EDGE LINES. Include a low gray-white stone roadside parapet along each long outer edge as integral module features. No curved road, intersections, cars, terrain, signs, vegetation, mountains or base plinth. The strip must be long and straight to deform along a route in Blender; all four corners visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/road-module.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-87803001-4ee8-4bb3-be80-15ffd88bcadb.png",
+      "sha256": "78634b99f5dc215a7ef4368d160383503b51e463755a868e786b64e1dff45d05",
+      "sizeBytes": 1653223,
+      "visualCheck": "Straight rectangular asphalt strip, continuous yellow double center lines, white edges and low pale stone parapets on both sides; full ends visible. Needs longitudinal subdivisions and end alignment for deformation/tiling in Blender.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/road-module.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "cloud",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE thick puffy white cloud volume, an irregular connected mass of several rounded lobes with a broad soft upper silhouette and a gently flattened underside, warm ivory highlights and soft pale blue-gray shaded recesses. A clearly solid sculptural cloud form suitable for a cartoon sky prop, no face, no outline doodles, no rain or separate wisps. Composition: isolated three-quarter view showing depth, whole cloud in frame.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/cloud.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-032ea9c4-91a5-4a4e-8faa-7f1a0ad193c8.png",
+      "sha256": "a897d4e35720ecced55e80b1d57f89e4990911b2e1baac85080440d279910c17",
+      "sizeBytes": 1437367,
+      "visualCheck": "One connected thick white lobed cloud mass with pale blue shaded recesses; suitable reference.",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/cloud.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    },
+    {
+      "id": "impact-star",
+      "prompt": "Use case: stylized-concept.\nAsset type: one isolated 3D reconstruction reference for the Banana Express game, a single coherent solid object.\nInput image role: the supplied image is the authoritative STYLE reference only. Match its warm hand-painted comic/toon art direction, rich matte color, softly faceted and rounded forms, subtle painted texture and confident dark edge accents. Do not copy the scene composition or HUD.\nBackdrop: clean flat light-gray studio background, even neutral lighting, very faint contact shadow only. The asset must have its full silhouette and every extremity visible, with generous margin.\nConstraints: one asset only, no unrelated props, no scenery, no display pedestal, no base, no separate ground platform, no labels, no words, no watermark. Make the object convincingly volumetric and easy to reconstruct in 3D. Avoid photorealism, chibi proportions and low-poly triangular styling.\nSubject: ONE solid three-dimensional comic impact starburst, a bright white core surrounded by a warm golden-yellow thick jagged border, an uneven radial pointed star with 10-12 bold spikes and visibly shallow extrusion. Matte painted white and gold, strong graphic silhouette yet readable edge thickness. No rays or particles separate from the star, no words, no surrounding ring, no background effects. Composition: isolated near-frontal three-quarter view, every star point visible.",
+      "referenceImage": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/style-a-2026-10-28.png",
+      "outputPath": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/reference/banana-tripo-v1/impact-star.png",
+      "status": "generated",
+      "attempts": 1,
+      "tool": "built-in image_gen__imagegen",
+      "sourcePath": "/Users/bazzi/.codex/generated_images/01a17e49-50eb-7a61-82b4-5c18b91c6f67/exec-0d381030-d95d-419e-82f1-ed163b167e5f.png",
+      "sha256": "13eef35fb1c687ba115067cb1b81ad3990512f0fcbe44cf215c8e4fa8a1742a5",
+      "sizeBytes": 1450189,
+      "visualCheck": "Complete thick comic starburst with white center, gold border and every point visible; suitable reference.",
+      "dimensions": {
+        "width": 1391,
+        "height": 1131
+      },
+      "outputRelativePath": "assets/reference/banana-tripo-v1/impact-star.png",
+      "referenceRelativePath": "assets/reference/style-a-2026-10-28.png"
+    }
+  ],
+  "verification": {
+    "verifiedAtUTC": "2026-10-27T17:15:02.065826+00:00",
+    "expectedAssets": 25,
+    "generatedAssets": 25,
+    "failedAssets": 0,
+    "verifiedOriginalByteCopies": 25,
+    "uniqueSHA256Count": 25,
+    "checks": [
+      "All 25 expected unique asset ids exist.",
+      "Each asset was generated with one independent built-in imagegen call, with the same style reference.",
+      "All 25 project PNG files are byte-identical to their preserved original generated output.",
+      "All stored SHA256 values and file sizes match actual files.",
+      "Every PNG header and dimensions are valid.",
+      "Every output was visually inspected for subject, style, framing and downstream modelling concerns."
+    ]
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "status": "pass",
+  "blenderVersion": "5.2.2 LTS",
+  "skin": {
+    "status": "pass",
+    "source": "artifacts/tripo-hero-bike/hero.blend",
+    "glb": "artifacts/tripo-hero-bike/riderSkinned.glb",
+    "triangles": 19121,
+    "vertices": 22184,
+    "bones": 65,
+    "blendedVertices": 16392,
+    "clips": [
+      {
+        "name": "Rider_Idle_Ready",
+        "vertexSpan": 0.0051769083365798
+      },
+      {
+        "name": "Rider_Ride_SeatedPedal",
+        "vertexSpan": 0.38010191917419434
+      },
+      {
+        "name": "Rider_Ride_StandingBalance",
+        "vertexSpan": 0.005206770729273558
+      },
+      {
+        "name": "Rider_Trans_SitToStand",
+        "vertexSpan": 1.2627434730529785
+      },
+      {
+        "name": "Rider_Trans_StandToSit",
+        "vertexSpan": 1.2630404233932495
+      },
+      {
+        "name": "Rider_Jump_Takeoff",
+        "vertexSpan": 0.2267969399690628
+      },
+      {
+        "name": "Rider_Jump_Air",
+        "vertexSpan": 0.004488019738346338
+      },
+      {
+        "name": "Rider_Jump_Land",
+        "vertexSpan": 0.22661328315734863
+      },
+      {
+        "name": "Rider_Kick_Charge_L",
+        "vertexSpan": 0.003545654471963644
+      },
+      {
+        "name": "Rider_Kick_Charge_R",
+        "vertexSpan": 0.003545654471963644
+      },
+      {
+        "name": "Rider_Kick_Strike_L",
+        "vertexSpan": 1.2978931665420532
+      },
+      {
+        "name": "Rider_Kick_Strike_R",
+        "vertexSpan": 1.0492782592773438
+      },
+      {
+        "name": "Rider_Lean_L",
+        "vertexSpan": 0.00015970632375683635
+      },
+      {
+        "name": "Rider_Lean_R",
+        "vertexSpan": 0.00015925246407277882
+      },
+      {
+        "name": "Rider_Hit_Shield",
+        "vertexSpan": 0.08677860349416733
+      },
+      {
+        "name": "Rider_Crash",
+        "vertexSpan": 1.6647443771362305
+      }
+    ],
+    "markerSurfaceDistance": {
+      "Sole_L": 2.3599670839757891e-07,
+      "Sole_R": 3.401020265414445e-08,
+      "Palm_L": 5.972094641037984e-08,
+      "Palm_R": 4.217318121391145e-07,
+      "SeatContact": 4.656612873077393e-10
+    },
+    "textureBytes": 1156433,
+    "sha256": {
+      "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/riderSkinned.glb": "db5ea16b7e1bcca9b0d409cb403fea13c1510627f9b53dbf5843a67711646f34",
+      "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/hero-metadata.json": "6698f04e9aad6793722fd6d3a7543a24384eead4f3c45408fd83c472798d4b90",
+      "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/sources/banana-tripo-v1/hero-rigged.glb": "c5e49d048684b79f3070e9e52a00d6638b7843594ce0e7f5f4ff1c07b8b8de7c",
+      "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/hero.blend": "4041ab01b0dd01c029ecf5f0bb7225a283b216a222d9c0c866dd531063ed2eb6"
+    }
+  },
+  "exportEvidence": {
+    "hero": {
+      "trianglesCompared": 19121,
+      "nativeMeshesCompared": 1,
+      "hierarchyAndPaint": "preserved"
+    },
+    "bicycle": {
+      "trianglesCompared": 20802,
+      "nativeMeshesCompared": 6,
+      "hierarchyAndPaint": "preserved"
+    },
+    "cargo": {
+      "trianglesCompared": 48528,
+      "nativeMeshesCompared": 5,
+      "hierarchyAndPaint": "preserved"
+    }
+  },
+  "contacts": {
+    "maxContactError": 8.58079197936533e-07,
+    "sampledContacts": [
+      {
+        "stance": "seated",
+        "frame": 0
+      },
+      {
+        "stance": "seated",
+        "frame": 9
+      },
+      {
+        "stance": "seated",
+        "frame": 17
+      },
+      {
+        "stance": "seated",
+        "frame": 25
+      },
+      {
+        "stance": "seated",
+        "frame": 33
+      },
+      {
+        "stance": "seated",
+        "frame": 48
+      },
+      {
+        "stance": "seated",
+        "frame": 60
+      },
+      {
+        "stance": "standing",
+        "frame": 0
+      },
+      {
+        "stance": "standing",
+        "frame": 30
+      },
+      {
+        "stance": "standing",
+        "frame": 60
+      },
+      {
+        "stance": "standing",
+        "frame": 90
+      },
+      {
+        "stance": "standing",
+        "frame": 120
+      }
+    ],
+    "bikeMarkerSurfaceDistances": {
+      "RiderSeat": 5.961192073300481e-08,
+      "RiderStand_L": 2.9802322387695312e-08,
+      "RiderStand_R": 1.862645149230957e-08,
+      "RiderGrip_L": 2.9802322387695312e-08,
+      "RiderGrip_R": 2.9802322387695312e-08,
+      "RiderPedal_L": 2.491492523404304e-07,
+      "RiderPedal_R": 4.072681178968196e-07
+    },
+    "coverage": "Saved native seated/standing/kick support, pedal counter-rotation, jump release and crash release."
+  },
+  "cargo": {
+    "bundles": 20,
+    "sharedGeometries": 4,
+    "maxMatrixError": 5.960464477539063e-08,
+    "firstBundleSupportDistance": 0.0003657209163066,
+    "riderClearance": {
+      "minimumVertexClearance": 0.12662473320960999,
+      "poses": [
+        {
+          "name": "Rider_Ride_SeatedPedal",
+          "frame": 0,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.21174941956996918
+        },
+        {
+          "name": "Rider_Ride_SeatedPedal",
+          "frame": 15,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.20930294692516327
+        },
+        {
+          "name": "Rider_Ride_SeatedPedal",
+          "frame": 30,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.19101592898368835
+        },
+        {
+          "name": "Rider_Ride_SeatedPedal",
+          "frame": 45,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.19190528988838196
+        },
+        {
+          "name": "Rider_Ride_StandingBalance",
+          "frame": 0,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.12662473320960999
+        },
+        {
+          "name": "Rider_Ride_StandingBalance",
+          "frame": 60,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.126629039645195
+        },
+        {
+          "name": "Rider_Trans_SitToStand",
+          "frame": 10,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.17847807705402374
+        },
+        {
+          "name": "Rider_Kick_Strike_L",
+          "frame": 21,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.2166443169116974
+        },
+        {
+          "name": "Rider_Kick_Strike_R",
+          "frame": 21,
+          "intersectingTriangles": 0,
+          "minimumVertexClearance": 0.19478560984134674
+        }
+      ]
+    }
+  },
+  "sha256": {
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/riderSkinned.glb": "db5ea16b7e1bcca9b0d409cb403fea13c1510627f9b53dbf5843a67711646f34",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/hero.blend": "4041ab01b0dd01c029ecf5f0bb7225a283b216a222d9c0c866dd531063ed2eb6",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/export/manifest.json": "a061a0e1cdc0b75f0032456e236c54ac7d1430b8a22392d25012c22415a5cfdf",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-cargo/bananaRack.glb": "0eded8e72f46b086261a4a6d6efaeecdefd6c724d27eef1fae3ba3841ffa27e2",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-bicycle/bicycle.blend": "bbebc3c93c60571c9e6090ee6c9a15c6804a2eeab6fd3448211cc772445412f7",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-cargo/cargo.blend": "b6707407b0201d497b4230a8d569d1229deb46ac7bd4e7999b502e51da3a9373",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/assets/sources/banana-tripo-v1/hero-rigged.glb": "c5e49d048684b79f3070e9e52a00d6638b7843594ce0e7f5f4ff1c07b8b8de7c",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-hero-bike/hero-metadata.json": "6698f04e9aad6793722fd6d3a7543a24384eead4f3c45408fd83c472798d4b90",
+    "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/artifacts/tripo-bicycle/bicycle.glb": "2d0f74bde7bd882b0961fd22a5fd003974d9c15c9efb49df82cb799708eb559a"
+  },
+  "scope": "Saved Tripo meshes/skin/Actions, real bike markers, runtime texture/UV and hierarchy, authored cargo matrices and support. Overall rendered appearance is checked separately."
+}

@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "case": "quick-tap-Space",
+      "actual": 0.7183333333333337
+    },
+    {
+      "case": "quick-tap-KeyE",
+      "actual": {
+        "boost": 1.3833333333333337,
+        "shield": 0,
+        "double": 0
+      }
+    },
+    {
+      "case": "quality-then-space",
+      "before": {
+        "phase": "racing",
+        "quality": "low",
+        "focus": "game-canvas"
+      },
+      "after": {
+        "quality": "low",
+        "focus": "game-canvas"
+      }
+    }
+  ],
+  "errors": []
+}

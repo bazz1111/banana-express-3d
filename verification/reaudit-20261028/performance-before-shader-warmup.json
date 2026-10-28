@@ -1,0 +1,313 @@
+{
+  "testedAt": "2026-10-28T02:44:44.358Z",
+  "seconds": 60,
+  "warmupSeconds": 5,
+  "repeats": 1,
+  "viewport": "1920x1080",
+  "platform": {
+    "os": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpu": "Apple M6"
+  },
+  "browser": "156.0.8078.48",
+  "fixture": {
+    "shieldRefreshed": true,
+    "naturalGameplay": false,
+    "virtualClock": false,
+    "stagedKicks": 6,
+    "initialDistance": 3750,
+    "lane": 4.6,
+    "bananas": 100,
+    "maximumSpeed": true,
+    "resetKickCooldown": true,
+    "trafficDisabled": true
+  },
+  "method": "All rAF intervals in the complete sample; all WebGL render passes including shadows; no slow-frame filtering",
+  "tiers": {
+    "high": {
+      "loadMs": 1163,
+      "transferMB": 16.814932823181152,
+      "encodedBodyMB": 16.806063652038574,
+      "decodedBodyMB": 31.19248676300049,
+      "actualSeconds": 60.003099999904634,
+      "distance": 5295.700000000216,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "high",
+      "memoryMB": 85.9067211151123,
+      "geometries": 134,
+      "textures": 32,
+      "frames": 7717,
+      "intervals": 7716,
+      "fps": 128.61972169066033,
+      "p50": 5.600000000005821,
+      "p95": 11.200000000004366,
+      "p99": 11.700000000000728,
+      "maxFrameMs": 66.70000000000073,
+      "calls": 126.66321109239341,
+      "maxCalls": 185,
+      "triangles": 2180096.7186730593,
+      "maxTriangles": 2297546,
+      "phases": {
+        "racing": 7717
+      },
+      "impact": {
+        "frames": 900,
+        "intervals": 900,
+        "fps": 117.41836162246085,
+        "p50": 6,
+        "p95": 16.30000000000109,
+        "p99": 16.799999999999272,
+        "maxFrameMs": 55.5,
+        "calls": 151.4488888888889,
+        "maxCalls": 161,
+        "triangles": 2237322.018888889,
+        "maxTriangles": 2297546,
+        "phases": {
+          "racing": 900
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "errors": [],
+      "over16_67ms": 29,
+      "over33_33ms": 2,
+      "longestFrames": [
+        {
+          "intervalMs": 66.70000000000073,
+          "calls": 147,
+          "triangles": 2229313,
+          "phase": "racing",
+          "impact": false,
+          "relativeMs": 66.70000000000073
+        },
+        {
+          "intervalMs": 55.5,
+          "calls": 155,
+          "triangles": 2216544,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 1144.1000000000004
+        },
+        {
+          "intervalMs": 17.299999999999272,
+          "calls": 144,
+          "triangles": 2224273,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 4959.5
+        },
+        {
+          "intervalMs": 17.299999999999272,
+          "calls": 152,
+          "triangles": 2234230,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 10368.800000000001
+        },
+        {
+          "intervalMs": 17.299999999999272,
+          "calls": 159,
+          "triangles": 2231657,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 13273.300000000001
+        },
+        {
+          "intervalMs": 16.900000000001455,
+          "calls": 157,
+          "triangles": 2218479,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 12990.000000000002
+        },
+        {
+          "intervalMs": 16.900000000001455,
+          "calls": 152,
+          "triangles": 2229689,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 13856.500000000002
+        },
+        {
+          "intervalMs": 16.899999999997817,
+          "calls": 154,
+          "triangles": 2215797,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 12917.9
+        },
+        {
+          "intervalMs": 16.799999999999272,
+          "calls": 155,
+          "triangles": 2216504,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 1188.6000000000004
+        },
+        {
+          "intervalMs": 16.799999999999272,
+          "calls": 146,
+          "triangles": 2248426,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 7553.1
+        }
+      ]
+    },
+    "low": {
+      "loadMs": 992,
+      "transferMB": 16.814932823181152,
+      "encodedBodyMB": 16.806063652038574,
+      "decodedBodyMB": 31.19248676300049,
+      "actualSeconds": 60.003099999904634,
+      "distance": 5296.566666666883,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "low",
+      "memoryMB": 85.58047103881836,
+      "geometries": 133,
+      "textures": 30,
+      "frames": 8992,
+      "intervals": 8991,
+      "fps": 149.84500516649686,
+      "p50": 5.599999999998545,
+      "p95": 11.19999999999709,
+      "p99": 11.5,
+      "maxFrameMs": 94.30000000000109,
+      "calls": 84.42326512455516,
+      "maxCalls": 115,
+      "triangles": 1523822.3396352313,
+      "maxTriangles": 1581822,
+      "phases": {
+        "racing": 8992
+      },
+      "impact": {
+        "frames": 965,
+        "intervals": 965,
+        "fps": 126.37010070322009,
+        "p50": 5.600000000002183,
+        "p95": 11.299999999999272,
+        "p99": 16.700000000000728,
+        "maxFrameMs": 94.30000000000109,
+        "calls": 97.41347150259067,
+        "maxCalls": 107,
+        "triangles": 1566945.3150259068,
+        "maxTriangles": 1581822,
+        "phases": {
+          "racing": 965
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "errors": [],
+      "over16_67ms": 20,
+      "over33_33ms": 2,
+      "longestFrames": [
+        {
+          "intervalMs": 94.30000000000109,
+          "calls": 101,
+          "triangles": 1572526,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 1188.6000000000004
+        },
+        {
+          "intervalMs": 61.29999999999927,
+          "calls": 94,
+          "triangles": 1548554,
+          "phase": "racing",
+          "impact": false,
+          "relativeMs": 61.29999999999927
+        },
+        {
+          "intervalMs": 21.599999999998545,
+          "calls": 107,
+          "triangles": 1581782,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 10173.9
+        },
+        {
+          "intervalMs": 17.200000000000728,
+          "calls": 103,
+          "triangles": 1573166,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 15950.300000000001
+        },
+        {
+          "intervalMs": 17,
+          "calls": 90,
+          "triangles": 1553660,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 3882.199999999999
+        },
+        {
+          "intervalMs": 16.80000000000291,
+          "calls": 74,
+          "triangles": 1513209,
+          "phase": "racing",
+          "impact": false,
+          "relativeMs": 33627.700000000004
+        },
+        {
+          "intervalMs": 16.799999999999272,
+          "calls": 92,
+          "triangles": 1556740,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 4037.7999999999993
+        },
+        {
+          "intervalMs": 16.799999999999272,
+          "calls": 101,
+          "triangles": 1570742,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 15811.6
+        },
+        {
+          "intervalMs": 16.700000000000728,
+          "calls": 98,
+          "triangles": 1569844,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 1077.6000000000004
+        },
+        {
+          "intervalMs": 16.700000000000728,
+          "calls": 95,
+          "triangles": 1559422,
+          "phase": "racing",
+          "impact": true,
+          "relativeMs": 4165.5
+        }
+      ]
+    }
+  },
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+  "gpu": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "vendor": "Google Inc. (Apple)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "dpr": 1
+  }
+}

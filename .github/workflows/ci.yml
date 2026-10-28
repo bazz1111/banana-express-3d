@@ -22,6 +22,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      - name: Replay sampled steering routes through production rules
+        if: matrix.browser == 'chromium'
+        run: pnpm check:course
       - run: pnpm check:assets
       - run: pnpm assets:fingerprint
       - name: Verify reproducible lossless delivery assets
@@ -56,4 +59,5 @@ jobs:
           path: |
             artifacts/shots
             artifacts/asset-fingerprint-diff.json
+            artifacts/course-report.json
             preview.log

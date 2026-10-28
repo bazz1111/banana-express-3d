@@ -1,0 +1,103 @@
+{
+  "red": {
+    "quickCMaxDegrees": 56.61948908814455,
+    "quickCContactErrorMeters": 0.11712794922133138,
+    "releaseMaxDegrees": 17.72001040683095,
+    "releaseFootMoveMeters": 0.15104382360873175
+  },
+  "stanceCases": [
+    {
+      "initial": "seated",
+      "mode": "hold",
+      "maxAngle": 0.08246831213408082,
+      "maxContact": 3.781501610367858e-07,
+      "worst": "mixamorigRightFoot, seated, frame 0, seated"
+    },
+    {
+      "initial": "seated",
+      "mode": "single",
+      "maxAngle": 14.626847407032551,
+      "maxContact": 6.853508045231911e-07,
+      "worst": "mixamorigLeftForeArm, standing, frame 5, sitToStand"
+    },
+    {
+      "initial": "seated",
+      "mode": "reverse",
+      "maxAngle": 10.410031503758438,
+      "maxContact": 1.2095378998183873e-06,
+      "worst": "mixamorigRightHand, standing, frame 1, sitToStand"
+    },
+    {
+      "initial": "seated",
+      "mode": "repeated",
+      "maxAngle": 11.722228275755556,
+      "maxContact": 1.1291816548981042e-06,
+      "worst": "mixamorigRightHand, standing, frame 3, sitToStand"
+    },
+    {
+      "initial": "standing",
+      "mode": "hold",
+      "maxAngle": 3.297814091305154,
+      "maxContact": 5.013080511913592e-07,
+      "worst": "mixamorigLeftForeArm, standing, frame 0, standing"
+    },
+    {
+      "initial": "standing",
+      "mode": "single",
+      "maxAngle": 14.499963441411218,
+      "maxContact": 6.866800570088954e-07,
+      "worst": "mixamorigLeftForeArm, seated, frame 15, standToSit"
+    },
+    {
+      "initial": "standing",
+      "mode": "reverse",
+      "maxAngle": 11.454406942881796,
+      "maxContact": 1.2863850100894957e-06,
+      "worst": "mixamorigRightHand, seated, frame 1, standToSit"
+    },
+    {
+      "initial": "standing",
+      "mode": "repeated",
+      "maxAngle": 11.788367077832751,
+      "maxContact": 1.1852153480539012e-06,
+      "worst": "mixamorigRightHand, seated, frame 3, standToSit"
+    }
+  ],
+  "chargeReleaseCases": [
+    {
+      "stance": "seated",
+      "side": -1,
+      "chargedState": "kickChargeL",
+      "strikeState": "kickStrikeL",
+      "maxAngle": 5.097407926915529,
+      "maxFootMove": 0.0024000113981299796
+    },
+    {
+      "stance": "seated",
+      "side": 1,
+      "chargedState": "kickChargeR",
+      "strikeState": "kickStrikeR",
+      "maxAngle": 5.097407926915529,
+      "maxFootMove": 0.0024000709114037747
+    },
+    {
+      "stance": "standing",
+      "side": -1,
+      "chargedState": "kickChargeL",
+      "strikeState": "kickStrikeL",
+      "maxAngle": 3.922253683127664,
+      "maxFootMove": 0.0024000276312360247
+    },
+    {
+      "stance": "standing",
+      "side": 1,
+      "chargedState": "kickChargeR",
+      "strikeState": "kickStrikeR",
+      "maxAngle": 5.246939947354691,
+      "maxFootMove": 0.0024000299873510166
+    }
+  ],
+  "nativeCandidateChanged": false,
+  "rebakeNeeded": false,
+  "savedExporterCLIRegression": "headless 4-model fixture: no-separator default main and explicit --manifest/--out-dir outputs both identical; all source SHAs unchanged"
+}

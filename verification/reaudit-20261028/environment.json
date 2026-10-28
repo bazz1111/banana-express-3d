@@ -1,0 +1,71 @@
+{
+  "baseline": "ae954381075cef195dd56837f31bd425c8eac098",
+  "branch": "codex/banana-comprehensive-20261028",
+  "recordedAt": "2026-10-28T03:21:43.608505+00:00",
+  "url": "http://127.0.0.1:4183/?seed=2817",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "scope": "Input/paused rendering/course validation; no asset/source geometry changes",
+  "runtimeAndTestSha256": {
+    "src/audio.js": "eef6c5e42ec42de077bd4754c31841d6eb3c6f639fca531ce9c98f83712de2c9",
+    "src/cargo.js": "acc4bf0987bba7c6107b789003fa72531c01538e3a047e7ff1da207834121291",
+    "src/game.ts": "272b47010eb43a42e82d0964dad16ad9ab4f571cd28b555c03de95159e5491ca",
+    "src/inputBuffer.js": "679c2ecb3fea15735d0f6403c1fa9ddd53f5aed6151543cb5343bf8a5a273e41",
+    "src/kickCamera.js": "b1eead84dfb3d57afc1b5ed1123096dfcba87d994557f404e66e5dd5cf194410",
+    "src/main.js": "d319a58fdaaa7d501b393c7fb5cde0eb7c0a70f01b1cb021e821646ee77c5bdd",
+    "src/mixamoRiderAnimation.js": "559d9c0c32aef2e95877a47d40e76b2ded3f4d3069aaa0c099ecc1ed5afa3c90",
+    "src/physics.ts": "7de4fe8a28472399d8f4a4d57f2db9f8f5ef0575bdb2d62236e4855b14e3209f",
+    "src/reference.css": "abce6d8b125f42dabc11c2ef86fa7210cc9bea7e9c97a4b34a0624165c0d8080",
+    "src/riderAnimation.js": "407faf5dc3c71d122b50d8448380dead95bc0b02733250b69137d5a74403e09c",
+    "src/route.ts": "954e5a62aacfc1a75df6ab1c3a6f117150416236280df50f637f1889a89d4dbf",
+    "src/session.js": "6f3279f336f9e7922da381c7ffa4de8df31f09c398893f6aaf230ce2a1c6a94d",
+    "src/style.css": "4583f02cd224341abb933f52f9e42cc7844df9708dda101597d46d9ad5f68085",
+    "src/vehicleDebris.js": "ffeb8661b2033d0eaebf2ec8f7b498f646ff3437972be28887bcbc1416289561",
+    "src/view.js": "090c76ac2a6c5f5ba2b4ebe56b288b9124a1cfff83c3e2cb08df4504d706eac3",
+    "index.html": "5a7239717be90684104add02fd9573ab08b588603553ee3a7a699ed9e45a5044",
+    "package.json": "6bf72eee2a19987fc6112e93892bf44b9b60476c2937fa7bbdc6e72e516bb1b7",
+    "pnpm-lock.yaml": "3117263537f78a564846e9cb90fddf84b758bc26c5d49f9141c05086b2f593c4",
+    ".github/workflows/ci.yml": "0d7a4514e996d102577dcfcaaa34be099a61f9a1d93941947e443324ccdc9169",
+    "scripts/check-course.mjs": "8d8a51a3ff6060facd4bf3921a2d320943d4f195bcc3e4d7f458fe79579ced25",
+    "scripts/smoke-shots.mjs": "3069290f8d8dbf3203ed79f8f96f208ef7a0fdda38780615f30cd43745dea851",
+    "scripts/perf-check.mjs": "352c16fd335db92fffa55db0ebe821392b37a1f487bb52e2d93d80296f330a65",
+    "tests/input-buffer.test.js": "308c1dcc30c9f3b78f30181870ebbda5e2dff010f2575887d840bf0d215b1c9f",
+    "tests/course-reachability.test.js": "7e8a33f1b2d09213c3c604072fa5ad5ef657da71549d1791fdcf26eb74f75138"
+  },
+  "unit": {
+    "tests": 163,
+    "pass": 163,
+    "fail": 0,
+    "skipped": 0,
+    "log": "artifacts/reaudit-20261028/unit-final.log"
+  },
+  "build": {
+    "passed": true,
+    "log": "artifacts/reaudit-20261028/build-final.log"
+  },
+  "assets": {
+    "passed": true,
+    "runtimeAssets": 60,
+    "fingerprints": 62,
+    "nativeSourcesChanged": false
+  },
+  "review": "Independent read-only review of physical input edges, source cancellation, route initialization and one-pixel shader warmup; specified issues closed, no outstanding finding; performance and browser checks executed separately",
+  "distSha256": {
+    "dist/assets/physics-CPnSlmoZ.js": "d8fbff4369e8a0b38fccd4e91dd024c48920fe1c213950568b5f0262bbaf5c1e",
+    "dist/assets/index-7RPEIEDR.css": "9e2e46a2255a7be2d72e397bc131dfbeffaf47afc250c66c2db9cc5f2e1190fd",
+    "dist/assets/index-Cz-eVTJw.js": "4cec8dc1caffbea6565d2da2b6f718203870cb4590512f81428d92e92bce7a39"
+  },
+  "gameplay": {
+    "distance": 3602.924999999839,
+    "bananas": 158,
+    "kicks": 3,
+    "virtualClock": true
+  },
+  "performance": {
+    "realClock": true,
+    "secondsPerTier": 60,
+    "tiers": 2,
+    "headed": true,
+    "stagedKicksPerTier": 6
+  },
+  "remoteCI": "Read current PR #4 checks for the uploaded revision; no remote success inferred from local checks"
+}

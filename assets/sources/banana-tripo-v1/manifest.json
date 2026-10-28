@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "scope": "Full replacement; variants/LOD/road deformation and assembly in Blender derive from the generated source masters. No old visible mesh is accepted as a new Tripo model.",
+  "reference": "assets/reference/style-a-2026-10-28.png",
+  "provider": "Tripo Studio",
+  "model": "H3.1 – 最高质量",
+  "observedAlternatives": [
+    "H3.0 – 快速且均衡",
+    "H2.5 – 经典版本"
+  ],
+  "budget": {
+    "userApproval": "不限制，用就行",
+    "openingCredits": 25175,
+    "limitExistingCredits": null,
+    "purchasesAllowed": false,
+    "latestVerifiedCredits": 23230,
+    "spentCredits": 1945,
+    "additionalPaidOperations": "hold-after-user-cost-review; use existing sources and local Blender processing"
+  },
+  "assets": [
+    {
+      "id": "hero",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/hero.png",
+      "referenceSha256": "8ad371f40162cccadbde4baf3cd15ffa0e7a11fa9bef26d6cafb7ebd038e3bca",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/3881e9ca-0d9e-4175-b9be-effde85e995f",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/hero-rigged.glb",
+          "bytes": 25928308,
+          "sha256": "c5e49d048684b79f3070e9e52a00d6638b7843594ce0e7f5f4ff1c07b8b8de7c",
+          "role": "H3.1 quad-retopology Mixamo humanoid rig"
+        },
+        {
+          "file": "assets/sources/banana-tripo-v1/hero-master.glb",
+          "bytes": 71228268,
+          "sha256": "4d59376d60f7cec0cd5c29127d0ea5c9f8a4581dd28e66922159a0eb708a50f1"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/rider.glb",
+        "public/assets/riderSkinned.glb"
+      ],
+      "openingCredits": 25175,
+      "remainingCredits": 25110,
+      "masterTriangles": 1943671,
+      "masterVertices": 998787,
+      "processing": [
+        {
+          "operation": "quad-retopology",
+          "cost": 40,
+          "actualDebit": 40,
+          "faces": 10220,
+          "vertices": 9562,
+          "url": "https://studio.tripo3d.ai/zh/workspace/retopology/3881e9ca-0d9e-4175-b9be-effde85e995f"
+        },
+        {
+          "operation": "Mixamo-humanoid-rigging",
+          "cost": 20,
+          "actualDebit": 20,
+          "faces": 10212,
+          "vertices": 9562,
+          "remainingCredits": 23230,
+          "url": "https://studio.tripo3d.ai/zh/workspace/rigging/3881e9ca-0d9e-4175-b9be-effde85e995f"
+        }
+      ],
+      "productionTier": "primary"
+    },
+    {
+      "id": "bicycle",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/bicycle.png",
+      "referenceSha256": "ee0257a45bbfc00151dda48dd3e20019ee0ecd524a7dacc7b4df4687f9e1a742",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/1961e20f-c3cf-4c45-b540-6300630cfe8d",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/bicycle-master.glb",
+          "bytes": 71659828,
+          "sha256": "a75f5166e2b39f7d0ca9001445f3863e80fcbfabfe7b9515d403296024dbed50"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/bicycle.glb"
+      ],
+      "openingCredits": 25070,
+      "remainingCredits": 25005,
+      "masterTriangles": 1895590,
+      "masterVertices": 1002678,
+      "productionTier": "primary"
+    },
+    {
+      "id": "banana-bunch",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/banana-bunch.png",
+      "referenceSha256": "22fb32b51701fb74434fe6a4c00304c82e6cea45787c1cd41f5075bb55d26185",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/7cd786d2-435c-4314-9ebf-5d746e81372d",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/banana-bunch-master.glb",
+          "bytes": 66802308,
+          "sha256": "3db00c598245ee5126932d43b6c44895a7f7237f2550ce47fd19f84cdbc8ce50"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/banana.glb",
+        "public/assets/bananaB.glb",
+        "public/assets/bananaC.glb",
+        "public/assets/bananaD.glb",
+        "public/assets/bananaRack.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "primary",
+      "masterTriangles": 1968636
+    },
+    {
+      "id": "banana-single",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/banana-single.png",
+      "referenceSha256": "e3d7b90aa520adfed413223b95f962d0667c6ed318300082ea84b2842e66f303",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/aef135c9-1118-436b-ae41-c91a006fdc8b",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/banana-single-master.glb",
+          "bytes": 67723716,
+          "sha256": "f274f9d3b846a6a1d04a9029657cb9f9070be9032dbdd3596d1d04a15fa8c14f"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/looseBanana.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "primary",
+      "masterTriangles": 1997202
+    },
+    {
+      "id": "truck",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/truck.png",
+      "referenceSha256": "473f494311ddd0ee169c41412ccbd42b8b15cede6bc1ed49c1ca8027a7d8a6bf",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/02f11595-cb3b-48d8-86c9-8012a76cb9a6",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/truck-master.glb",
+          "bytes": 73066704,
+          "sha256": "b5983e49af48051ac6b881f22b8f464e44a595e8c3a157e79701b1a328b638f8"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/truck.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "primary",
+      "masterTriangles": 1878798
+    },
+    {
+      "id": "car",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/car.png",
+      "referenceSha256": "872128cb7924293efab987449ee716496adf64b0b15801d4623047b475a5801c",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/3928ff20-3bfe-4b81-b42f-7a6f1fbf081d",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/car-master.glb",
+          "bytes": 71455600,
+          "sha256": "388330ac52eca41a3f178430712de39c3aa48bba32975d42d4157f4f860d6dce"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/car.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "primary",
+      "masterTriangles": 1914674
+    },
+    {
+      "id": "pedestrian",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/pedestrian.png",
+      "referenceSha256": "ae65a88d40a00b26403dee2822f8467692b71993a632cee1df508be62c517600",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/b3c40992-1b45-4dd1-82f5-70b5d4678e69",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/pedestrian-master.glb",
+          "bytes": 69393984,
+          "sha256": "7d70db693f64ec46efe29c2d609f4cc9d2a067d2204f8abdb3fc5d332fbe8320"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/pedestrian.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1948006
+    },
+    {
+      "id": "goat",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/goat.png",
+      "referenceSha256": "9b702f305acd1f56e1d5967e07a9fb04c7936339d230f514c6c5282db3b44ee2",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/724b5c7b-a3da-498e-87ef-319edce67aa3",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/goat-master.glb",
+          "bytes": 70402560,
+          "sha256": "69cda553e50bd1f296b9853e6cac0b6187f31659149ed4a513df17e28268cfb2"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/goat.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1961138
+    },
+    {
+      "id": "barrier",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/barrier.png",
+      "referenceSha256": "af5bfa827cacc5305b5bb03d2e0028e5b4ec09fd925f4d1792d365efa5a3e749",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/e46fc40b-4f27-4c39-a676-d1eb79ee681e",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/barrier-master.glb",
+          "bytes": 72979972,
+          "sha256": "95aa2e9a9b558b58687722f265454adcbd330c1259d9d755ebbdf87fc9a9cb94"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/barrier.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1989954
+    },
+    {
+      "id": "crate",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/crate.png",
+      "referenceSha256": "f2ee607026dc53d7040b171b432ab120235caf56816f406c8e31fbe9961789b6",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/b3dc8335-efcc-48f0-95c1-740b6304f435",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/crate-master.glb",
+          "bytes": 72824292,
+          "sha256": "5b4d8dfee581fa5848876bfce8fd724674ebe3ae56000063b7a5ad9b921bc97e"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/truck.glb",
+        "public/assets/crate.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1887174
+    },
+    {
+      "id": "wall",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/wall.png",
+      "referenceSha256": "f669893fc14e6a751ee9d4bf7f780cea18ba94493c2f011fd0bc9f3fb2c01433",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/dd44baca-7e65-4522-9c70-9dd4d980fc9f",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/wall-master.glb",
+          "bytes": 75994776,
+          "sha256": "78ef4161c49ad1fbd6058eba67e9f8a44d9cb8b190fb3f972f4aaf627ecfbe3f"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/wall.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1927532
+    },
+    {
+      "id": "train",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/train.png",
+      "referenceSha256": "7862a9559dcf2a09aa31b267d16db3aa49edd43025a05689a935331b0751552d",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/0fb76487-af4a-4429-aca4-139e4187efcf",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/train-master.glb",
+          "bytes": 72792164,
+          "sha256": "568eb1f20268df2e0c11e9c54f257d6d5464db6161f1f443bb4cad0f42b75daf"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/train.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1968271
+    },
+    {
+      "id": "boost",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/boost.png",
+      "referenceSha256": "24c5d49756366ece13ad8da965ab89b4301a2e48d4c5a49e6775e8ed7e0c6a10",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/32df1454-b863-4029-9251-97209e5c37da",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/boost-master.glb",
+          "bytes": 66457652,
+          "sha256": "5f9f73960fc3324ce236bd413916fa6b09f4f4e9fde5f25d76882c38f007e127"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/boost.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1969028
+    },
+    {
+      "id": "shield",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/shield.png",
+      "referenceSha256": "f099b93491c1d148708768cc2110bfb2e74139ae1141887a1597bd9d5604a72b",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/4aa8e6d5-a3e6-405d-b1c5-c56a7ba6f768",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/shield-master.glb",
+          "bytes": 69196448,
+          "sha256": "a4e6290d789c5c4457f6a053e526cef22e8b62168a5602a4b9600a617a0ba62b"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/shield.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1952510
+    },
+    {
+      "id": "double",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/double.png",
+      "referenceSha256": "1c98213cccd4afbe0b1a4efa2d2b2cbb81e4e55f50072f59bf14aa457bd2c8d5",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/ed9c0e94-9c92-4b1f-8724-8d56e1f13583",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/double-master.glb",
+          "bytes": 66859236,
+          "sha256": "afdc768a2488d1a89e6129517738fbff63d7e8ad9c5ec59eeec71370d8d85b97"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/double.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1934226
+    },
+    {
+      "id": "palm",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/palm.png",
+      "referenceSha256": "72ae9ad173fc45ca1871862e96829be77e696035b7212e0361991ccbfe8979a3",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/e15cd265-4867-4ea7-b863-b87339f3e93f",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/palm-master.glb",
+          "bytes": 75618380,
+          "sha256": "08c897b30afc27e416a64622d7e8af9aba11146e1bac53d72a9c01fb5a619ae0"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/palm.glb",
+        "public/assets/roadCourse.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1978609
+    },
+    {
+      "id": "tree",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/tree.png",
+      "referenceSha256": "aef05d274a3bc233c6b5d5e90508d6fa2d8b415dc062a243f9966216f9189d07",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/8543d3bc-c5f4-42a5-90b8-7ecb8c1b59c7",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/tree-master.glb",
+          "bytes": 76398096,
+          "sha256": "e2295b08b1e3a2b35006eceb2a1aeb4bde6452e9712a992be337155f35a802b6"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/tree.glb",
+        "public/assets/forestTree.glb",
+        "public/assets/forestTreeLOD1.glb",
+        "public/assets/forestTreeLOD2.glb",
+        "public/assets/roadCourse.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1949375
+    },
+    {
+      "id": "banana-plant",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/banana-plant.png",
+      "referenceSha256": "96e48d512841eb49a1161a19f4af65ed1a8a329019c05c541c0b48abee04002e",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/dd843cde-9e35-4ee9-9349-090ac0c85a0f",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/banana-plant-master.glb",
+          "bytes": 71401920,
+          "sha256": "4797cf07d0890c8642ba7f4f117ad1f3c3050a809643ca2122676ccfb5cef2ba"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/bananaPlant.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1923607
+    },
+    {
+      "id": "rock",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/rock.png",
+      "referenceSha256": "850be05fda474d10fedfa970d2072918244afde7089fe0b8e4922b4e4964fb81",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/00f6a611-8739-4627-847f-454f70109525",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/rock-master.glb",
+          "bytes": 68807628,
+          "sha256": "debd7dd4e417eb558184579694fa4461ba9df990945b837e395231d4a06534cd"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/rock.glb",
+        "public/assets/rockE.glb",
+        "public/assets/rockF.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1912687
+    },
+    {
+      "id": "bush",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/bush.png",
+      "referenceSha256": "5f5a4fef10171ba01b4ae23b4b6c506fe25158cc37cb4a694988298fecaec384",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/cf780b88-7b0a-4485-a53a-522e87ae087b",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/bush-master.glb",
+          "bytes": 71990152,
+          "sha256": "d2007e6d4bae8fd38721a6079634cb98ed924466ba6d9cd1ff07f24187a76347"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/bush.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1961567
+    },
+    {
+      "id": "hut",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/hut.png",
+      "referenceSha256": "4d641357dc3c03e935f6bdaa911e86af02cc0812ced77a601a3de28505af719e",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/466d3244-a2b1-43c7-829b-458eedfd5c3c",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/hut-master.glb",
+          "bytes": 75610240,
+          "sha256": "907d6af9ce8e9bf232b67003c83902dc04bca6351dcacea4add0725c7b2e7134"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/hut.glb",
+        "public/assets/villageHouse.glb",
+        "public/assets/villageLonghouse.glb",
+        "public/assets/tower.glb",
+        "public/assets/roadCourse.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1919802
+    },
+    {
+      "id": "stall",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/stall.png",
+      "referenceSha256": "acf83aa5388b405a91cb8de04c17dfbc2ce7da23b137d4db0b81e25d4a8b9608",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/af3660a2-d3ba-4f73-a33a-c379223f8efc",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/stall-master.glb",
+          "bytes": 72795332,
+          "sha256": "130e7f6f628a030a0637f3ee56cacca4446bcdab46bd13c234acff2b4df6d0a2"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/stall.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1884580
+    },
+    {
+      "id": "foundation",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/foundation.png",
+      "referenceSha256": "3b063d146a4a0d6a6f01cb8ede417a0f91f04385fca6d4e4eba19d0b6b03b488",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/044890ef-9c0a-4724-8506-3d50bb65c190",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/foundation-master.glb",
+          "bytes": 74520844,
+          "sha256": "b6007bb11fac50d72f728a6a7151cb51cd61ce5049754bc79b5ae1f0f11d31eb"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/foundation.glb",
+        "public/assets/roadCourse.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1953140
+    },
+    {
+      "id": "sign",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/sign.png",
+      "referenceSha256": "1bfdd2023eee7ec75bf4b2e4357255d74c88a06dffb45f73065ff75537d0d201",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/972f4ba0-090c-40ee-800d-ac7ff4e4ddac",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/sign-master.glb",
+          "bytes": 69681824,
+          "sha256": "a06c401f8e4a6ac89e301341b229b6da03e4537484a0ff3fbb71ec2be1c2e7c8"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/sign.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1933710
+    },
+    {
+      "id": "mountain",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/mountain.png",
+      "referenceSha256": "e2294ee411daca46716cc8dda872f9cf5315589930d43ffcb6b79b390b80fa24",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/150212a2-a86a-4464-913c-5897b90098bd",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/mountain-master.glb",
+          "bytes": 75601048,
+          "sha256": "5ef27396c3a262e15b33ff8f2a1721b161afa9ea4a1c6ac1f861eb578661a629"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/mountain.glb",
+        "public/assets/mountainB.glb",
+        "public/assets/midMountain.glb",
+        "public/assets/midMountainB.glb",
+        "public/assets/forestHill.glb",
+        "public/assets/forestHillB.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1957398
+    },
+    {
+      "id": "cliff",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/cliff.png",
+      "referenceSha256": "9421d7ae0b835a4a614ac117b4dd6cd3afd1e732507f8381d676937b1396d992",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/1082163c-4c59-4c42-b222-38ea374db675",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/cliff-master.glb",
+          "bytes": 76191452,
+          "sha256": "8666520881d004d6663378e34e1ef9b841aa05391d222287b2e3a130fb1b1e0d"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/cliff.glb",
+        "public/assets/rockA.glb",
+        "public/assets/rockB.glb",
+        "public/assets/rockC.glb",
+        "public/assets/rockD.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1935370
+    },
+    {
+      "id": "road-module",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/road-module.png",
+      "referenceSha256": "78634b99f5dc215a7ef4368d160383503b51e463755a868e786b64e1dff45d05",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/b6507b50-cae6-4c6b-b925-6dfdd4c8d1e4",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/road-module-master.glb",
+          "bytes": 69030632,
+          "sha256": "aade70aed0815739b76116e23f3a6575aac53dff0d4cbb19dc85fd202f6ce2f0"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/roadTile.glb",
+        "public/assets/roadCourse.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "complex",
+      "masterTriangles": 1921251
+    },
+    {
+      "id": "cloud",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/cloud.png",
+      "referenceSha256": "a897d4e35720ecced55e80b1d57f89e4990911b2e1baac85080440d279910c17",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/410f1cd2-ad73-4db5-92e7-85b299e39952",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/cloud-master.glb",
+          "bytes": 64720340,
+          "sha256": "201d9762fb5c616f0b5144da7b2dd35d17e23cfffb29124d19cd5c47f0ff0162"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/cloud.glb",
+        "public/assets/cloudB.glb",
+        "public/assets/cloudC.glb",
+        "public/assets/valley.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1935836
+    },
+    {
+      "id": "impact-star",
+      "status": "integrated-saved-native",
+      "reference": "assets/reference/banana-tripo-v1/impact-star.png",
+      "referenceSha256": "13eef35fb1c687ba115067cb1b81ad3990512f0fcbe44cf215c8e4fa8a1742a5",
+      "taskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/24986829-7819-438f-91b2-b280e9629175",
+      "displayedCost": 65,
+      "actualDebit": 65,
+      "sourceFiles": [
+        {
+          "file": "assets/sources/banana-tripo-v1/impact-star-master.glb",
+          "bytes": 77791340,
+          "sha256": "d97c04df09147e9b5b423f9bcf9b3d00f471bb54a316b630bec279bd42687f3c"
+        }
+      ],
+      "runtimeFiles": [
+        "public/assets/burst.glb",
+        "public/assets/burstGlow.glb"
+      ],
+      "batch": "batch-27-20261028",
+      "productionTier": "distant",
+      "masterTriangles": 1998478
+    }
+  ],
+  "batches": [
+    {
+      "id": "batch-27-20261028",
+      "assets": [
+        "banana-bunch",
+        "banana-single",
+        "truck",
+        "car",
+        "pedestrian",
+        "goat",
+        "barrier",
+        "crate",
+        "wall",
+        "train",
+        "boost",
+        "shield",
+        "double",
+        "palm",
+        "tree",
+        "banana-plant",
+        "rock",
+        "bush",
+        "hut",
+        "stall",
+        "foundation",
+        "sign",
+        "mountain",
+        "cliff",
+        "road-module",
+        "cloud",
+        "impact-star"
+      ],
+      "status": "submitted",
+      "model": "H3.1 – 最高质量",
+      "ultraGeometry": true,
+      "texture": "8K",
+      "pbr": true,
+      "visibility": "private",
+      "displayedCost": 1755,
+      "actualDebit": 1755,
+      "openingCredits": 25005,
+      "remainingCredits": 23250,
+      "firstObservedTaskUrl": "https://studio.tripo3d.ai/zh/workspace/generate/00f6a611-8739-4627-847f-454f70109525"
+    }
+  ],
+  "futureProductionPolicy": {
+    "approvedByUser": "主体、复杂环境、简单远景分三档 我觉得后续可以按照这个方案来进行游戏的设计，划分不同的档位，比较合理",
+    "model": "H3.1 – 最高质量",
+    "primary": {
+      "geometry": "ultra",
+      "texture": "4K",
+      "pbr": "where useful, especially selective vehicle metal",
+      "observedStudioCostWithPBR": 55
+    },
+    "complex": {
+      "geometry": "ultra",
+      "texture": "2K",
+      "pbr": false,
+      "observedStudioCost": 40
+    },
+    "distant": {
+      "geometry": "standard",
+      "texture": "2K",
+      "pbr": false,
+      "observedStudioCost": 25
+    },
+    "existingSources": "Keep already-generated 8K masters; make local runtime derivatives, do not regenerate merely to lower settings."
+  }
+}

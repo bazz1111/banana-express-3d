@@ -6,7 +6,7 @@ import * as THREE from 'three';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({channel:'chrome',headless:true}),report=[],errors=[];
 const tag=process.env.CARGO_ARTIFACT_TAG||'current',base=process.env.GAME_URL||'http://127.0.0.1:4175/';
-const rigs=(process.env.CARGO_RIGS||'skinned,legacy').split(',');
+const rigs=(process.env.CARGO_RIGS||'skinned').split(',');
 fs.mkdirSync('artifacts',{recursive:true});
 function tree(faces){
   const box=new THREE.Box3();for(const f of faces)box.union(f.box);
@@ -87,17 +87,20 @@ try{
             for(let i=0;i<indices.length;i+=3){const totals={};for(const v of indices.slice(i,i+3))for(let n=0;n<4;n++){const b=skin.getComponent(v,n),w=weight.getComponent(v,n);totals[b]=(totals[b]??0)+w;}const bone=Object.keys(totals).sort((a,b)=>totals[b]-totals[a])[0];parts.push(o.skeleton.bones[bone].name);}}
           return {name,vertices,indices,parts};
         };
-        const body=[],cargo=[];v.rider.traverse(o=>{if(o.isMesh)body.push(mesh(o,inv.clone().multiply(o.matrixWorld),o.name));});
+        const body=[],cargo=[],finishing=[];v.rider.traverse(o=>{if(o.isMesh)body.push(mesh(o,inv.clone().multiply(o.matrixWorld),o.name));});
         if(wantCargo)for(const group of v.cargoGroups)for(let i=0;i<group.count;i++){const m=new Matrix();group.getMatrixAt(i,m);m.premultiply(group.matrixWorld).premultiply(inv);cargo.push(mesh(group,m,`CargoBundle${String(group.userData.globalIndices[i]).padStart(2,'0')}`));}
-        const contacts=[];
-        for(let i=0;i<2;i++){
-          const side=i?1:-1,foot=v.feet[i].getWorldPosition(new Vector()).applyMatrix4(inv),ankle=new Vector(side*.21,.538-side*.18*Math.cos(v.crank.rotation.x),-.035-side*.18*Math.sin(v.crank.rotation.x)).lerp(side<0?new Vector(-.30,1.311,.58):new Vector(.04,1.233,-.21),v.stanceBlend);ankle.y+=Math.sin(Math.PI*v.stanceBlend)*.38;
-          if(v.kickBlend[i]<.0001)contacts.push({joint:'Foot_'+(i?'R':'L'),error:foot.distanceTo(ankle)});
-          if(v.stanceBlend<.00001)contacts.push({joint:'Hand_'+(i?'R':'L'),error:v.hands[i].getWorldPosition(new Vector()).applyMatrix4(inv).distanceTo(new Vector(side*.36,1.20,.50))});
+        if(wantCargo)v.cargoRopes.traverseVisible(o=>{if(o.isMesh)finishing.push(mesh(o,inv.clone().multiply(o.matrixWorld),o.name));});
+        const a=v.riderAnimator,contacts=a.contactErrors.map(e=>({joint:e.bone,error:e.error}));
+        const stance=a.stanceBlend;
+        if(g.jumpHeight===0&&(stance<.00001||stance>.99999))for(let i=0;i<2;i++){
+          const tag=i?'R':'L',kicking=(g.kickPose>0||g.charge>0)&&(g.kickSide>0?i===0:i===1);
+          const position=o=>o.getWorldPosition(new Vector()).applyMatrix4(inv);
+          if(!kicking){const sole=v.rider.getObjectByName('Sole_'+tag),support=v.bike.getObjectByName((stance>.5?'RiderStand_':'RiderPedal_')+tag);contacts.push({joint:'Sole_'+tag,error:position(sole).distanceTo(position(support))});}
+          if(stance<.00001){const palm=v.rider.getObjectByName('Palm_'+tag),grip=v.bike.getObjectByName('RiderGrip_'+tag);contacts.push({joint:'Palm_'+tag,error:position(palm).distanceTo(position(grip))});}
         }
-        return {body,cargo,contacts,stanceBlend:v.stanceBlend,crank:v.crank.rotation.x,jump:g.jumpHeight,kickPose:g.kickPose,mode:v.rigMode};
+        return {body,cargo,finishing,contacts,stanceBlend:stance,crank:v.crank.rotation.x,jump:g.jumpHeight,kickPose:g.kickPose,mode:v.rigMode};
       },{s:scenario,frame,wantCargo:!cargo});
-      assert.equal(data.mode,rig);if(!cargo){cargo=data.cargo.map(triangles);assert.equal(cargo.length,20);assert.equal(new Set(cargo.map(x=>x.name)).size,20);}
+      assert.equal(data.mode,rig);if(!cargo){cargo=data.cargo.map(triangles);assert.equal(cargo.length,20);assert.equal(new Set(cargo.map(x=>x.name)).size,20);cargo.push(...data.finishing.map(triangles));}
       const hits=[];for(const b of data.body.map(triangles))for(const c of cargo){const pairs=[];intersections(b.tree,c.tree,pairs);if(!pairs.length)continue;
         const parts={};for(const p of pairs)parts[p.body.part]=(parts[p.body.part]??0)+1;
         const bounds=new THREE.Box3().setFromPoints(pairs.map(p=>p.point)),key=c.name+'/'+Object.keys(parts).join(',');let depth=null;

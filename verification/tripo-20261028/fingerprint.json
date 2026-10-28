@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "reason": "CI caught a stale manifest fingerprint after compound-source provenance completion; the earlier local failed check had been missed.",
+  "changedFingerprintFiles": [
+    "manifest.json"
+  ],
+  "unchangedFingerprints": 61,
+  "previous": {
+    "contentHash": "407ed998b21116099fd62a7a1f78cc8a4f2ee7c11eee9fce26cf475f812e65d5"
+  },
+  "current": {
+    "contentHash": "a53661d678afca1f14c903d91d36b5654e807236849941126a0eb0781ad1d046"
+  },
+  "exactOldManifestReconstruction": {
+    "models.roadCourse.sourceIds": [
+      "road-module"
+    ],
+    "models.valley.sourceIds": [
+      "palm",
+      "tree",
+      "hut",
+      "foundation",
+      "mountain",
+      "cloud"
+    ],
+    "models.truck.sourceIds": [
+      "truck",
+      "crate"
+    ]
+  },
+  "allOtherManifestFieldsUnchanged": true,
+  "checks": "check:assets independently validates each embedded source ID and SHA against the Tripo ledger; assets:fingerprint passes with the final list; thresholds and comparison algorithm unchanged."
+}

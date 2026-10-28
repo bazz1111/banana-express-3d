@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-10-27T22:02:43.026912+00:00",
+  "url": "http://127.0.0.1:4183/?seed=2817&quality=high",
+  "loadedBuild": {
+    "page": "http://127.0.0.1:4183/?seed=2817&quality=high",
+    "moduleScripts": [
+      "http://127.0.0.1:4183/assets/index-ClWqS7xM.js"
+    ]
+  },
+  "status": "geometry-support-LOD-period-pass; mountain-pixel-range-fail",
+  "assetsFrozen": true,
+  "nativeSha256": "9045801ba10d1c940c606a43b69f6967949a47cd521718071c2f53758ec38d24",
+  "nativeSupport": {
+    "candidate": false,
+    "pass": true,
+    "foundationRaySamples": 12150,
+    "exactNearFootprintIntersections": 3318,
+    "rootSamples": 5870,
+    "maxRootError": 6.103515625001388e-06,
+    "rockBottomSamples": 227440,
+    "maxFarFoundationHeight": 11.312713623046875,
+    "measurement": "Native float BVH checks; not a substitute for the real triangle-plane support baselines below"
+  },
+  "curved": {
+    "pass": true,
+    "fixtures": 9,
+    "rootsPerFixture": 288,
+    "maxSourceTrianglePlaneRootErrorMetres": 0.0010363998173858122,
+    "maxRuntimeRootErrorMetres": 0.0010369759939598197,
+    "maxDoubleRebaseSupportDriftMetres": 2.3092638912203256e-13,
+    "maxFloat32InstanceSupportDriftMetres": 3.539827522303085e-05,
+    "maxAuthoredMatrixError": 1.525301587435024e-05,
+    "maxWheelGapMetres": 5.18243832185461e-05,
+    "precisionContract": {
+      "sourceBVHRayOrigin": 5000,
+      "float32HeightUlp": 0.00048828125,
+      "sourcePlacementAllowance": 0.001953125,
+      "maxDoubleRebaseSupportDrift": 1e-06,
+      "maxFloat32InstanceSupportDrift": 0.0001,
+      "explanation": "Source signed error is reported against real triangle planes. Runtime must preserve that source baseline; four float ray-height ULPs cover the native BVH solve, not visible Tripo mesh changes."
+    }
+  },
+  "valley": {
+    "pass": true,
+    "quality": {
+      "highTriangles": 94,
+      "highCount": 1406,
+      "lowTriangles": 20,
+      "lowCount": 633,
+      "usesDeclaredLowGeometry": true,
+      "farLowMatchesSavedPanorama": true
+    },
+    "mainBuildings": 131,
+    "farTrees": 2310,
+    "farBuildings": 7,
+    "footprintSamplesPerFixture": 10611,
+    "farFootprintSamplesPerFixture": 567,
+    "maxTreeErrorMetres": 0.0009149339584050495,
+    "maxFarTreeErrorMetres": 0.0009544915476368473,
+    "minWaterClearanceMetres": 1.7910050123844456,
+    "maxSeamErrorMetres": 5.053152337880483e-12,
+    "authoredCounts": {
+      "ValleyVillageHouse": 44,
+      "ValleyVillageLonghouse": 86,
+      "ValleyTower": 1,
+      "ValleyFoundations": 131,
+      "ValleyForest": 1406,
+      "ValleyPalms": 160,
+      "ValleyMountains": 12,
+      "ValleyFoothills": 6,
+      "ValleyClouds": 8,
+      "ValleyForestFar": 994,
+      "ValleyMountainsB": 12,
+      "ValleyMidMountains": 5,
+      "ValleyMidMountainsB": 5,
+      "ValleyFoothillsB": 5,
+      "ValleyCloudsB": 8,
+      "ValleyCloudsC": 8,
+      "ValleyPanoramaForest": 2310,
+      "ValleyPanoramaHouse": 2,
+      "ValleyPanoramaLonghouse": 2,
+      "ValleyPanoramaTower": 3,
+      "ValleyPanoramaFoundations": 7
+    }
+  },
+  "landscape": {
+    "pass": false,
+    "samples": 27,
+    "checks": {
+      "mountainPixels": false,
+      "sourceGroups": true,
+      "sourceMatricesAndSharing": true,
+      "exactDistances": true,
+      "noPageErrors": true
+    },
+    "unchangedMountainPixelThreshold": 0.0115,
+    "unmetMountainSamples": [
+      {
+        "viewport": "medium",
+        "distance": 0,
+        "fraction": 0.008819444444444444
+      },
+      {
+        "viewport": "medium",
+        "distance": 1599.99,
+        "fraction": 0.008880787037037038
+      },
+      {
+        "viewport": "medium",
+        "distance": 1600.01,
+        "fraction": 0.008888888888888889
+      },
+      {
+        "viewport": "medium",
+        "distance": 1000010,
+        "fraction": 0.0074212962962962965
+      },
+      {
+        "viewport": "portrait",
+        "distance": 1000010,
+        "fraction": 0.005483655365171953
+      }
+    ],
+    "maxBayFraction": 0.03660416666666667,
+    "maxCityFraction": 0.011915178028922105,
+    "measurement": "Real GL on/off masks; city/water fractions are measurements with no invented acceptance thresholds"
+  },
+  "recommendation": "The five mountain failures cluster around course-period local 0–10m in medium/portrait views. In a future visual pass, adjust that narrow-view panorama direction/vertical framing to expose blue ridge above the red-cliff silhouette while retaining the passed main-camera composition and open bay; alternatively adjust only existing inland ridge peaks in those view directions. Current assets and the 1.15% gate were not changed.",
+  "reports": {
+    "curved": "artifacts/curved-road-report.json",
+    "valley": "artifacts/valley-report.json",
+    "landscape": "artifacts/landscape-art-production-final-camera.json"
+  },
+  "qaBrowsersClosed": true,
+  "activeQaNodeProcesses": 0
+}

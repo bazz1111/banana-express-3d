@@ -10,7 +10,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const errors=[],url=process.env.GAME_URL||'http://127.0.0.1:5173/';
 const baseTag=process.env.HERO_ARTIFACT_TAG||'current';
-const rigs=(process.env.HERO_RIGS||'skinned,legacy').split(',');let currentRig=rigs[0],artifactTag=baseTag;
+const rigs=(process.env.HERO_RIGS||'skinned').split(',');let currentRig=rigs[0],artifactTag=baseTag;
 fs.mkdirSync('artifacts',{recursive:true});
 const sizes=[['desktop',1440,900],['medium',960,900],['portrait',390,844]].filter(s=>!process.env.HERO_SIZES||process.env.HERO_SIZES.split(',').includes(s[0]));
 const frameFailures=[],runs=[];
@@ -55,7 +55,7 @@ async function observe(page){
     return {rigMode:v.rigMode,globalIndices,phase:g.phase,s:g.s,viewTime:v.time,lane:g.lane,stance:g.stance,stanceBlend:v.stanceBlend,bananas:g.bananas,jump:g.jumpHeight,kickPose:g.kickPose,kickSide:g.kickSide,cooldown:g.cooldowns.kick,
       width:w,height:h,camera:v.camera.position.toArray(),target:v.lookTarget.toArray(),fov:v.camera.fov,cameraSide:v.player.position.x-v.camera.position.x,cameraBack:-v.camera.position.z,
       bike,rider,cargo,burstBounds:v.burst.visible?boundsFor(v.burst):null,wheels,wheelGapX:Math.abs(wheels[0].center.x-wheels[1].center.x),forwardError:forward.distanceTo(expectedForward),
-      capacity:v.cargoGroups.reduce((n,m)=>n+m.instanceMatrix.count,0),count:v.cargo.count,ropesVisible:v.bike.getObjectByName('CargoRopes').visible,sourceBundles:sources.length,bundleNames:sources.map(mesh=>mesh.name),
+      capacity:v.cargoGroups.reduce((n,m)=>n+m.instanceMatrix.count,0),count:v.cargo.count,ropesVisible:v.cargoRopes.visible,sourceBundles:sources.length,bundleNames:sources.map(mesh=>mesh.name),
       nativeGeometry,nativeMaterial,
       sourceGeometries:new Set(sources.map(mesh=>mesh.geometry)).size,burstVisible:v.burst.visible,burstDistance:burst.distanceTo(foot),burstFacingError:1-Math.abs(v.burst.quaternion.dot(v.camera.quaternion)),footPosition:foot.toArray(),burstPosition:burst.toArray(),
       nativeMatrixError:sources.length?nativeMatrixError:null,sampleMatrices,riderFlatShading:flat.some(Boolean),worldFlatShading:v.roadTiles[0].children.find(mesh=>mesh.userData.surfaceRole==='road').material.flatShading};
@@ -124,7 +124,7 @@ try{
   const countFixtures=[];
   for(const bananas of [0,5,100,150]){
     await page.evaluate(bananas=>{const {game:g,view:v}=window.__bananaGame;g.bananas=bananas;v.update(g,0);},bananas);
-    const frame=await observe(page);assert.equal(frame.count,Math.min(20,Math.floor(bananas/5)));assert.equal(frame.bananas,bananas);assert.equal(frame.ropesVisible,bananas>=20);assert.ok(frame.nativeMatrixError<1e-4);
+    const frame=await observe(page);assert.equal(frame.count,Math.min(20,Math.floor(bananas/5)));assert.equal(frame.bananas,bananas);assert.equal(frame.ropesVisible,bananas>=80);assert.ok(frame.nativeMatrixError<1e-4);
     countFixtures.push({bananas,count:frame.count,capacity:frame.capacity,ropesVisible:frame.ropesVisible,nativeMatrixError:frame.nativeMatrixError});
   }
   const fixtures=[];

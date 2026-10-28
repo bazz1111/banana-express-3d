@@ -27,7 +27,7 @@ try{
   await page.waitForTimeout(1400);await page.screenshot({path:path.join(out,'endless-ready.png')});
   const metrics=await page.evaluate(()=>{const m=window.__renderCheck,frames=m.intervals.slice(-60).filter(n=>n>0&&n<500).sort((a,b)=>a-b);return {...m.last,medianFrameMs:frames[Math.floor(frames.length*.5)],p95FrameMs:frames[Math.floor(frames.length*.95)]};});
   await page.clock.install();await page.evaluate(()=>window.__instrumentFrames());
-  const state=()=>page.evaluate(()=>{const {game:g,view:v}=window.__bananaGame;return {phase:g.phase,s:g.s,lane:g.lane,lateralSpeed:g.lateralSpeed,speed:g.speed,bananas:g.bananas,score:g.score,elapsed:g.elapsed,
+  const state=()=>page.evaluate(()=>{const {game:g,view:v}=window.__bananaGame;return {phase:g.phase,s:g.s,lane:g.lane,lateralSpeed:g.lateralSpeed,speed:g.speed,baseSpeed:g.baseSpeed,bananas:g.bananas,score:g.score,elapsed:g.elapsed,
     stance:g.stance,charge:g.charge,jumpHeight:g.jumpHeight,kicks:g.kickedCount,cd:g.cooldowns.kick,buffs:g.buffs,obstacles:g.obstacles,pickups:g.pickups,
     models:v.obstacleModels.size,bodies:v.physics.vehicles.size,children:v.scene.children.length};});
   await page.click('#start');await page.clock.runFor(3150);assert.equal((await state()).phase,'racing');
@@ -35,10 +35,11 @@ try{
   async function controls(input){const desired=new Set(Object.entries({KeyA:input.steer<0,KeyD:input.steer>0,Space:input.jump,KeyQ:input.kick}).filter(([,v])=>v).map(([k])=>k));
     for(const key of [...held])if(!desired.has(key)){await page.keyboard.up(key);held.delete(key);}
     for(const key of desired)if(!held.has(key)){await page.keyboard.down(key);held.add(key);}}
-  let kicked=false,paused=false,shieldSeen=false,boostSeen=false,doubleSeen=false,jumped=false,stood=false,satAgain=false,peakModels=0,peakBodies=0;
+  let kicked=false,paused=false,shieldSeen=false,boostSeen=false,doubleSeen=false,jumped=false,stood=false,satAgain=false,dashed=false,peakSpeed=0,peakModels=0,peakBodies=0;
   const decisions=[];
   for(let frame=0;frame<2200;frame++){
-    const g=await state();if(g.phase!=='racing'){fs.writeFileSync(path.join(out,'endless-autoplay-failure.json'),JSON.stringify({...g,decisions},null,2));await page.screenshot({path:path.join(out,'endless-autoplay-failure.png')});}assert.equal(g.phase,'racing',`Unexpected collision at ${g.s}m`);if(g.s>2500)break;
+    const g=await state();if(g.phase!=='racing'){fs.writeFileSync(path.join(out,'endless-autoplay-failure.json'),JSON.stringify({...g,decisions},null,2));await page.screenshot({path:path.join(out,'endless-autoplay-failure.png')});}assert.equal(g.phase,'racing',`Unexpected collision at ${g.s}m`);if(g.s>3600)break;
+    peakSpeed=Math.max(peakSpeed,g.speed);
     peakModels=Math.max(peakModels,g.models);peakBodies=Math.max(peakBodies,g.bodies);
     shieldSeen ||= g.buffs.shield>0;boostSeen ||= g.buffs.boost>0;doubleSeen ||= g.buffs.double>0;jumped ||= g.jumpHeight>0;
     const obstacles=g.obstacles.filter(o=>!o.kicked&&!o.hit&&o.s-g.s> -obstacleSpecs[o.type].length/2-1&&o.s-g.s<44);
@@ -73,9 +74,10 @@ try{
       const frozen=await state();assert.equal(frozen.s,before.s);assert.equal(frozen.elapsed,before.elapsed);assert.deepEqual(frozen.buffs,before.buffs);assert.equal(frozen.phase,'paused');await page.click('#resume');}
     if(!stood&&after.s>450){await page.keyboard.press('KeyC');assert.equal((await state()).stance,'standing');stood=true;}
     if(!satAgain&&after.s>900){await page.click('#stance');assert.equal((await state()).stance,'seated');satAgain=true;}
+    if(!dashed&&after.s>3500){await page.keyboard.down('KeyE');await page.clock.runFor(40);await page.keyboard.up('KeyE');dashed=true;}
     if(frame%250===0)console.log('ENDLESS_DISTANCE',Math.round(after.s),'bananas',after.bananas,'speed',after.speed);
   }
-  await controls({});const final=await state();assert.ok(final.s>2500,'Must continue well beyond the old endpoint');assert.ok(final.bananas>20);assert.ok(kicked&&paused&&jumped&&stood&&satAgain);assert.ok(shieldSeen&&boostSeen&&doubleSeen,'All pickup powers should be reachable in actual play');
+  await controls({});const final=await state();assert.ok(final.s>3600,'Must reach the maximum automatic speed beyond the old endpoint');assert.equal(final.baseSpeed,26);assert.ok(dashed&&peakSpeed>=32.5,'Real E input must reach the boosted speed cap');assert.ok(final.bananas>20);assert.ok(kicked&&paused&&jumped&&stood&&satAgain);assert.ok(shieldSeen&&boostSeen&&doubleSeen,'All pickup powers should be reachable in actual play');
   await page.screenshot({path:path.join(out,'endless-running.png')});await page.click('#end-run');await page.clock.runFor(120);assert.equal((await state()).phase,'finished');
   assert.ok((await page.locator('#result-reason').textContent()).includes('主动'));await page.screenshot({path:path.join(out,'endless-result.png')});
   await page.click('#restart');await page.clock.runFor(100);const fresh=await state();assert.equal(fresh.bananas,0);assert.equal(fresh.s,0);assert.ok(['ready','countdown'].includes(fresh.phase));
@@ -85,6 +87,6 @@ try{
   assert.ok((await page.locator('#result-reason').textContent()).includes('撞'));
   await page.click('#restart');await page.clock.runFor(100);assert.equal((await state()).s,0);
   const phases=await page.evaluate(()=>window.__renderCheck.phases);assert.ok(phases.racing.maxCalls<=300,JSON.stringify(phases));assert.equal(errors.length,0,errors.join('\n'));
-  const report={metrics,phases,final,peakModels,peakBodies,kicked,paused,jumped,stood,satAgain,shieldSeen,boostSeen,doubleSeen,collisionEnd:true,errors};delete report.final.obstacles;delete report.final.pickups;
+  const report={metrics,phases,final,peakModels,peakBodies,peakSpeed,kicked,paused,jumped,stood,satAgain,dashed,shieldSeen,boostSeen,doubleSeen,collisionEnd:true,errors};delete report.final.obstacles;delete report.final.pickups;
   fs.writeFileSync(path.join(out,'endless-browser-report.json'),JSON.stringify(report,null,2));console.log('ENDLESS_BROWSER_PASS',JSON.stringify({...report,phases}));
 }finally{await browser.close();}

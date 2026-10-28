@@ -3,12 +3,17 @@ import './reference.css';
 import { GameView } from './view.js';
 import { GameAudio } from './audio.js';
 import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH } from './game.ts';
+import { createSessionCourse, readPreferences, savePreferences } from './session.js';
+import { ActionBuffer } from './inputBuffer.js';
 
 const $ = id => document.getElementById(id);
 const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
+const preferences = readPreferences();
 const audio = new GameAudio();
+audio.enabled = preferences.sound;
 const keys = new Set();
 const pointers = new Map();
+const actions = new ActionBuffer();
 const bestKey = 'banana-endless-best';
 const RACK_CAPACITY = 100, KICK_COOLDOWN = 18;
 // Presentation-only freeze on a landed kick; the fixed-step simulation simply receives no time.
@@ -16,7 +21,7 @@ const HIT_STOP = .085;
 let view, game, previousPhase = '', contextLost = false, resultSaved = false, toastRemaining = 0, lastFrame = 0, hitStop = 0;
 let best = readBest();
 const params = new URLSearchParams(location.search);
-// ?quality=high|low pins the tier; otherwise sustained slow racing frames step down to low once.
+// Saved quality is the starting tier; URL pins and a manual change lock this session's tier.
 const pinnedQuality = ['high', 'low'].includes(params.get('quality')) ? params.get('quality') : null;
 let qualityLocked = !!pinnedQuality;
 const frameTimes = [];
@@ -63,6 +68,7 @@ function bestText() {
 function clearInput() {
   keys.clear();
   pointers.clear();
+  actions.clear();
   hitStop = 0;
   for (const id of ['touch-left', 'touch-right', 'touch-jump', 'touch-kick', 'touch-dash', 'kick-skill', 'dash-skill']) {
     $(id).classList.remove('pressed');
@@ -86,7 +92,7 @@ function start() {
 function reset() {
   if (!view || !canInteract()) return;
   clearInput();
-  game = createGame(view.course);
+  game = createGame(createSessionCourse(view.course, params, game?.course.seed));
   view.reset(game);
   audio.reset();
   resultSaved = false;
@@ -138,12 +144,18 @@ for (const id of ['end-run', 'end-paused']) $(id).addEventListener('click', fini
 $('reload').addEventListener('click', () => location.reload());
 $('sound').addEventListener('click', async () => {
   await audio.toggle();
+  preferences.sound = audio.enabled;
+  savePreferences(preferences);
   updateSound();
+  if (running()) $('game-canvas').focus({ preventScroll: true });
 });
 $('quality').addEventListener('click', () => {
   if (!view || contextLost) return;
   qualityLocked = true;
   setQuality(view.quality === 'high' ? 'low' : 'high');
+  preferences.quality = view.quality;
+  savePreferences(preferences);
+  if (running()) $('game-canvas').focus({ preventScroll: true });
 });
 
 for (const [id, code] of [
@@ -155,13 +167,15 @@ for (const [id, code] of [
     event.preventDefault();
     if (!canInteract() || game?.phase !== 'racing') return;
     pointers.set(event.pointerId, code);
+    actions.press(code);
     button.classList.add('pressed');
     button.setPointerCapture(event.pointerId);
     audio.start();
   });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
     button.addEventListener(type, event => {
-      pointers.delete(event.pointerId);
+      const wasHeld = pointers.delete(event.pointerId);
+      if (type !== 'pointerup' && wasHeld) actions.cancel(code, held(code));
       button.classList.remove('pressed');
     });
   }
@@ -186,7 +200,10 @@ window.addEventListener('keydown', event => {
   }
   if (['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyQ', 'KeyE'].includes(event.code)) {
     event.preventDefault();
-    if (game.phase === 'racing') keys.add(event.code);
+    if (game.phase === 'racing') {
+      keys.add(event.code);
+      if (!event.repeat) actions.press(event.code);
+    }
   }
 });
 window.addEventListener('keyup', event => keys.delete(event.code));
@@ -225,6 +242,10 @@ function saveResult() {
   $('result-bananas').textContent = `${result.bananas.toLocaleString()} 根`;
   $('result-time').textContent = formatTime(result.elapsed);
   $('result-total').textContent = result.total.toLocaleString();
+  const replay = new URL(location.href);
+  replay.searchParams.set('seed', String(game.course.seed));
+  $('result-seed').textContent = `${game.course.seed} · 重放`;
+  $('result-seed').href = replay.href;
   best = { total: Math.max(best.total, result.total), distance: Math.max(best.distance, result.distance) };
   try {
     localStorage.setItem(bestKey, JSON.stringify(best));
@@ -336,9 +357,9 @@ async function boot() {
     });
     view.onSound=event=>audio.event(event);
     await view.load();
-    game = createGame(view.course);
+    game = createGame(createSessionCourse(view.course, params));
     view.reset(game);
-    if (pinnedQuality) setQuality(pinnedQuality);
+    setQuality(pinnedQuality || preferences.quality || view.quality);
     window.__bananaGame = { get game() { return game; }, view, perf: perfStats };
     $('start').disabled = false;
     $('start').innerHTML = '开始骑行 <span>→</span>';
@@ -354,10 +375,7 @@ async function boot() {
       hitStop = Math.max(0, hitStop - dt);
       const activeDt = running() && canInteract() && !stopped ? dt : 0;
       if (!contextLost) {
-        advance(game, {
-          steer: (held('KeyD') || held('ArrowRight') ? 1 : 0) - (held('KeyA') || held('ArrowLeft') ? 1 : 0),
-          jump: held('Space'), kick: held('KeyQ'), dash: held('KeyE'),
-        }, activeDt);
+        actions.consume(advance(game, actions.sample(held), activeDt));
         feedback();
         view.update(game, activeDt, canInteract()?dt:0);
       }

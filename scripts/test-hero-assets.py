@@ -1,323 +1,271 @@
-"""Read saved native hero assets and their actual GLB exports; never rebuild or save sources."""
-import bpy
-import hashlib
-import json
-import struct
-import sys
-import numpy as np
+"""Read-only Tripo hero/bicycle/cargo contracts in native metre space and real GLBs.
+
+Use --source/--glb/--metadata and --bike-source/--bike-glb for candidates.
+--skip-cargo explicitly limits a candidate run before the separate cargo assembly
+is available. Default CI also checks its 20 bundles and four shared geometries.
+"""
+import argparse
 from collections import defaultdict
+import json
 from pathlib import Path
-from mathutils import Matrix, Quaternion, Vector
-from mathutils.bvhtree import BVHTree
+import runpy
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE = ROOT / 'tests/fixtures/blender/hero-native-baseline.json'
-REPORT = ROOT / 'artifacts/hero-native-report.json'
-OUT = ROOT / 'assets/export'
-REPORT.parent.mkdir(parents=True, exist_ok=True)
-SOURCES = ['asset-library.blend', 'standing-motion.blend']
-HERO_MODELS = ['rider', 'bicycle', 'banana', 'bananaB', 'bananaC', 'bananaD', 'looseBanana', 'bananaRack']
-RIG_NAMES = ['BikeFrame', 'CargoRopes', 'WheelRear', 'WheelFront', 'Crank', 'Pedal_L', 'Pedal_R',
-             'BalanceBody', 'Arm_L', 'Arm_R', 'Elbow_L', 'Elbow_R', 'Hand_L', 'Hand_R',
-             'Leg_L', 'Leg_R', 'Knee_L', 'Knee_R', 'Foot_L', 'Foot_R']
-POSE_FRAMES = [1, 9, 17, 25, 33, 48, 96, 120, 160]
-Y_UP = Matrix(((1, 0, 0, 0), (0, 0, 1, 0), (0, -1, 0, 0), (0, 0, 0, 1)))
-
-
-def open_source(name):
-    path = ROOT / 'assets/blender' / name
-    assert path.is_file(), ('Missing editable native source', str(path))
-    bpy.ops.wm.open_mainfile(filepath=str(path))
-    bpy.context.view_layer.update()
-    assert bpy.context.scene.unit_settings.system == 'METRIC'
-    assert bpy.context.scene.unit_settings.scale_length == 1
-
-
-def rig_snapshot(motion=False):
-    bpy.context.scene.frame_set(1)
-    bpy.context.view_layer.update()
-    rig = {}
-    for name in RIG_NAMES:
-        obj = bpy.data.objects[name]
-        assert obj.library is None and (obj.type != 'MESH' or obj.data.library is None), (name, 'not locally editable')
-        rig[name] = {'parent': obj.parent.name if obj.parent else '', 'basis': np.asarray(obj.matrix_basis).tolist()}
-        for key in ['restUpper', 'support']:
-            if key in obj:
-                rig[name][key] = list(obj[key])
-    poses = {}
-    if motion:
-        for frame in POSE_FRAMES:
-            bpy.context.scene.frame_set(frame)
-            bpy.context.view_layer.update()
-            poses[str(frame)] = {name: np.asarray(bpy.data.objects[name].matrix_world).tolist() for name in RIG_NAMES}
-    return {'rig': rig, 'poses': poses}
-
-
-def compare_rig(before, after, source):
-    for name, expected in before['rig'].items():
-        actual = after['rig'][name]
-        assert expected['parent'] == actual['parent'], (source, name, 'rig hierarchy changed')
-        assert np.allclose(expected['basis'], actual['basis'], atol=1e-5, rtol=0), (source, name, 'joint rest transform changed')
-        for key in ['restUpper', 'support']:
-            assert expected.get(key) == actual.get(key), (source, name, key, 'contact target changed')
-    for frame, poses in before['poses'].items():
-        for name, expected in poses.items():
-            assert np.allclose(expected, after['poses'][frame][name], atol=1e-5, rtol=0), (source, frame, name, 'native action changed')
-
-
-def read_glb(path):
-    blob = path.read_bytes()
-    assert blob[:4] == b'glTF' and struct.unpack_from('<I', blob, 4)[0] == 2, (path.name, 'invalid GLB')
-    assert struct.unpack_from('<I', blob, 8)[0] == len(blob)
-    document, binary, offset = None, None, 12
-    while offset < len(blob):
-        size, kind = struct.unpack_from('<I4s', blob, offset)
-        chunk = blob[offset + 8:offset + 8 + size]
-        if kind == b'JSON':
-            document = json.loads(chunk)
-        elif kind == b'BIN\x00':
-            binary = chunk
-        offset += 8 + size
-    assert document is not None and binary is not None, (path.name, 'missing GLB chunks')
-    return document, binary
-
-
-def accessor(document, binary, index):
-    item = document['accessors'][index]
-    view = document['bufferViews'][item['bufferView']]
-    dtype = np.dtype({5121: '<u1', 5123: '<u2', 5125: '<u4', 5126: '<f4'}[item['componentType']])
-    columns = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4}[item['type']]
-    values = np.ndarray((item['count'], columns), dtype=dtype, buffer=binary,
-                        offset=view.get('byteOffset', 0) + item.get('byteOffset', 0),
-                        strides=(view.get('byteStride', columns * dtype.itemsize), dtype.itemsize)).astype(np.float64)
-    if item.get('normalized'):
-        values /= np.iinfo(dtype).max
-    assert np.isfinite(values).all()
-    return values
+SKIN = runpy.run_path(str(ROOT / 'scripts/test-skinned-hero.py'))
+read_glb, accessor, unchanged = (SKIN[name] for name in ['read_glb', 'accessor', 'unchanged'])
 
 
 def node_matrix(node):
-    if 'matrix' in node:
-        return Matrix([[node['matrix'][col * 4 + row] for col in range(4)] for row in range(4)])
+    from mathutils import Matrix, Quaternion, Vector
+    if 'matrix' in node: return Matrix([[node['matrix'][column * 4 + row] for column in range(4)] for row in range(4)])
     x, y, z, w = node.get('rotation', [0, 0, 0, 1])
-    return Matrix.LocRotScale(Vector(node.get('translation', [0, 0, 0])), Quaternion((w, x, y, z)),
-                             Vector(node.get('scale', [1, 1, 1])))
+    return Matrix.LocRotScale(Vector(node.get('translation', [0, 0, 0])), Quaternion((w, x, y, z)), Vector(node.get('scale', [1, 1, 1])))
 
 
-def source_color_triangles(mesh):
-    mesh.calc_loop_triangles()
-    attr = mesh.color_attributes.get('Color')
-    assert attr and attr.domain == 'CORNER', (mesh.name, 'missing editable corner Color')
-    expected = defaultdict(list)
-    for triangle in mesh.loop_triangles:
-        corners = []
-        for loop in triangle.loops:
-            p = mesh.vertices[mesh.loops[loop].vertex_index].co
-            corners.append(((round(p.x, 5), round(p.z, 5), round(-p.y, 5)), tuple(attr.data[loop].color)))
-        corners.sort(key=lambda v: v[0])
-        expected[tuple(p for p, color in corners)].append(np.asarray([color for p, color in corners]))
-    return expected
+def append_root(bpy, path, name):
+    with bpy.data.libraries.load(str(path.resolve()), link=False) as (available, loaded):
+        assert name in available.objects, ('Missing saved native root', name, str(path))
+        loaded.objects = available.objects
+    root = next(obj for obj in loaded.objects if obj and obj.name == name)
+    assembly = root
+    while assembly.parent: assembly = assembly.parent
+    for obj in [assembly, *assembly.children_recursive]:
+        if obj.name not in bpy.context.scene.objects: bpy.context.scene.collection.objects.link(obj)
+    assembly.location = (0, 0, 0); bpy.context.view_layer.update()
+    return root
 
 
-def verify_export_colors(models, names=HERO_MODELS):
-    cached, triangles, vertices = {}, 0, 0
-    for name in names:
-        item = models[name]
-        gltf, binary = read_glb(OUT / item['file'])
-        seen = set()
-        minimum, maximum = 1., 0.
-        for node in gltf['nodes']:
-            if 'mesh' not in node or node['mesh'] in seen:
-                continue
-            seen.add(node['mesh'])
-            obj = bpy.data.objects[node['name']]
-            assert obj.type == 'MESH' and obj.data.library is None and len(obj.data.vertices) > 0
-            key = obj.data.as_pointer()
-            if key not in cached:
-                cached[key] = source_color_triangles(obj.data)
-            expected = cached[key]
-            for primitive in gltf['meshes'][node['mesh']]['primitives']:
-                assert primitive.get('mode', 4) == 4
-                assert 'COLOR_0' in primitive['attributes'], (name, node['name'], 'missing standard COLOR_0')
-                positions = accessor(gltf, binary, primitive['attributes']['POSITION'])
-                rgba = accessor(gltf, binary, primitive['attributes']['COLOR_0'])
-                if rgba.shape[1] == 3:
-                    rgba = np.concatenate((rgba, np.ones((len(rgba), 1))), axis=1)
-                minimum = min(minimum, float(rgba[:, :3].min()))
-                maximum = max(maximum, float(rgba[:, :3].max()))
-                indices = accessor(gltf, binary, primitive['indices']).astype(np.int64).reshape(-1, 3)
-                for triangle in indices:
-                    corners = sorted([(tuple(np.round(positions[i], 5)), rgba[i]) for i in triangle], key=lambda v: v[0])
-                    colors = np.asarray([color for p, color in corners])
-                    candidates = expected.get(tuple(p for p, color in corners))
-                    assert candidates, (name, node['name'], 'exported geometry differs from current native mesh')
-                    assert any(np.allclose(colors, candidate, atol=3e-5, rtol=0) for candidate in candidates), (
-                        name, node['name'], 'GLB COLOR_0 differs from current source Color')
-                    triangles += 1
-                vertices += len(positions)
-        # Black pedals and rubber are legitimate individual meshes; inspect the whole asset palette.
-        assert maximum > .05 and minimum < .95, (name, 'invalid all-white/black export')
-    return {'models': names, 'uniqueExportVertices': vertices, 'triangles': triangles}
+def verify_export(root, path):
+    """Compare current artist geometry, UVs, palette, hierarchy and packed maps."""
+    import bpy
+    import numpy as np
+    from mathutils import Matrix
+    document, binary = read_glb(path); triangles = 0; cache = {}
+    parents = {child: parent for parent, node in enumerate(document['nodes']) for child in node.get('children', [])}
+    conversion = Matrix.Rotation(-np.pi / 2, 4, 'X')
+    world = {}
+    def exported_world(index):
+        if index not in world:
+            world[index] = (exported_world(parents[index]) if index in parents else Matrix.Identity(4)) @ node_matrix(document['nodes'][index])
+        return world[index]
+    # This maps Blender Z-up positions to glTF Y-up positions.
+    roots = [document['nodes'][index] for index in document['scenes'][document.get('scene', 0)]['nodes']]
+    assert len(roots) == 1 and roots[0]['name'] == root.name
+    assert np.allclose(node_matrix(roots[0]), Matrix.Identity(4), atol=1e-5, rtol=0), 'Runtime assembly root must start at origin'
+    allowed = {obj.name: obj for obj in [root, *root.children_recursive]}
+    for index, node in enumerate(document['nodes']):
+        obj = allowed.get(node['name'])
+        if obj is None: continue  # Bone nodes are checked against the actual Mixamo65 source.
+        if obj != root:
+            expected_parent = obj.parent_bone if obj.parent_type == 'BONE' else obj.parent.name
+            assert document['nodes'][parents[index]]['name'] == expected_parent, (obj.name, 'Saved parent hierarchy changed')
+        expected = conversion @ (root.matrix_world.inverted() @ obj.matrix_world) @ conversion.inverted()
+        assert np.allclose(expected, exported_world(index), atol=1e-5, rtol=0), (obj.name, 'Native author transform changed on export')
+        for key in ['provider', 'sourceSha256', 'preparedSourceSha256', 'rigProfile', 'riderContactConfigJSON', 'contactRole']:
+            if key in obj: assert node.get('extras', {}).get(key) == obj[key], (obj.name, key, 'Required source metadata was lost')
+        if 'mesh' not in node: continue
+        assert obj.type == 'MESH' and obj.library is None and obj.data.library is None
+        mesh = obj.data; key = mesh.as_pointer()
+        if key not in cache:
+            mesh.calc_loop_triangles(); uv = mesh.uv_layers.active; color = mesh.color_attributes.get('Color')
+            expected = defaultdict(list)
+            for triangle in mesh.loop_triangles:
+                corners = []
+                for loop in triangle.loops:
+                    point = mesh.vertices[mesh.loops[loop].vertex_index].co
+                    position = (round(point.x, 5), round(point.z, 5), round(-point.y, 5))
+                    texcoord = tuple((uv.data[loop].uv.x, 1 - uv.data[loop].uv.y)) if uv else None
+                    rgba = tuple(color.data[loop].color) if color else None
+                    corners.append((position, texcoord, rgba))
+                corners.sort(key=lambda item: item[0]); expected[tuple(item[0] for item in corners)].append(corners)
+            cache[key] = expected
+        for primitive in document['meshes'][node['mesh']]['primitives']:
+            attributes = primitive['attributes']; positions = accessor(document, binary, attributes['POSITION'])
+            texcoords = accessor(document, binary, attributes['TEXCOORD_0']) if 'TEXCOORD_0' in attributes else None
+            colors = accessor(document, binary, attributes['COLOR_0']) if 'COLOR_0' in attributes else None
+            if colors is not None and colors.shape[1] == 3: colors = np.concatenate((colors, np.ones((len(colors), 1))), axis=1)
+            assert [key for key in attributes if key.startswith('COLOR_')] in [[], ['COLOR_0']], 'Backup palettes leaked into runtime colors'
+            indices = accessor(document, binary, primitive['indices']).astype(np.int64).reshape(-1, 3)
+            for triangle in indices:
+                corners = sorted([(tuple(np.round(positions[i], 5)), None if texcoords is None else texcoords[i],
+                                   None if colors is None else colors[i]) for i in triangle], key=lambda item: item[0])
+                candidates = cache[key].get(tuple(item[0] for item in corners))
+                assert candidates, (root.name, node['name'], 'Exported geometry differs from saved mesh')
+                assert any(all((actual[1] is None or expected[1] is not None and np.allclose(actual[1], expected[1], atol=3e-5, rtol=0))
+                               and (actual[2] is None or expected[2] is not None and np.allclose(actual[2], expected[2], atol=3e-5, rtol=0))
+                               for actual, expected in zip(corners, candidate)) for candidate in candidates), (obj.name, 'Saved UV or Color layout changed')
+                triangles += 1
+            material = document.get('materials', [])[primitive['material']] if 'material' in primitive else None
+            if material and 'baseColorTexture' in material.get('pbrMetallicRoughness', {}):
+                assert texcoords is not None, (obj.name, 'Textured export is missing UVs')
+                native = next(slot for slot in mesh.materials if slot.name == material['name'])
+                shader = next(node for node in native.node_tree.nodes if node.type == 'BSDF_PRINCIPLED')
+                image = shader.inputs['Base Color'].links[0].from_node.image
+                texture = document['textures'][material['pbrMetallicRoughness']['baseColorTexture']['index']]
+                view = document['bufferViews'][document['images'][texture['source']]['bufferView']]
+                encoded = binary[view.get('byteOffset', 0):view.get('byteOffset', 0) + view['byteLength']]
+                assert image.packed_file and image.packed_file.data == encoded, (obj.name, 'Painted texture changed on export')
+    return {'trianglesCompared': triangles, 'nativeMeshesCompared': len(cache), 'hierarchyAndPaint': 'preserved'}
 
 
-def frame_bvh(rack_only=False):
-    frame = bpy.data.objects['BikeFrame']
-    relative = bpy.data.objects['Bicycle'].matrix_world.inverted() @ frame.matrix_world
-    vertices = [relative @ v.co for v in frame.data.vertices]
-    polygons = [list(p.vertices) for p in frame.data.polygons if not rack_only or all(
-        -.39 <= vertices[i].x <= .39 and .36 <= vertices[i].y <= 1.30 and 1.00 <= vertices[i].z <= 1.09 for i in p.vertices)]
-    assert polygons, 'Native rear rack support geometry missing'
-    return BVHTree.FromPolygons(vertices, polygons), len(polygons)
+def surface(bpy, root):
+    from mathutils.bvhtree import BVHTree
+    vertices, faces = [], []
+    for obj in root.children_recursive:
+        if obj.type != 'MESH': continue
+        matrix = root.matrix_world.inverted() @ obj.matrix_world; offset = len(vertices)
+        vertices.extend(matrix @ vertex.co for vertex in obj.data.vertices)
+        faces.extend([index + offset for index in face.vertices] for face in obj.data.polygons)
+    return BVHTree.FromPolygons(vertices, faces)
 
 
-def mesh_vertices(obj, reference):
-    relative = reference.matrix_world.inverted() @ obj.matrix_world
-    return [relative @ v.co for v in obj.data.vertices]
+def verify_contacts(bpy, actor, bike, metadata):
+    import math
+    from mathutils import Vector
+    config = metadata.get('contactConfig')
+    assert config, 'Hero has no measured bike contact config; rebake the candidate for this bicycle'
+    assert json.loads(actor['riderContactConfigJSON']) == config, 'Native/runtime contact config diverged'
+    rig = next(obj for obj in actor.children_recursive if obj.type == 'ARMATURE')
+    for track in rig.animation_data.nla_tracks: track.mute = True
+    rig.animation_data.action = None
+    crank = bpy.data.objects['Crank']; pedals = [bpy.data.objects['Pedal_' + tag] for tag in ['L', 'R']]
+    markers = {name: bpy.data.objects[name] for name in ['RiderSeat', 'RiderStand_L', 'RiderStand_R', 'RiderGrip_L', 'RiderGrip_R', 'RiderPedal_L', 'RiderPedal_R']}
+    for tag, pedal in zip(['L', 'R'], pedals):
+        assert pedal.parent == crank and markers['RiderPedal_' + tag].parent == pedal
+    support = surface(bpy, bike); marker_distances = {}
+    for name, marker in markers.items():
+        point = bike.matrix_world.inverted() @ marker.matrix_world.translation
+        distance = support.find_nearest(point)[3]; assert distance < .006, (name, 'Bike marker is separated from its actual support surface', distance)
+        marker_distances[name] = distance
+    def point(name): return actor.matrix_world.inverted() @ bpy.data.objects[name].matrix_world.translation
+    def target(name): return actor.matrix_world.inverted() @ markers[name].matrix_world.translation
+    def spin(angle):
+        crank.rotation_euler.x = angle
+        for pedal in pedals: pedal.rotation_euler.x = -angle
+        bpy.context.view_layer.update()
+    maximum = 0.; records = []
+    for stance, name, frames in [('seated', 'Rider_Ride_SeatedPedal', [0, 9, 17, 25, 33, 48, 60]),
+                                  ('standing', 'Rider_Ride_StandingBalance', [0, 30, 60, 90, 120])]:
+        rig.animation_data.action = bpy.data.actions[name]
+        for frame in frames:
+            bpy.context.scene.frame_set(frame); spin(frame / 60 * math.tau if stance == 'seated' else 0)
+            for tag in ['L', 'R']:
+                expected = target(('RiderPedal_' if stance == 'seated' else 'RiderStand_') + tag)
+                error = (point('Sole_' + tag) - expected).length; assert error < .005, (stance, frame, tag, 'Sole missed actual bike support', error)
+                maximum = max(maximum, error)
+                if stance == 'seated':
+                    error = (point('Palm_' + tag) - target('RiderGrip_' + tag)).length
+                    assert error < .005, (stance, frame, tag, 'Palm missed actual grip', error); maximum = max(maximum, error)
+            if stance == 'seated': assert (point('SeatContact') - target('RiderSeat')).length < .006
+            records.append({'stance': stance, 'frame': frame})
+    for side in ['L', 'R']:
+        rig.animation_data.action = bpy.data.actions['Rider_Kick_Strike_' + side]
+        for frame in [0, 8, 21, 42]:
+            bpy.context.scene.frame_set(frame); spin(0)
+            error = (point('Sole_' + side) - target('RiderPedal_' + side)).length
+            assert error < .005, ('Kick lost its supporting foot', side, frame, error); maximum = max(maximum, error)
+    rig.animation_data.action = bpy.data.actions['Rider_Jump_Air']; bpy.context.scene.frame_set(15); spin(0)
+    assert all(point('Sole_' + tag).z > target('RiderPedal_' + tag).z + .10 for tag in ['L', 'R']), 'Jump feet did not release the pedals'
+    rig.animation_data.action = bpy.data.actions['Rider_Crash']; bpy.context.scene.frame_set(60); spin(0)
+    assert all((point('Palm_' + tag) - target('RiderGrip_' + tag)).length > .15 for tag in ['L', 'R']), 'Crash hands remain pinned to the bar'
+    assert (rig.matrix_world @ rig.pose.bones['mixamorig:Hips'].head).z < .5, 'Crash never falls below the seat'
+    return {'maxContactError': maximum, 'sampledContacts': records, 'bikeMarkerSurfaceDistances': marker_distances,
+            'coverage': 'Saved native seated/standing/kick support, pedal counter-rotation, jump release and crash release.'}
 
 
-def verify_cargo(item):
-    cargo = bpy.data.objects.get('BananaCargo')
-    assert cargo and cargo.type == 'EMPTY' and cargo.library is None, 'Missing editable BananaCargo native root'
-    bundles = sorted(cargo.children, key=lambda o: o.name)
-    names = [f'CargoBundle{i:02}' for i in range(20)]
-    assert [o.name for o in bundles] == names and all(o.type == 'MESH' for o in bundles), 'Expected 20 direct native bundle meshes'
-    variants = [next(o.data for o in bpy.data.objects[root].children_recursive if o.type == 'MESH')
-                for root in ['Banana', 'BananaVariant1', 'BananaVariant2', 'BananaVariant3']]
-    assert len({data.as_pointer() for data in variants}) == 4, 'Expected four editable native banana meshes'
+def verify_cargo(bpy, cargo, bike, path):
+    import numpy as np
+    from mathutils import Matrix
+    bundles = sorted(cargo.children, key=lambda obj: obj.name)
+    assert len(bundles) == 20 and all(obj.type == 'MESH' for obj in bundles), 'Expected 20 editable bundle instances'
+    geometries = {obj.data.as_pointer() for obj in bundles}; assert len(geometries) == 4, 'Expected four shared banana variants'
     for index, obj in enumerate(bundles):
-        assert obj.data == variants[index % 4], (obj.name, 'native variant assignment changed')
         assert obj.get('globalBundleIndex') == index and obj.get('variant') == index % 4
-    assert all(sum(obj.data == data for obj in bundles) == 5 for data in variants)
-    assert all(o.get('bananas') == 5 for o in bundles)
-    gltf, binary = read_glb(OUT / item['file'])
-    roots = [gltf['nodes'][i] for i in gltf['scenes'][gltf.get('scene', 0)]['nodes']]
-    assert len(roots) == 1 and roots[0]['name'] == 'BananaCargo'
-    exported = sorted([gltf['nodes'][i] for i in roots[0]['children']], key=lambda n: n['name'])
-    assert [n['name'] for n in exported] == names and all('mesh' in n for n in exported)
-    assert len({n['mesh'] for n in exported}) == 4 and len(gltf['meshes']) == 4, '20 GLB bundles must share four geometries'
-    for index, node in enumerate(exported):
+        if 'bananas' in obj: assert obj['bananas'] == 5
+        assert sum(other.data == obj.data for other in bundles) == 5
+    document, _ = read_glb(path)
+    native_heap = next(node for node in document['nodes'] if node['name'] == cargo.name)
+    exported = sorted([document['nodes'][index] for index in native_heap['children']], key=lambda node: node['name'])
+    assert [node['name'] for node in exported] == [obj.name for obj in bundles]
+    assert len({node['mesh'] for node in exported}) == 4, 'Bundle instances must retain four shared geometries independently of the local tie-down meshes'
+    conversion = Matrix.Rotation(-np.pi / 2, 4, 'X'); maximum = 0.
+    for index, (obj, node) in enumerate(zip(bundles, exported)):
         assert node['extras']['globalBundleIndex'] == index and node['extras']['variant'] == index % 4
-        assert node['mesh'] == exported[index % 4]['mesh'], (node['name'], 'export lost variant sharing')
-    assert np.allclose(node_matrix(roots[0]), Matrix.Identity(4), atol=1e-6, rtol=0), 'Runtime cargo root must start at origin'
-    matrix_error = 0
-    for obj, node in zip(bundles, exported):
-        expected = Y_UP @ (cargo.matrix_world.inverted() @ obj.matrix_world) @ Y_UP.inverted()
+        expected = conversion @ (cargo.matrix_world.inverted() @ obj.matrix_world) @ conversion.inverted()
         error = float(np.max(np.abs(np.asarray(expected) - np.asarray(node_matrix(node)))))
-        assert error < 1e-5, (obj.name, 'native author matrix was not preserved in Y-up export', error)
-        matrix_error = max(matrix_error, error)
-    rack, polygon_count = frame_bvh(True)
-    distances = [min(rack.find_nearest(p)[3] for p in mesh_vertices(obj, cargo)) for obj in bundles]
-    assert distances[0] <= .004, ('First visible native banana bundle floats above rear rack', distances[0])
-    assert min(distances) <= .004, ('Entire native banana heap floats above rear rack', min(distances))
-    points = [p for obj in bundles for p in mesh_vertices(obj, cargo)]
-    return {'bundles': 20, 'nativeSharedMeshes': [data.name for data in variants], 'glbSharedMeshes': 4, 'maxMatrixError': matrix_error,
-            'rackPolygons': polygon_count, 'firstBundleRackDistance': distances[0], 'nearestRackDistance': min(distances),
-            'minimumZ': min(p.z for p in points), 'maximumZ': max(p.z for p in points),
-            'coverage': 'Actual native rack contact and first visible bundle; no dynamic cargo simulation.'}
+        assert error < 1e-5, (obj.name, 'Native cargo author matrix changed'); maximum = max(maximum, error)
+        assert node['mesh'] == exported[index % 4]['mesh']
+    support = surface(bpy, bike); distances = [min(support.find_nearest(bike.matrix_world.inverted() @ obj.matrix_world @ vertex.co)[3]
+                                                     for vertex in obj.data.vertices) for obj in bundles]
+    assert distances[0] < .008 and min(distances) < .008, ('Banana cargo floats above its actual native rear support', distances[0])
+    return {'bundles': 20, 'sharedGeometries': 4, 'maxMatrixError': maximum, 'firstBundleSupportDistance': distances[0]}
 
 
-def joint_mesh_vertices(name, reference):
-    joint = bpy.data.objects[name]
-    meshes = [obj for obj in joint.children_recursive if obj.type == 'MESH']
-    assert meshes, (name, 'missing editable joint mesh')
-    return [point for obj in meshes for point in mesh_vertices(obj, reference)]
+def verify_clearance(bpy, actor, cargo):
+    from mathutils.bvhtree import BVHTree
+    rig = next(obj for obj in actor.children_recursive if obj.type == 'ARMATURE')
+    skin = next(obj for obj in actor.children_recursive if obj.type == 'MESH')
+    # Both assemblies are at origin in the same metre-space frame.
+    heap = surface(bpy, cargo); records = []
+    for name, frames in [('Rider_Ride_SeatedPedal', [0, 15, 30, 45]), ('Rider_Ride_StandingBalance', [0, 60]),
+                         ('Rider_Trans_SitToStand', [10]), ('Rider_Kick_Strike_L', [21]), ('Rider_Kick_Strike_R', [21])]:
+        rig.animation_data.action = bpy.data.actions[name]
+        for frame in frames:
+            bpy.context.scene.frame_set(frame); bpy.context.view_layer.update()
+            evaluated = skin.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            vertices = [cargo.matrix_world.inverted() @ evaluated.matrix_world @ vertex.co for vertex in evaluated.data.vertices]
+            body = BVHTree.FromPolygons(vertices, [list(face.vertices) for face in evaluated.data.polygons])
+            overlap = len(body.overlap(heap)); nearest = min(heap.find_nearest(point)[3] for point in vertices)
+            records.append({'name': name, 'frame': frame, 'intersectingTriangles': overlap, 'minimumVertexClearance': nearest})
+            assert overlap == 0 and nearest > .01, ('Rider intersects or nearly touches the actual cargo; move the cargo, retain the bicycle contour', records[-1])
+    return {'minimumVertexClearance': min(record['minimumVertexClearance'] for record in records), 'poses': records}
 
 
-def standing_contact(tags=('L', 'R')):
-    actor = bpy.data.objects['StandingRider']
-    support, _ = frame_bvh()
-    records = []
-    for tag in tags:
-        expected = Vector((-.30, -.58, 1.311) if tag == 'L' else (.04, .21, 1.233))
-        actual = actor.matrix_world.inverted() @ bpy.data.objects['Foot_' + tag].matrix_world.translation
-        assert (actual - expected).length < 1e-5, (tag, 'standing support target moved', list(actual))
-        # The library lays templates out separately; compare each root's metre-space geometry.
-        shoes = joint_mesh_vertices('Foot_' + tag, actor)
-        bottom = min(p.z for p in shoes)
-        top = 1.193 if tag == 'L' else 1.115
-        assert -.001 <= bottom - top <= .010, (tag, 'sole no longer reaches handlebar/saddle', bottom, top)
-        distance = min(support.find_nearest(p)[3] for p in shoes if p.z < bottom + .001)
-        assert distance < .035, (tag, 'standing sole is separated from actual bike support mesh', distance)
-        records.append({'side': tag, 'soleHeight': bottom, 'nativeSupportDistance': distance})
-    return records
+def main():
+    import bpy
+    parser = SKIN['arguments'](argparse.ArgumentParser(description=__doc__))
+    parser.add_argument('--bike-source', type=Path, default=ROOT / 'assets/blender/tripo/bicycle.blend')
+    parser.add_argument('--bike-glb', type=Path, default=ROOT / 'assets/export/bicycle.glb')
+    parser.add_argument('--bike-root', default='Bicycle')
+    parser.add_argument('--manifest', type=Path, default=ROOT / 'assets/export/manifest.json')
+    parser.add_argument('--cargo-source', type=Path)
+    parser.add_argument('--cargo-glb', type=Path)
+    parser.add_argument('--cargo-root', default='BananaCargo')
+    parser.add_argument('--skip-cargo', action='store_true')
+    parser.add_argument('--report', type=Path, default=ROOT / 'artifacts/hero-native-report.json')
+    options = parser.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [])
+    manifest = json.loads(options.manifest.read_text()); cargo = manifest['models'].get('bananaRack')
+    protected = [options.source, options.glb, options.metadata, options.original_source, options.bike_source, options.bike_glb, options.manifest]
+    if not options.skip_cargo:
+        if options.cargo_source or options.cargo_glb:
+            if not options.cargo_source or not options.cargo_glb: parser.error('--cargo-source and --cargo-glb must be provided together')
+            cargo_source, cargo_glb, cargo_root = options.cargo_source, options.cargo_glb, options.cargo_root
+        else:
+            assert cargo and cargo.get('root'), 'Missing manifest native bananaRack root/source contract'
+            cargo_source, cargo_glb, cargo_root = ROOT / cargo['source'], options.manifest.parent / cargo['file'], cargo['root']
+        protected.extend([cargo_source, cargo_glb])
+    with unchanged(protected) as hashes:
+        skin = SKIN['verify_skin'](options); actor = bpy.data.objects[options.root]
+        exports = {'hero': verify_export(actor, options.glb)}
+        bike = append_root(bpy, options.bike_source, options.bike_root)
+        exports['bicycle'] = verify_export(bike, options.bike_glb)
+        contacts = verify_contacts(bpy, actor, bike, json.loads(options.metadata.read_text()))
+        cargo_report = {'coverage': 'Explicitly skipped until candidate cargo assembly is available'}
+        if not options.skip_cargo:
+            assembly = append_root(bpy, cargo_source, cargo_root)
+            while assembly.parent: assembly = assembly.parent
+            heap = next((obj for obj in [assembly, *assembly.children_recursive] if obj.name == 'BananaCargo'), None)
+            assert heap is not None, 'Cargo assembly is missing its 20-bundle BananaCargo root'
+            exports['cargo'] = verify_export(assembly, cargo_glb)
+            cargo_report = verify_cargo(bpy, heap, bike, cargo_glb)
+            cargo_report['riderClearance'] = verify_clearance(bpy, actor, assembly)
+        report = {'status': 'pass', 'blenderVersion': bpy.app.version_string, 'skin': skin, 'exportEvidence': exports,
+                  'contacts': contacts, 'cargo': cargo_report, 'sha256': hashes,
+                  'scope': 'Saved Tripo meshes/skin/Actions, real bike markers, runtime texture/UV and hierarchy, authored cargo matrices and support. Overall rendered appearance is checked separately.'}
+        assert options.report.resolve() not in {Path(path).resolve() for path in protected}
+        options.report.parent.mkdir(parents=True, exist_ok=True); options.report.write_text(json.dumps(report, indent=2) + '\n')
+    print('HERO_NATIVE_PASS ' + json.dumps(report), flush=True)
 
 
-def verify_motion():
-    assert bpy.context.scene.frame_start == 1 and bpy.context.scene.frame_end == 160
-    for name in ['Crank', 'Pedal_L', 'Pedal_R']:
-        assert bpy.data.objects[name].rotation_mode == 'XYZ'
-    for name in ['Crank', 'BalanceBody', 'Leg_L', 'Leg_R', 'Arm_L', 'Arm_R']:
-        assert bpy.data.objects[name].animation_data and bpy.data.objects[name].animation_data.action, (name, 'missing editable motion Action')
-    seated = []
-    for frame in [1, 9, 17, 25, 33, 160]:
-        bpy.context.scene.frame_set(frame)
-        bpy.context.view_layer.update()
-        support, _ = frame_bvh()
-        bicycle = bpy.data.objects['Bicycle']
-        for side, tag in [(-1, 'L'), (1, 'R')]:
-            foot = bpy.data.objects['Foot_' + tag].matrix_world.translation
-            pedal = bpy.data.objects['Pedal_' + tag]
-            assert (foot - pedal.matrix_world.translation - Vector((0, .075, .138))).length < 1e-5, (frame, tag, 'seated foot left pedal target')
-            shoes = joint_mesh_vertices('Foot_' + tag, bicycle)
-            platform = mesh_vertices(pedal, bicycle)
-            gap = min(p.z for p in shoes) - max(p.z for p in platform)
-            assert 0 <= gap <= .006, (frame, tag, 'actual sole/pedal gap', gap)
-            hand = bpy.data.objects['Hand_' + tag].matrix_world.translation
-            assert (hand - Vector((side * .36, -.50, 1.20))).length < 1e-5, (frame, tag, 'seated hand left handlebar target')
-            palm = joint_mesh_vertices('Hand_' + tag, bicycle)
-            distance = min(support.find_nearest(p)[3] for p in palm)
-            assert distance < .025, (frame, tag, 'hand separated from actual grip mesh', distance)
-            seated.append({'frame': frame, 'side': tag, 'solePedalGap': gap, 'handGripDistance': distance})
-    standing = []
-    for frame in [48, 80, 96, 128]:
-        bpy.context.scene.frame_set(frame)
-        bpy.context.view_layer.update()
-        standing.append({'frame': frame, 'feet': standing_contact()})
-    bpy.context.scene.frame_set(120)
-    bpy.context.view_layer.update()
-    standing.append({'frame': 120, 'feet': standing_contact(('R',))})
-    return {'seatedContacts': seated, 'standingAndKickSupports': standing, 'nativeActionPoseFramesCompared': POSE_FRAMES}
-
-
-if '--baseline' in sys.argv:
-    assert not BASELINE.exists(), 'Preserve the existing hero joint baseline instead of replacing it'
-    baseline = {}
-    for source in SOURCES:
-        open_source(source)
-        baseline[source] = rig_snapshot(source == 'standing-motion.blend')
-    BASELINE.write_text(json.dumps(baseline, indent=2))
-    print('HERO_NATIVE_JOINT_BASELINE_SAVED', str(BASELINE))
-else:
-    manifest = json.loads((OUT / 'manifest.json').read_text())
-    assert 'bananaRack' in manifest['models'], 'Missing bananaRack runtime export'
-    assert (OUT / manifest['models']['bananaRack']['file']).is_file(), 'Missing bananaRack runtime export'
-    baseline = json.loads(BASELINE.read_text())
-    if '--accept-hero-rest' in sys.argv:
-        # Explicit migration only: the new authored fallback has static arms.
-        # Preserve every translation, parent, support target and motion-frame baseline.
-        for name in ['Arm_L', 'Arm_R']:
-            basis = baseline['asset-library.blend']['rig'][name]['basis']
-            for row in range(3):
-                for col in range(3):basis[row][col] = float(row == col)
-    open_source('asset-library.blend')
-    compare_rig(baseline['asset-library.blend'], rig_snapshot(), 'asset-library.blend')
-    cargo = verify_cargo(manifest['models']['bananaRack'])
-    colors = verify_export_colors(manifest['models'])
-    library_contacts = standing_contact()
-    open_source('standing-motion.blend')
-    compare_rig(baseline['standing-motion.blend'], rig_snapshot(True), 'standing-motion.blend')
-    motion = verify_motion()
-    open_source('rider-hero.blend')
-    skin_colors = verify_export_colors(manifest['models'], ['riderSkinned'])
-    hashes = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in
-              [ROOT / 'assets/blender' / source for source in SOURCES + ['rider-hero.blend']] +
-              [OUT / manifest['models'][name]['file'] for name in HERO_MODELS + ['riderSkinned']]}
-    report = {'status': 'pass', 'blenderVersion': bpy.app.version_string, 'cargo': cargo, 'exportColors': colors, 'skinnedExportColors': skin_colors,
-              'libraryStandingContacts': library_contacts, 'motion': motion, 'sha256': hashes,
-              'scope': 'Saved native hero source, actual standard GLB exports, shared geometry, author matrices, rack support and object-rig keyframe contacts. Overall image fidelity and real engine visuals are not claimed.'}
-    if '--accept-hero-rest' in sys.argv:
-        BASELINE.write_text(json.dumps(baseline, indent=2) + '\n')
-    REPORT.write_text(json.dumps(report, indent=2))
-    print('HERO_NATIVE_ASSETS_PASS', json.dumps({'bundles': 20, 'sharedGeometry': 4, 'maxMatrixError': cargo['maxMatrixError'],
-          'firstBundleRackDistance': cargo['firstBundleRackDistance'], 'colorTriangles': colors['triangles'],
-          'sources': len(SOURCES)+1, 'heroExports': len(HERO_MODELS)+1, 'report': str(REPORT)}))
+if __name__ == '__main__': main()
