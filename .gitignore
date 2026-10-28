@@ -7,3 +7,7 @@ artifacts-blender.log
 art/
 __pycache__/
 *.pyc
+# Keep the original 8K Tripo masters locally; the ledger retains task URLs and
+# hashes. The smaller rigged hero is retained for CI's skin/source comparisons.
+# Git also carries the editable, packed Blender sources and runtime exports.
+assets/sources/banana-tripo-v1/*-master.glb

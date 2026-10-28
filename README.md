@@ -1,10 +1,10 @@
 # 彪速骑行 · 无尽香蕉山道
 
-Blender + Three.js 的低多边形无尽骑行原型。按图 A 的方向制作人物、二八大杠、香蕉、热带山道和飞踢卡车；开局空货架，自动前进，沿路拾取。整体画面还没有达到图 A 的严格还原。
+Tripo H3.1 资产、本地 Blender 精修与动作、Three.js 展示的无尽骑行游戏。红衫骑手驾驶二八大杠，沿热带山道自动前进、拾取香蕉、跳跃避障和蓄力踢飞卡车。美术以图 A 为基准；实际截图与验证范围见本轮报告。
 
-最新修复及验证范围见 [改进结果](docs/NEXT-STEPS-RESULTS.md)，剩余事项见 [卡点报告](docs/BLOCKERS.md)。[图 A 与实现草稿索引](assets/reference/README.md) 保留已确认与未确认状态。
+最新修复及验证范围见 [本轮检查报告](docs/banana-audit-20261028.md)，剩余事项见 [卡点报告](docs/BLOCKERS.md)。[图 A 与实现草稿索引](assets/reference/README.md) 保留已确认与未确认状态。
 
-![当前版本](verification/next-game.png)
+![当前可玩版本（货量和卡车为展示夹具）](verification/tripo-20261028/desktop-kick.png)
 
 ## 运行
 
@@ -46,41 +46,44 @@ pnpm preview --port 4173 --host 127.0.0.1
 
 ## 原生资产与动作
 
-所有可见三维网格由本地 Blender 5.2.2 LTS 建模并保存源文件；运行时没有用 Three.js 基础几何替代游戏模型。
+辨识性模型来自同一批 **29 类 Tripo H3.1 母版**，由本地 Blender 5.2.2 LTS 统一尺寸、材质、分件、骨骼、动作和LOD。连续地形、水面、天空球及尘土/火花载体是明确记录的 Blender 功能性网格，香蕉绑绳是本地精修。运行时通过 GLB 加载模型。
 
-| 源文件 | 内容 |
+| 保存源 | 内容 |
 |---|---|
-| `assets/blender/asset-library.blend` | 自行车、四种蕉束、20束货堆、16部件卡车、障碍、道具、植被与特效 |
-| `assets/blender/rider-hero.blend` | 独立新角色、Rigify控制、加权蒙皮、16个Action/NLA与对象关节回退 |
-| `assets/blender/endless-course.blend` | 20段80m原生弯路、标线、护栏和路侧摆放 |
-| `assets/blender/standing-motion.blend` | 同场自行车、接触点与历史对象动作时间轴 |
-| `assets/blender/valley-layout.blend` | 海岸城镇、水面、三个景深带、山云变体及森林LOD |
-| `assets/blender/rock-kit.blend` | 六种封底红岩模块 |
-| `assets/blender/mountain-course.blend` | 保留的历史配送路线 |
+| `assets/blender/tripo/hero.blend` | 原 Tripo 65 骨 Mixamo 蒙皮、16 Actions/NLA、真实掌心/脚底/车座接触标记 |
+| `assets/blender/tripo/bicycle.blend` | 黑色经典横梁车架、独立轮轴/曲柄/脚踏、真实车把/座/货架标记 |
+| `assets/blender/tripo-cargo.blend` | 20捆、4种共享蕉束变体、按拾取数从中央向两翼堆叠、绑绳 |
+| `assets/blender/tripo-truck.blend` | 卡车16分件、正确中心枢轴和Y-up碎片碰撞体 |
+| `assets/blender/tripo-pedestrian.blend` / `tripo-goat.blend` | 新行人/山羊及独立摆动腿 |
+| `assets/blender/tripo-environment.blend` | 20段连续道路、13类场景母版衍生的植被/房屋/红岩/山云、海湾与城镇布局 |
+| `assets/blender/tripo-effects.blend` | Tripo冲击星及本地粒子载体 |
+| `assets/blender/tripo-pickups.blend` | 中心对齐的单蕉和三种道具 |
+| `assets/blender/tripo/*.blend` 其余文件 | 汽车、矮栏、木箱、高墙、长车厢及优化母版 |
 
-角色10896三角面、5912顶点、15根变形骨、每顶点最多2个权重。Rigify使用定制 `basic.super_copy` 控制骨，烘到变形骨，并非直接使用完整 Human 模板。默认播放蒙皮GLB；`?rig=legacy` 可对照对象回退。AnimationMixer控制动作，运行时接触IK保证手握把、脚踏板和站姿支撑；暂停冻结，重开恢复坐姿。准备页有Idle，碰撞后继续播放有限失败动作。
+主角自然身高1.85m，19,121三角面，65根原始骨骼，每顶点至多4个影响。保留真实网格、UV、蒙皮和骨段长度；16套专属骑行动作在本地制作，通过 AnimationMixer 与接触IK驱动。默认坐姿，C平滑切换一脚踩前车把、一脚踩车座的站姿；所有入口统一新蒙皮人物。
 
-16个片段包括准备、坐/站、双向切换、起跳/腾空/落地、双侧蓄力/踢击、双侧倾斜、护盾受击及失败；建议正文“14个”与表格不一致，本轮按表格16个交付。
+16个片段包括准备、坐/站、双向切换、起跳/腾空/落地、双侧蓄力/踢击、双侧倾斜、护盾受击及失败。手脚目标读取实际新车标记；暂停冻结，重开恢复坐姿。香蕉拾取累计不设上限，货堆最多展示100根，上层填满后出现绑绳。
 
-规范GLB在 `assets/export/`；无损Meshopt生成 `public/assets/`。60模型规范体积20.30MB、运行体积约12.29MB；逐缓冲校验颜色、矩阵、extras、动画、权重、图片与顶点顺序。只对天空导出三角列表作确定性排序，保留全部带绕序三角形。
+规范GLB在 `assets/export/`，无损Meshopt运行导出在 `public/assets/`。60个导出条目包含LOD/变体与兼容入口，对应29类生成来源。基础色在主体使用2K、环境1K、小物件512；8K母版不会直接装入游戏。来源、权限实测、扣费和三档规则见[生产方案](docs/banana-tripo/production-plan.md)与[源账本](assets/sources/banana-tripo-v1/manifest.json)。29个大母版保留本地；用于CI逐顶点验证的原始25.9MB绑定主角随仓库保存。
 
 ```sh
 /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/test-blender.py
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/export-saved-assets.py
 pnpm assets:fingerprint
 pnpm assets:compress
 pnpm check:assets
 pnpm build
 ```
 
-`test-blender.py` 会全量重建；其他 `scripts/test-*.py` 校验已保存原生源。修改资产后确认有意差异才执行 `pnpm assets:fingerprint:update`；不能用更新指纹掩盖意外漂移。
+**保存的 `.blend` 是权威源。** `test-blender.py` 默认只读检查；`export-saved-assets.py` 或显式 `test-blender.py -- --rebuild` 仅重导GLB，均不保存或重建源文件。`scripts/build-*.py` 是历史流程，不用于重建本轮资产。模型有意修改后，先验证实际形体/动作和导出差异，再更新指纹；不能用更新指纹掩盖意外漂移。
 
 ## Three.js 与性能
 
-GLTFLoader注册MeshoptDecoder；SkeletonUtils独立克隆蒙皮角色。四种蕉束、植被、远山和粒子用InstancedMesh；近树172面、远树LOD1为32面、远景LOD2为12面。低档两份滚动场景均保留45%森林密度，近岸树使用LOD1、远岸树使用LOD2。
+GLTFLoader注册MeshoptDecoder；SkeletonUtils独立克隆蒙皮角色。四种蕉束、植被、远山和粒子用InstancedMesh；路边树796三角面、谷地树94面、远景树20面，均从真实源轮廓和颜色派生。低档两份滚动场景均保留45%森林密度，谷地树进一步切换20面版本。
 
 60Hz固定规则、扫掠碰撞和自由横移保持不变。Rapier接收实际Blender路面，驱动踢车与最多12个、寿命3秒的表现零件；回收卡车恢复门/尾板/箱子，旧零件不影响复用后的模型。它们不参与积分判定。
 
-三层Toon明暗、暖光、顶点AO、雾、动态阴影、速度线和速度FOV。背景/前景两次渲染；发光面片采用加法混合，不增加Bloom全屏通道。竖屏踢击回撤同时保持侧角，人、车、货架与两轮轮廓都校验；减少动态效果和暂停设置生效。
+手绘基础色、三层Toon明暗、暖光、雾、近景动态阴影、速度线和速度FOV。材质保留源透明/裁切设置，冲击星保留生成的绘制纹理；HUD图标由同一模型在Blender渲染。背景/前景两次渲染；发光面片采用加法混合，不增加Bloom全屏通道。竖屏飞踢采用实际凸包、必要视野与路内侧镜头，人、车、货架与两轮轮廓都校验；减少动态效果和暂停设置生效。
 
 25个免费音频样本共约253KB，首次交互后加载、缓存，同类最多4声部；缺样本回退合成。风和链声循环跟速度变化，暂停/后台/重开清理；结算与碰撞尾音自然结束。[逐文件来源与CC0授权](public/audio/LICENSES.md)。
 
@@ -106,6 +109,6 @@ GAME_URL=http://127.0.0.1:4173/ pnpm smoke
 HEADED=1 GAME_URL=http://127.0.0.1:4173/ PERF_SECONDS=60 PERF_REPEATS=3 PERF_SIZE=1920x1080 pnpm perf
 ```
 
-测速统计整个真实rAF采样窗口及全部GL绘制/阴影通道；不滤掉长帧。盾仅用于让测速跑局持续。实际Apple M6结果不代替GTX1650/IrisXe或手机验收，[真机清单](docs/device-checklist.md) 记录仍待测的设备。
+测速统计整个真实rAF采样窗口及全部GL绘制/阴影通道；不滤掉长帧。盾仅用于让测速跑局持续。可加 `PERF_KICKS=6 PERF_SECONDS=90` 测满货、最高速度及路边连续真实Q的表现压力；该夹具禁用自然交通、注入距离/货量并重置技能冷却，单独输出impact帧统计，不是玩家成绩。实际Apple M6结果不代替GTX1650/IrisXe或手机验收，[真机清单](docs/device-checklist.md) 记录仍待测的设备。
 
 CI固定Node24、Playwright和Blender5.2.2下载校验和。原生重建固定在macOS ARM64，与本地资产作者平台一致，执行原生检查、严格指纹及无损压缩；Linux执行游戏构建和三个浏览器冒烟。首轮Linux x64重建实际发现32个赛道朝向尾数及23个GLB的浮点/排列差异，因此不宣称跨平台字节一致，也不放宽指纹或改写原路面基线。不会自动提交重建资产。完整光照烘焙贴图、KTX2、后期Bloom、完整轮胎物理和在线排行暂未实现；整体图A构图与正式真机验收仍在改进结果中单列。

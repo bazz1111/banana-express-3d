@@ -2,40 +2,39 @@ name: Blender asset rebuild
 
 on:
   pull_request:
-    paths:
-      - 'scripts/build-*.py'
-      - 'scripts/test-*.py'
-      - 'scripts/*assets.mjs'
-      - 'scripts/check-compressed.mjs'
-      - 'scripts/asset-fingerprint.mjs'
-      - 'assets/blender/**'
-      - 'assets/export/**'
-      - 'public/assets/**'
-      - 'tests/fixtures/blender/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/assets.yml'
   push:
     branches: [main]
-    paths:
-      - 'scripts/build-*.py'
-      - 'scripts/test-*.py'
-      - 'scripts/*assets.mjs'
-      - 'scripts/check-compressed.mjs'
-      - 'scripts/asset-fingerprint.mjs'
-      - 'assets/blender/**'
-      - 'assets/export/**'
-      - 'public/assets/**'
-      - 'tests/fixtures/blender/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/assets.yml'
   workflow_dispatch:
   schedule:
     - cron: '17 3 * * 1'
 
+permissions:
+  contents: read
+
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      rebuild: ${{ steps.scope.outputs.rebuild }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Detect changes to native asset inputs
+        id: scope
+        env:
+          SCOPE_EVENT: ${{ github.event_name }}
+          SCOPE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/asset-change-scope.mjs detect
+
   rebuild:
+    needs: changes
+    if: needs.changes.outputs.rebuild == 'true'
     # Canonical assets are authored with the official macOS ARM64 build.
     # Linux x64 changed libm/Blender floats and exporter ordering in 23 GLBs;
     # retain exact decoded fingerprints instead of broadening tolerances.
@@ -73,15 +72,29 @@ jobs:
           fi
           "$BLENDER_BIN" --version
           "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python-expr "import bpy,numpy,platform; assert bpy.app.version == (5,2,2); assert platform.system() == 'Darwin' and platform.machine() == 'arm64'; print('numpy',numpy.__version__)"
-      - name: Rebuild and verify native Blender assets
+      - name: Test saved native export and source preservation
+        run: BLENDER_BIN="$HOME/blender/Blender.app/Contents/MacOS/Blender" python3 tests/test-saved-assets.py
+      - name: Export and verify saved native Blender assets
         run: |
           BLENDER_BIN="$HOME/blender/Blender.app/Contents/MacOS/Blender"
+          "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python scripts/export-saved-assets.py
           "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python scripts/test-blender.py
           for script in scripts/test-*.py; do
             if test "$script" != scripts/test-blender.py; then
               "$BLENDER_BIN" --background --factory-startup --python-exit-code 1 --python "$script"
             fi
           done
+      - name: Require every manifest native source to remain unchanged
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          sources = json.loads(Path('assets/export/manifest.json').read_text())['sourceFiles']
+          assert sources and all(Path(source).is_file() for source in sources), 'Missing saved native source'
+          subprocess.run(['git', 'ls-files', '--error-unmatch', '--', *sources], check=True)
+          subprocess.run(['git', 'diff', '--exit-code', 'HEAD', '--', *sources], check=True)
+          PY
       - run: pnpm check:assets
       - name: Compare decoded fingerprints with committed canonical assets
         run: pnpm assets:fingerprint
@@ -99,3 +112,22 @@ jobs:
             public/assets
             artifacts/asset-fingerprint-diff.json
             artifacts/blender-*.json
+            artifacts/hero-native-report.json
+
+  asset-gate:
+    name: asset-gate
+    needs: [changes, rebuild]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Require successful native verification or intentional skip
+        env:
+          SCOPE_RESULT: ${{ needs.changes.result }}
+          REBUILD_REQUIRED: ${{ needs.changes.outputs.rebuild }}
+          REBUILD_RESULT: ${{ needs.rebuild.result }}
+        run: node scripts/asset-change-scope.mjs gate

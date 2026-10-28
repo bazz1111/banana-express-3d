@@ -3,10 +3,13 @@ import './reference.css';
 import { GameView } from './view.js';
 import { GameAudio } from './audio.js';
 import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH } from './game.ts';
+import { createSessionCourse, readPreferences, savePreferences } from './session.js';
 
 const $ = id => document.getElementById(id);
 const show = (id, visible) => $(id).classList.toggle('hidden', !visible);
+const preferences = readPreferences();
 const audio = new GameAudio();
+audio.enabled = preferences.sound;
 const keys = new Set();
 const pointers = new Map();
 const bestKey = 'banana-endless-best';
@@ -16,7 +19,7 @@ const HIT_STOP = .085;
 let view, game, previousPhase = '', contextLost = false, resultSaved = false, toastRemaining = 0, lastFrame = 0, hitStop = 0;
 let best = readBest();
 const params = new URLSearchParams(location.search);
-// ?quality=high|low pins the tier; otherwise sustained slow racing frames step down to low once.
+// Saved quality is the starting tier; URL pins and a manual change lock this session's tier.
 const pinnedQuality = ['high', 'low'].includes(params.get('quality')) ? params.get('quality') : null;
 let qualityLocked = !!pinnedQuality;
 const frameTimes = [];
@@ -86,7 +89,7 @@ function start() {
 function reset() {
   if (!view || !canInteract()) return;
   clearInput();
-  game = createGame(view.course);
+  game = createGame(createSessionCourse(view.course, params, game?.course.seed));
   view.reset(game);
   audio.reset();
   resultSaved = false;
@@ -138,12 +141,16 @@ for (const id of ['end-run', 'end-paused']) $(id).addEventListener('click', fini
 $('reload').addEventListener('click', () => location.reload());
 $('sound').addEventListener('click', async () => {
   await audio.toggle();
+  preferences.sound = audio.enabled;
+  savePreferences(preferences);
   updateSound();
 });
 $('quality').addEventListener('click', () => {
   if (!view || contextLost) return;
   qualityLocked = true;
   setQuality(view.quality === 'high' ? 'low' : 'high');
+  preferences.quality = view.quality;
+  savePreferences(preferences);
 });
 
 for (const [id, code] of [
@@ -225,6 +232,10 @@ function saveResult() {
   $('result-bananas').textContent = `${result.bananas.toLocaleString()} 根`;
   $('result-time').textContent = formatTime(result.elapsed);
   $('result-total').textContent = result.total.toLocaleString();
+  const replay = new URL(location.href);
+  replay.searchParams.set('seed', String(game.course.seed));
+  $('result-seed').textContent = `${game.course.seed} · 重放`;
+  $('result-seed').href = replay.href;
   best = { total: Math.max(best.total, result.total), distance: Math.max(best.distance, result.distance) };
   try {
     localStorage.setItem(bestKey, JSON.stringify(best));
@@ -336,9 +347,9 @@ async function boot() {
     });
     view.onSound=event=>audio.event(event);
     await view.load();
-    game = createGame(view.course);
+    game = createGame(createSessionCourse(view.course, params));
     view.reset(game);
-    if (pinnedQuality) setQuality(pinnedQuality);
+    setQuality(pinnedQuality || preferences.quality || view.quality);
     window.__bananaGame = { get game() { return game; }, view, perf: perfStats };
     $('start').disabled = false;
     $('start').innerHTML = '开始骑行 <span>→</span>';

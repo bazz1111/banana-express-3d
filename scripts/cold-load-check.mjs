@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome',headless:true});
-const report={testedAt:new Date().toISOString(),browser:await browser.version(),headless:true,network:{downloadMbps:50,latencyMs:50,cacheDisabled:true},runs:[]};
+const budget={maxEncodedBytes:30e6,maxReadyMs:{high:6000,low:8000}};
+const report={testedAt:new Date().toISOString(),browser:await browser.version(),headless:true,passed:false,budget,network:{downloadMbps:50,latencyMs:50,cacheDisabled:true},runs:[]};
 try{
   for(const quality of ['high','low'])for(let repeat=0;repeat<3;repeat++){
     const page=await browser.newPage({viewport:{width:1920,height:1080}}),errors=[],encodings={};
@@ -17,9 +18,11 @@ try{
     const resources=await page.evaluate(()=>performance.getEntriesByType('resource').map(r=>({path:new URL(r.name).pathname,encoded:r.encodedBodySize,decoded:r.decodedBodySize,transfer:r.transferSize})));
     const encodedBytes=resources.reduce((n,r)=>n+r.encoded,0),transferBytes=resources.reduce((n,r)=>n+r.transfer,0);
     report.runs.push({quality,repeat,loadedMs,encodedBytes,transferBytes,errors,encodings});await page.close();
-    assert.deepEqual(errors,[]);assert.ok(encodedBytes<12e6,'First-play resource transfer should fit the12MB budget');
-    assert.ok(loadedMs<(quality==='high'?6000:8000),'Cold load exceeded the stated local loading gate');
+    // The agreed game budget is 30MB at first play, including JavaScript and
+    // physics. The earlier 12MB gate described the retired pre-Tripo assets.
+    assert.deepEqual(errors,[]);assert.ok(encodedBytes<budget.maxEncodedBytes,'First-play resource transfer exceeded the agreed 30MB budget');
+    assert.ok(loadedMs<budget.maxReadyMs[quality],'Cold load exceeded the stated local loading gate');
   }
-  fs.writeFileSync(process.env.LOAD_REPORT||'artifacts/next-cold-load.json',JSON.stringify(report,null,2)+'\n');
+  report.passed=true;
   console.log('COLD_LOAD_PASS',JSON.stringify({...report,runs:report.runs.map(({encodings,...r})=>r)}));
-}finally{await browser.close();}
+}finally{fs.writeFileSync(process.env.LOAD_REPORT||'artifacts/next-cold-load.json',JSON.stringify(report,null,2)+'\n');await browser.close();}

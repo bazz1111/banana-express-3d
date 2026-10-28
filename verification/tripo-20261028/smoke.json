@@ -1,0 +1,143 @@
+{
+  "desktop": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "quality": "high",
+    "input": "keyboard",
+    "fixture": {
+      "temporaryReleaseFreeze": true,
+      "s": 54.09999999999992,
+      "charge": 1.016666666666668,
+      "lane": 0
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 86,
+    "hud": "86",
+    "flight": 0.3,
+    "vehicleBounds": {
+      "min": [
+        -0.29634504420824426,
+        0.3001920021755929
+      ],
+      "max": [
+        0.16980515760280063,
+        0.8686220216598939
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.29634504420824426,
+        0.300192002175593
+      ],
+      "max": [
+        0.16980515760280065,
+        0.8686220216598938
+      ]
+    },
+    "camera": [
+      2.062022604185389,
+      2.2487902880868043,
+      -3.679353958756793
+    ],
+    "fov": 56.135281556643164,
+    "callsPerFrame": 116.16666666666667,
+    "msPerFrame": 16.92500001192093,
+    "loadMs": 450
+  },
+  "portrait": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "quality": "high",
+    "input": "real touch",
+    "fixture": {
+      "temporaryReleaseFreeze": true,
+      "s": 68.20000000000012,
+      "charge": 1.0000000000000013,
+      "lane": 0
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 87,
+    "hud": "87",
+    "flight": 0.35,
+    "vehicleBounds": {
+      "min": [
+        -0.7415799455102933,
+        0.13594339950363285
+      ],
+      "max": [
+        0.6383314618575433,
+        0.5602414732397575
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.7415799455102933,
+        0.13594339950363285
+      ],
+      "max": [
+        0.6383314618575432,
+        0.5602414732397575
+      ]
+    },
+    "camera": [
+      4.065554462828772,
+      2.7103810433740954,
+      -6.161447919743092
+    ],
+    "fov": 56.12427587654764,
+    "callsPerFrame": 118.08333333333333,
+    "msPerFrame": 16.916666666666668,
+    "loadMs": 925
+  },
+  "phone": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "quality": "high",
+    "input": "real touch",
+    "fixture": {
+      "temporaryReleaseFreeze": true,
+      "s": 67.80000000000011,
+      "charge": 1.0000000000000013,
+      "lane": 0
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 87,
+    "hud": "87",
+    "flight": 0.35,
+    "vehicleBounds": {
+      "min": [
+        -0.7423445556475876,
+        0.13550059007112675
+      ],
+      "max": [
+        0.6391700607333867,
+        0.5599350470073774
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.7423445556475876,
+        0.13550059007112675
+      ],
+      "max": [
+        0.6391700607333869,
+        0.5599350470073775
+      ]
+    },
+    "camera": [
+      4.064309820777405,
+      2.7040891948981014,
+      -6.162263130304549
+    ],
+    "fov": 56.1244398191634,
+    "callsPerFrame": 117.41666666666667,
+    "msPerFrame": 16.900000015894573,
+    "loadMs": 929
+  }
+}

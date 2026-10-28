@@ -1,0 +1,696 @@
+{
+  "testedAt": "2026-10-27T23:07:38.483Z",
+  "seconds": 90,
+  "warmupSeconds": 5,
+  "repeats": 1,
+  "viewport": "1920x1080",
+  "platform": {
+    "os": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpu": "Apple M6"
+  },
+  "browser": "156.0.8078.48",
+  "fixture": {
+    "shieldRefreshed": true,
+    "naturalGameplay": false,
+    "virtualClock": false,
+    "stagedKicks": 6,
+    "initialDistance": 3750,
+    "lane": 4.6,
+    "bananas": 100,
+    "maximumSpeed": true,
+    "resetKickCooldown": true,
+    "trafficDisabled": true
+  },
+  "method": "All rAF intervals in the complete sample; all WebGL render passes including shadows; no slow-frame filtering",
+  "tiers": {
+    "high": {
+      "loadMs": 949,
+      "transferMB": 16.81460475921631,
+      "encodedBodyMB": 16.80573558807373,
+      "decodedBodyMB": 31.19139575958252,
+      "actualSeconds": 90.00559999990463,
+      "distance": 6076.133333333659,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "high",
+      "memoryMB": 88.92798042297363,
+      "geometries": 134,
+      "textures": 32,
+      "frames": 10794,
+      "intervals": 10793,
+      "fps": 119.92062328057618,
+      "p50": 8.30000000000291,
+      "p95": 10,
+      "p99": 10.30000000000291,
+      "maxFrameMs": 32.69999999999891,
+      "calls": 123.50565128775246,
+      "maxCalls": 184,
+      "triangles": 2170704.576616639,
+      "maxTriangles": 2299358,
+      "phases": {
+        "racing": 10794
+      },
+      "impact": {
+        "frames": 917,
+        "intervals": 917,
+        "fps": 119.86771414752751,
+        "p50": 8.299999999999272,
+        "p95": 10,
+        "p99": 10.299999999999272,
+        "maxFrameMs": 15.100000000000364,
+        "calls": 151.57142857142858,
+        "maxCalls": 160,
+        "triangles": 2237233.0370774264,
+        "maxTriangles": 2299358,
+        "phases": {
+          "racing": 917
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "resources": [
+        {
+          "name": "/assets/index-BRzp3bTr.js",
+          "transferSize": 173449,
+          "encodedBodySize": 173149,
+          "decodedBodySize": 738335
+        },
+        {
+          "name": "/assets/index-7RPEIEDR.css",
+          "transferSize": 4481,
+          "encodedBodySize": 4181,
+          "decodedBodySize": 16016
+        },
+        {
+          "name": "/ui/boost.png",
+          "transferSize": 36952,
+          "encodedBodySize": 36652,
+          "decodedBodySize": 36652
+        },
+        {
+          "name": "/ui/banana.png",
+          "transferSize": 34593,
+          "encodedBodySize": 34293,
+          "decodedBodySize": 34293
+        },
+        {
+          "name": "/ui/shield.png",
+          "transferSize": 43491,
+          "encodedBodySize": 43191,
+          "decodedBodySize": 43191
+        },
+        {
+          "name": "/ui/double.png",
+          "transferSize": 41891,
+          "encodedBodySize": 41591,
+          "decodedBodySize": 41591
+        },
+        {
+          "name": "/assets/course.json",
+          "transferSize": 21277,
+          "encodedBodySize": 20977,
+          "decodedBodySize": 74775
+        },
+        {
+          "name": "/assets/physics-BDj6NDDM.js",
+          "transferSize": 1370868,
+          "encodedBodySize": 1370568,
+          "decodedBodySize": 4339515
+        },
+        {
+          "name": "/favicon.svg",
+          "transferSize": 549,
+          "encodedBodySize": 249,
+          "decodedBodySize": 249
+        },
+        {
+          "name": "/assets/bicycle.glb",
+          "transferSize": 1358127,
+          "encodedBodySize": 1357827,
+          "decodedBodySize": 1456288
+        },
+        {
+          "name": "/assets/bananaRack.glb",
+          "transferSize": 333879,
+          "encodedBodySize": 333579,
+          "decodedBodySize": 464012
+        },
+        {
+          "name": "/assets/looseBanana.glb",
+          "transferSize": 70634,
+          "encodedBodySize": 70334,
+          "decodedBodySize": 75440
+        },
+        {
+          "name": "/assets/riderSkinned.glb",
+          "transferSize": 1899063,
+          "encodedBodySize": 1898763,
+          "decodedBodySize": 3107108
+        },
+        {
+          "name": "/assets/truck.glb",
+          "transferSize": 1981571,
+          "encodedBodySize": 1981271,
+          "decodedBodySize": 2108912
+        },
+        {
+          "name": "/assets/car.glb",
+          "transferSize": 568091,
+          "encodedBodySize": 567791,
+          "decodedBodySize": 617264
+        },
+        {
+          "name": "/assets/pedestrian.glb",
+          "transferSize": 413968,
+          "encodedBodySize": 413668,
+          "decodedBodySize": 443724
+        },
+        {
+          "name": "/assets/goat.glb",
+          "transferSize": 384646,
+          "encodedBodySize": 384346,
+          "decodedBodySize": 414252
+        },
+        {
+          "name": "/assets/barrier.glb",
+          "transferSize": 320116,
+          "encodedBodySize": 319816,
+          "decodedBodySize": 319816
+        },
+        {
+          "name": "/assets/crate.glb",
+          "transferSize": 434788,
+          "encodedBodySize": 434488,
+          "decodedBodySize": 434488
+        },
+        {
+          "name": "/assets/wall.glb",
+          "transferSize": 385904,
+          "encodedBodySize": 385604,
+          "decodedBodySize": 385604
+        },
+        {
+          "name": "/assets/train.glb",
+          "transferSize": 489029,
+          "encodedBodySize": 488729,
+          "decodedBodySize": 528416
+        },
+        {
+          "name": "/assets/boost.glb",
+          "transferSize": 78744,
+          "encodedBodySize": 78444,
+          "decodedBodySize": 84040
+        },
+        {
+          "name": "/assets/shield.glb",
+          "transferSize": 102833,
+          "encodedBodySize": 102533,
+          "decodedBodySize": 109932
+        },
+        {
+          "name": "/assets/double.glb",
+          "transferSize": 91677,
+          "encodedBodySize": 91377,
+          "decodedBodySize": 97964
+        },
+        {
+          "name": "/assets/dust.glb",
+          "transferSize": 1938,
+          "encodedBodySize": 1638,
+          "decodedBodySize": 3692
+        },
+        {
+          "name": "/assets/spark.glb",
+          "transferSize": 1940,
+          "encodedBodySize": 1640,
+          "decodedBodySize": 3708
+        },
+        {
+          "name": "/assets/burstGlow.glb",
+          "transferSize": 92891,
+          "encodedBodySize": 92591,
+          "decodedBodySize": 99608
+        },
+        {
+          "name": "/assets/burst.glb",
+          "transferSize": 92946,
+          "encodedBodySize": 92646,
+          "decodedBodySize": 99600
+        },
+        {
+          "name": "/assets/roadCourse.glb",
+          "transferSize": 5281503,
+          "encodedBodySize": 5281203,
+          "decodedBodySize": 8383556
+        },
+        {
+          "name": "/assets/valley.glb",
+          "transferSize": 1512435,
+          "encodedBodySize": 1512135,
+          "decodedBodySize": 8124332
+        },
+        {
+          "name": "/assets/sky.glb",
+          "transferSize": 7117,
+          "encodedBodySize": 6817,
+          "decodedBodySize": 20176
+        }
+      ],
+      "errors": [],
+      "longestFrames": [
+        {
+          "timestampMs": 9066.4,
+          "intervalMs": 32.69999999999891,
+          "calls": 147,
+          "triangles": 2232895,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 18333.8,
+          "intervalMs": 17.200000000000728,
+          "calls": 145,
+          "triangles": 2193331,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 23617.1,
+          "intervalMs": 17.19999999999709,
+          "calls": 154,
+          "triangles": 2246944,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 18316.6,
+          "intervalMs": 16.299999999999272,
+          "calls": 145,
+          "triangles": 2193331,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 9957.1,
+          "intervalMs": 15.100000000000364,
+          "calls": 151,
+          "triangles": 2213870,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 71568.1,
+          "intervalMs": 10.400000000008731,
+          "calls": 116,
+          "triangles": 2146907,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 80284.8,
+          "intervalMs": 10.400000000008731,
+          "calls": 108,
+          "triangles": 2139131,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 91376.6,
+          "intervalMs": 10.400000000008731,
+          "calls": 121,
+          "triangles": 2208390,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 93818.3,
+          "intervalMs": 10.400000000008731,
+          "calls": 117,
+          "triangles": 2148050,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 94193.3,
+          "intervalMs": 10.400000000008731,
+          "calls": 118,
+          "triangles": 2154502,
+          "phase": "racing",
+          "impact": false
+        }
+      ],
+      "scope": "90-second real-clock headed Chrome sample; full cargo/max speed/6 staged real Q actions. Raw complete frame samples retained locally."
+    },
+    "low": {
+      "loadMs": 954,
+      "transferMB": 16.81460475921631,
+      "encodedBodyMB": 16.80573558807373,
+      "decodedBodyMB": 31.19139575958252,
+      "actualSeconds": 90.00419999980926,
+      "distance": 6075.700000000325,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "low",
+      "memoryMB": 77.37973594665527,
+      "geometries": 133,
+      "textures": 30,
+      "frames": 10792,
+      "intervals": 10791,
+      "fps": 119.91025898882299,
+      "p50": 8.30000000000291,
+      "p95": 9.89999999999418,
+      "p99": 10.299999999999272,
+      "maxFrameMs": 32,
+      "calls": 82.87490733876946,
+      "maxCalls": 115,
+      "triangles": 1517050.2872498147,
+      "maxTriangles": 1581702,
+      "phases": {
+        "racing": 10792
+      },
+      "impact": {
+        "frames": 915,
+        "intervals": 915,
+        "fps": 119.5578320179794,
+        "p50": 8.299999999999272,
+        "p95": 10,
+        "p99": 10.300000000001091,
+        "maxFrameMs": 16.700000000000728,
+        "calls": 97.60765027322404,
+        "maxCalls": 107,
+        "triangles": 1567196.1595628415,
+        "maxTriangles": 1581702,
+        "phases": {
+          "racing": 915
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "resources": [
+        {
+          "name": "/assets/index-BRzp3bTr.js",
+          "transferSize": 173449,
+          "encodedBodySize": 173149,
+          "decodedBodySize": 738335
+        },
+        {
+          "name": "/assets/index-7RPEIEDR.css",
+          "transferSize": 4481,
+          "encodedBodySize": 4181,
+          "decodedBodySize": 16016
+        },
+        {
+          "name": "/ui/banana.png",
+          "transferSize": 34593,
+          "encodedBodySize": 34293,
+          "decodedBodySize": 34293
+        },
+        {
+          "name": "/ui/boost.png",
+          "transferSize": 36952,
+          "encodedBodySize": 36652,
+          "decodedBodySize": 36652
+        },
+        {
+          "name": "/ui/shield.png",
+          "transferSize": 43491,
+          "encodedBodySize": 43191,
+          "decodedBodySize": 43191
+        },
+        {
+          "name": "/ui/double.png",
+          "transferSize": 41891,
+          "encodedBodySize": 41591,
+          "decodedBodySize": 41591
+        },
+        {
+          "name": "/assets/course.json",
+          "transferSize": 21277,
+          "encodedBodySize": 20977,
+          "decodedBodySize": 74775
+        },
+        {
+          "name": "/assets/physics-BDj6NDDM.js",
+          "transferSize": 1370868,
+          "encodedBodySize": 1370568,
+          "decodedBodySize": 4339515
+        },
+        {
+          "name": "/favicon.svg",
+          "transferSize": 549,
+          "encodedBodySize": 249,
+          "decodedBodySize": 249
+        },
+        {
+          "name": "/assets/bicycle.glb",
+          "transferSize": 1358127,
+          "encodedBodySize": 1357827,
+          "decodedBodySize": 1456288
+        },
+        {
+          "name": "/assets/riderSkinned.glb",
+          "transferSize": 1899063,
+          "encodedBodySize": 1898763,
+          "decodedBodySize": 3107108
+        },
+        {
+          "name": "/assets/looseBanana.glb",
+          "transferSize": 70634,
+          "encodedBodySize": 70334,
+          "decodedBodySize": 75440
+        },
+        {
+          "name": "/assets/bananaRack.glb",
+          "transferSize": 333879,
+          "encodedBodySize": 333579,
+          "decodedBodySize": 464012
+        },
+        {
+          "name": "/assets/pedestrian.glb",
+          "transferSize": 413968,
+          "encodedBodySize": 413668,
+          "decodedBodySize": 443724
+        },
+        {
+          "name": "/assets/car.glb",
+          "transferSize": 568091,
+          "encodedBodySize": 567791,
+          "decodedBodySize": 617264
+        },
+        {
+          "name": "/assets/truck.glb",
+          "transferSize": 1981571,
+          "encodedBodySize": 1981271,
+          "decodedBodySize": 2108912
+        },
+        {
+          "name": "/assets/goat.glb",
+          "transferSize": 384646,
+          "encodedBodySize": 384346,
+          "decodedBodySize": 414252
+        },
+        {
+          "name": "/assets/barrier.glb",
+          "transferSize": 320116,
+          "encodedBodySize": 319816,
+          "decodedBodySize": 319816
+        },
+        {
+          "name": "/assets/crate.glb",
+          "transferSize": 434788,
+          "encodedBodySize": 434488,
+          "decodedBodySize": 434488
+        },
+        {
+          "name": "/assets/wall.glb",
+          "transferSize": 385904,
+          "encodedBodySize": 385604,
+          "decodedBodySize": 385604
+        },
+        {
+          "name": "/assets/train.glb",
+          "transferSize": 489029,
+          "encodedBodySize": 488729,
+          "decodedBodySize": 528416
+        },
+        {
+          "name": "/assets/boost.glb",
+          "transferSize": 78744,
+          "encodedBodySize": 78444,
+          "decodedBodySize": 84040
+        },
+        {
+          "name": "/assets/double.glb",
+          "transferSize": 91677,
+          "encodedBodySize": 91377,
+          "decodedBodySize": 97964
+        },
+        {
+          "name": "/assets/shield.glb",
+          "transferSize": 102833,
+          "encodedBodySize": 102533,
+          "decodedBodySize": 109932
+        },
+        {
+          "name": "/assets/dust.glb",
+          "transferSize": 1938,
+          "encodedBodySize": 1638,
+          "decodedBodySize": 3692
+        },
+        {
+          "name": "/assets/spark.glb",
+          "transferSize": 1940,
+          "encodedBodySize": 1640,
+          "decodedBodySize": 3708
+        },
+        {
+          "name": "/assets/burst.glb",
+          "transferSize": 92946,
+          "encodedBodySize": 92646,
+          "decodedBodySize": 99600
+        },
+        {
+          "name": "/assets/burstGlow.glb",
+          "transferSize": 92891,
+          "encodedBodySize": 92591,
+          "decodedBodySize": 99608
+        },
+        {
+          "name": "/assets/sky.glb",
+          "transferSize": 7117,
+          "encodedBodySize": 6817,
+          "decodedBodySize": 20176
+        },
+        {
+          "name": "/assets/roadCourse.glb",
+          "transferSize": 5281503,
+          "encodedBodySize": 5281203,
+          "decodedBodySize": 8383556
+        },
+        {
+          "name": "/assets/valley.glb",
+          "transferSize": 1512435,
+          "encodedBodySize": 1512135,
+          "decodedBodySize": 8124332
+        }
+      ],
+      "errors": [],
+      "longestFrames": [
+        {
+          "timestampMs": 9031.1,
+          "intervalMs": 32,
+          "calls": 94,
+          "triangles": 1548554,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 9882,
+          "intervalMs": 16.700000000000728,
+          "calls": 96,
+          "triangles": 1566484,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 22157.2,
+          "intervalMs": 16.700000000000728,
+          "calls": 106,
+          "triangles": 1578326,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 26832.2,
+          "intervalMs": 16.700000000000728,
+          "calls": 82,
+          "triangles": 1526833,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 10123.7,
+          "intervalMs": 16.600000000000364,
+          "calls": 101,
+          "triangles": 1572286,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 14255.9,
+          "intervalMs": 15.399999999999636,
+          "calls": 88,
+          "triangles": 1540415,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 67716.3,
+          "intervalMs": 10.400000000008731,
+          "calls": 83,
+          "triangles": 1523881,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 20424.2,
+          "intervalMs": 10.400000000001455,
+          "calls": 99,
+          "triangles": 1553090,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 22065.9,
+          "intervalMs": 10.400000000001455,
+          "calls": 104,
+          "triangles": 1577062,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 23140.9,
+          "intervalMs": 10.400000000001455,
+          "calls": 100,
+          "triangles": 1558554,
+          "phase": "racing",
+          "impact": false
+        }
+      ],
+      "scope": "90-second real-clock headed Chrome sample; full cargo/max speed/6 staged real Q actions. Raw complete frame samples retained locally."
+    }
+  },
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+  "gpu": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "vendor": "Google Inc. (Apple)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "dpr": 1
+  },
+  "headed": true,
+  "codeSha256": {
+    "src/game.ts": "d3cfac7efbffb838e2fafbc03f2cbee67af7bec3514467cef8302fbe3f9f2038",
+    "src/main.js": "7bc3d3b96d5173576374b38b4208f5a5e6e5b87cddb4d7b0d0ef7649a6403f52",
+    "src/view.js": "ce6812b959b9451c80084195a82ea1eac4cdf7903e3c106c134269392ec86844",
+    "src/kickCamera.js": "b1eead84dfb3d57afc1b5ed1123096dfcba87d994557f404e66e5dd5cf194410",
+    "src/mixamoRiderAnimation.js": "559d9c0c32aef2e95877a47d40e76b2ded3f4d3069aaa0c099ecc1ed5afa3c90",
+    "scripts/perf-check.mjs": "352c16fd335db92fffa55db0ebe821392b37a1f487bb52e2d93d80296f330a65"
+  }
+}

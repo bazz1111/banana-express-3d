@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "scope": "Actual End/Restart UI; one-shot seed providers137/138 and injected160m fixture; not earned distance. Normal Math.random restored immediately after course creation.",
+  "before": {
+    "seed": 137,
+    "id": "o:2:1",
+    "type": "barrier",
+    "renderedType": "barrier",
+    "visible": true,
+    "sameObject": false
+  },
+  "after": {
+    "seed": 138,
+    "id": "o:2:1",
+    "type": "pedestrian",
+    "renderedType": "pedestrian",
+    "visible": true,
+    "sameObject": false
+  },
+  "errors": []
+}

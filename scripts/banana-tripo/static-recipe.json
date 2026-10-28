@@ -1,0 +1,517 @@
+{
+  "assets": [
+    {
+      "id": "banana-bunch",
+      "source": "assets/sources/banana-tripo-v1/banana-bunch-master.glb",
+      "root": "TripoBananaBunch",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        0.54,
+        0.31,
+        0.35
+      ],
+      "triangleBudget": 2400,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/banana-bunch.blend",
+      "output": "assets/export/tripo-prototypes/banana-bunch.glb"
+    },
+    {
+      "id": "banana-single",
+      "source": "assets/sources/banana-tripo-v1/banana-single-master.glb",
+      "root": "TripoBananaSingle",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        0.56,
+        0.15,
+        0.22
+      ],
+      "triangleBudget": 700,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/banana-single.blend",
+      "output": "assets/export/tripo-prototypes/banana-single.glb"
+    },
+    {
+      "id": "truck",
+      "source": "assets/sources/banana-tripo-v1/truck-master.glb",
+      "root": "TripoTruck",
+      "rotationDegrees": [
+        0,
+        0,
+        -90
+      ],
+      "targetDimensions": [
+        2.7,
+        5.0,
+        2.8
+      ],
+      "triangleBudget": 22000,
+      "textureSize": 2048,
+      "native": "assets/blender/tripo/truck.blend",
+      "output": "assets/export/tripo-prototypes/truck.glb"
+    },
+    {
+      "id": "car",
+      "source": "assets/sources/banana-tripo-v1/car-master.glb",
+      "root": "TripoCar",
+      "rotationDegrees": [
+        0,
+        0,
+        -90
+      ],
+      "targetDimensions": [
+        1.8,
+        3.4,
+        1.4
+      ],
+      "triangleBudget": 9000,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/car.blend",
+      "output": "assets/export/tripo-prototypes/car.glb"
+    },
+    {
+      "id": "pedestrian",
+      "source": "assets/sources/banana-tripo-v1/pedestrian-master.glb",
+      "root": "TripoPedestrian",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        0.75,
+        0.45,
+        1.8
+      ],
+      "triangleBudget": 8500,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/pedestrian.blend",
+      "output": "assets/export/tripo-prototypes/pedestrian.glb"
+    },
+    {
+      "id": "goat",
+      "source": "assets/sources/banana-tripo-v1/goat-master.glb",
+      "root": "TripoGoat",
+      "rotationDegrees": [
+        0,
+        0,
+        90
+      ],
+      "targetDimensions": [
+        0.6,
+        1.3,
+        0.8
+      ],
+      "triangleBudget": 5000,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/goat.blend",
+      "output": "assets/export/tripo-prototypes/goat.glb"
+    },
+    {
+      "id": "barrier",
+      "source": "assets/sources/banana-tripo-v1/barrier-master.glb",
+      "root": "TripoBarrier",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        2.2,
+        0.7,
+        0.6
+      ],
+      "triangleBudget": 1800,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/barrier.blend",
+      "output": "assets/export/tripo-prototypes/barrier.glb"
+    },
+    {
+      "id": "crate",
+      "source": "assets/sources/banana-tripo-v1/crate-master.glb",
+      "root": "TripoCrate",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1.5,
+        1.2,
+        0.85
+      ],
+      "triangleBudget": 1800,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/crate.blend",
+      "output": "assets/export/tripo-prototypes/crate.glb"
+    },
+    {
+      "id": "wall",
+      "source": "assets/sources/banana-tripo-v1/wall-master.glb",
+      "root": "TripoWall",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        3.2,
+        1,
+        2.8
+      ],
+      "triangleBudget": 2400,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/wall.blend",
+      "output": "assets/export/tripo-prototypes/wall.glb"
+    },
+    {
+      "id": "train",
+      "source": "assets/sources/banana-tripo-v1/train-master.glb",
+      "root": "TripoTrain",
+      "rotationDegrees": [
+        0,
+        0,
+        -90
+      ],
+      "targetDimensions": [
+        2.6,
+        14,
+        3.1
+      ],
+      "triangleBudget": 7000,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/train.blend",
+      "output": "assets/export/tripo-prototypes/train.glb"
+    },
+    {
+      "id": "boost",
+      "source": "assets/sources/banana-tripo-v1/boost-master.glb",
+      "root": "TripoBoost",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        0.8,
+        0.18,
+        1.0
+      ],
+      "triangleBudget": 900,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/boost.blend",
+      "output": "assets/export/tripo-prototypes/boost.glb"
+    },
+    {
+      "id": "shield",
+      "source": "assets/sources/banana-tripo-v1/shield-master.glb",
+      "root": "TripoShield",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        0.95,
+        0.18,
+        1.1
+      ],
+      "triangleBudget": 900,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/shield.blend",
+      "output": "assets/export/tripo-prototypes/shield.glb"
+    },
+    {
+      "id": "double",
+      "source": "assets/sources/banana-tripo-v1/double-master.glb",
+      "root": "TripoDouble",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1.1,
+        0.18,
+        0.8
+      ],
+      "triangleBudget": 900,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/double.blend",
+      "output": "assets/export/tripo-prototypes/double.glb"
+    },
+    {
+      "id": "palm",
+      "source": "assets/sources/banana-tripo-v1/palm-master.glb",
+      "root": "TripoPalm",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        3.8,
+        3.6,
+        5.2
+      ],
+      "triangleBudget": 1800,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/palm.blend",
+      "output": "assets/export/tripo-prototypes/palm.glb"
+    },
+    {
+      "id": "tree",
+      "source": "assets/sources/banana-tripo-v1/tree-master.glb",
+      "root": "TripoTree",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        2.5,
+        2.2,
+        3.4
+      ],
+      "triangleBudget": 12000,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/tree.blend",
+      "output": "assets/export/tripo-prototypes/tree.glb"
+    },
+    {
+      "id": "banana-plant",
+      "source": "assets/sources/banana-tripo-v1/banana-plant-master.glb",
+      "root": "TripoBananaPlant",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        2.8,
+        2.6,
+        2.7
+      ],
+      "triangleBudget": 1500,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/banana-plant.blend",
+      "output": "assets/export/tripo-prototypes/banana-plant.glb"
+    },
+    {
+      "id": "rock",
+      "source": "assets/sources/banana-tripo-v1/rock-master.glb",
+      "root": "TripoRock",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1.2,
+        0.9,
+        0.85
+      ],
+      "triangleBudget": 900,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/rock.blend",
+      "output": "assets/export/tripo-prototypes/rock.glb"
+    },
+    {
+      "id": "bush",
+      "source": "assets/sources/banana-tripo-v1/bush-master.glb",
+      "root": "TripoBush",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1.5,
+        1.3,
+        0.9
+      ],
+      "triangleBudget": 650,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/bush.blend",
+      "output": "assets/export/tripo-prototypes/bush.glb"
+    },
+    {
+      "id": "hut",
+      "source": "assets/sources/banana-tripo-v1/hut-master.glb",
+      "root": "TripoHut",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        3.8,
+        3.0,
+        4.1
+      ],
+      "triangleBudget": 3500,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/hut.blend",
+      "output": "assets/export/tripo-prototypes/hut.glb"
+    },
+    {
+      "id": "stall",
+      "source": "assets/sources/banana-tripo-v1/stall-master.glb",
+      "root": "TripoStall",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        2.3,
+        1.6,
+        2.0
+      ],
+      "triangleBudget": 3000,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/stall.blend",
+      "output": "assets/export/tripo-prototypes/stall.glb"
+    },
+    {
+      "id": "foundation",
+      "source": "assets/sources/banana-tripo-v1/foundation-master.glb",
+      "root": "TripoFoundation",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1,
+        1,
+        1
+      ],
+      "triangleBudget": 900,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/foundation.blend",
+      "output": "assets/export/tripo-prototypes/foundation.glb"
+    },
+    {
+      "id": "sign",
+      "source": "assets/sources/banana-tripo-v1/sign-master.glb",
+      "root": "TripoSign",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        1,
+        0.12,
+        2.1
+      ],
+      "triangleBudget": 800,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/sign.blend",
+      "output": "assets/export/tripo-prototypes/sign.glb"
+    },
+    {
+      "id": "mountain",
+      "source": "assets/sources/banana-tripo-v1/mountain-master.glb",
+      "root": "TripoMountain",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        2.4,
+        2.0,
+        1.2
+      ],
+      "triangleBudget": 2400,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/mountain.blend",
+      "output": "assets/export/tripo-prototypes/mountain.glb"
+    },
+    {
+      "id": "cliff",
+      "source": "assets/sources/banana-tripo-v1/cliff-master.glb",
+      "root": "TripoCliff",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        5,
+        3,
+        6
+      ],
+      "triangleBudget": 2800,
+      "textureSize": 1024,
+      "native": "assets/blender/tripo/cliff.blend",
+      "output": "assets/export/tripo-prototypes/cliff.glb"
+    },
+    {
+      "id": "road-module",
+      "source": "assets/sources/banana-tripo-v1/road-module-master.glb",
+      "root": "TripoRoadModule",
+      "rotationDegrees": [
+        0,
+        0,
+        -90
+      ],
+      "targetDimensions": [
+        11.6,
+        20,
+        0.55
+      ],
+      "triangleBudget": 9000,
+      "textureSize": 2048,
+      "native": "assets/blender/tripo/road-module.blend",
+      "output": "assets/export/tripo-prototypes/road-module.glb"
+    },
+    {
+      "id": "cloud",
+      "source": "assets/sources/banana-tripo-v1/cloud-master.glb",
+      "root": "TripoCloud",
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ],
+      "targetDimensions": [
+        5.0,
+        2.0,
+        1.4
+      ],
+      "triangleBudget": 450,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/cloud.blend",
+      "output": "assets/export/tripo-prototypes/cloud.glb"
+    },
+    {
+      "id": "impact-star",
+      "source": "assets/sources/banana-tripo-v1/impact-star-master.glb",
+      "root": "TripoImpactStar",
+      "rotationDegrees": [
+        0,
+        0,
+        -90
+      ],
+      "targetDimensions": [
+        2,
+        0.18,
+        2
+      ],
+      "triangleBudget": 900,
+      "textureSize": 512,
+      "native": "assets/blender/tripo/impact-star.blend",
+      "output": "assets/export/tripo-prototypes/impact-star.glb"
+    }
+  ]
+}

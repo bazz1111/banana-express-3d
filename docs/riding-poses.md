@@ -1,17 +1,37 @@
-# 骑姿切换：用户补充，2026-10-13
+# 骑姿与动作规格（2026-10-28）
 
-站立是人物动作之一，不应强制一直站立。默认坐姿蹬踏；C 或顶部“骑姿 · 坐姿/站姿”按钮切换。ready/countdown/racing 可切换，paused/finished 或 WebGL 中断时禁用。重开恢复默认坐姿。姿势不改变速度、左右输入、跳跃判定、奖励、道具或 Q 冷却。
+站立是可切换的特技姿势。默认坐姿蹬踏，C 或顶部骑姿按钮切换；一脚踩前车把、一脚踩车座。姿势不改变速度、转向、碰撞体、跳跃、技能冷却或积分。ready/countdown/racing 允许切换，paused/finished 和 WebGL 中断时禁用；重开恢复坐姿，暂停不积攒输入。
 
-规则合同新增 `GameState.stance:'seated'|'standing'`、`toggleStance(g):void`。该函数只在 ready/countdown/racing 翻转 stance；无奖励或事件。UI button `#stance`，C 非重复 keydown 调用；点击按钮后回到 canvas 焦点。paused 下输入不得排队，重开标签须复位。main debug getter照旧。
+## 当前原生源
 
-视图使用同一 Blender 对象关节网格，以 ~0.3 秒过渡坐/站；ready 预览立即切换，暂停冻结动作。坐姿双脚跟随 Crank 下的两个实际脚踏（鞋底保持水平）、躯干前倾、两手扶把；站姿双脚继续落在车把与车座，摆臂平衡。跳跃、蓄力和飞踢叠加在当前骑姿上，不修改逻辑结果。
+`assets/blender/tripo/hero.blend` 保存 Tripo H3.1 主角的原始 Mixamo 65 骨蒙皮、19,121 个三角面、2K 基础色、16 个独立 Action/NLA。`assets/blender/tripo/bicycle.blend` 保存同版自行车及真实接触标记。它们替换历史对象关节和15骨人物；运行入口不再切换旧 rig。`rider.glb` 是兼容导出，实际只加载 `riderSkinned.glb`。
 
-Blender 新增可动 Elbow_L/R、Hand_L/R，与现有 Arm、Leg/Knee/Foot 层级一起提供对象关节；保存同场自行车与角色的坐姿踩踏、切换、站立、跳跃/落地、飞踢动作时间轴。不引入外部模型或下载动画。
+主角自然身高1.85m，骨段长度、UV、原始皮肤权重保持；接触IK只旋转骨骼，不拉伸四肢。绑定源 `assets/sources/banana-tripo-v1/hero-rigged.glb` 随仓库保留，原始 SHA256 和逐顶点验证信息在 `assets/export/hero-metadata.json`。
 
-验收：规则默认/切换/暂停禁用/重开；实际 GLB 坐姿脚踏与手把接触、站姿脚底支撑、过渡可达；真实 C 和按钮、触控窄屏、暂停与重开；完整无尽回归。美术材质改进仍接续执行，不恢复装货/配送。
+16个片段：准备、坐姿蹬踏、站姿平衡、坐→站、站→坐、起跳、腾空、落地、左右蓄力、左右踢击、左右倾斜、护盾受击、失败。Blender 原生 NLA 与 GLB 都保留这些动作，Three.js 通过 AnimationMixer 播放；`src/mixamoRiderAnimation.js` 负责混合与接触IK。
 
-完成证据：43 项规则/物理/视图测试、tsc 和生产构建通过。实际 Chrome 中默认坐姿、C/按钮双向切换、过渡、暂停禁用和重开复位通过；390 px 窄屏骑姿按钮可见且可操作。Q 动作从本帧腿部姿态混合并缓动，蓄力首帧脚部移动 15.1 mm、释放首帧 19.0 mm（含脚踏运动），随后恢复脚踏接触。独立复核关闭了旧站姿 rest 导致的瞬移问题。
+## 接触与过渡
 
-本地 Blender 动作源逐帧检查了坐姿五个踩踏关键帧的手把/脚踏接触，以及第 48 帧站姿支撑；Crank/Pedal 明确使用 XYZ 旋转模式，确保 Blender 时间轴实际生效。运行时仍采用对象关节 IK，未宣称有 Rigify 或 GLB 动画播放。
+- 坐姿掌心 `Palm_L/R` 对齐自行车 `RiderGrip_L/R`，鞋底 `Sole_L/R` 跟随 `RiderPedal_L/R`。脚踏在 Crank 下随曲柄旋转。
+- 站姿鞋底对齐 `RiderStand_L/R`，分别支撑在车把和车座。站姿摆臂用于平衡。
+- 实际目标来自同版自行车标记，保存的 `contactConfig` 同时进入原生源与 metadata；不再沿用历史车体坐标。
+- 正常切换约0.35秒。重复按C会从当前混合姿态平滑反向，不重置到旧切换端点；上身与四肢使用同一 stanceBlend。
+- Q 蓄力提前选择即将进入射程的车辆，与释放时采用同一目标筛选，避免蓄力抬右腿、命中突然换左腿。挥空仍平滑恢复所选骑姿。
+- 跳跃/落地/飞踢叠加在当前骑姿上；暂停冻结动画、车轮、风、粒子和镜头，重开清理所有混合与旧飞车。
 
-生产版真实键盘跑局在 450 m 后切站姿、900 m 后切回坐姿，持续到 2501 m、拾取 164 根香蕉、踢飞 2 辆重卡，完成跳跃、三种道具、暂停、主动结束、碰撞结束和重开，0 浏览器/资源错误。另通过 WebGL 冻结恢复和百万米资源窗口检查。原始记录为 artifacts/riding-browser.log、riding-fidelity.log、riding-context.log、riding-endless-browser.log、riding-report.json、riding-art-blender.log；截图为 riding-seated.png 和 riding-standing.png。
+## 货物与验证
+
+`tripo-cargo.blend` 包含20束、4种真实蕉束变体，随拾取数每5根显示一束；视觉容量100不限制计分。中央首束先出现并贴实货架，上层交错、外侧下垂；80根起显示两条绑绳。原生货架标记的 Blender 坐标为 `(0, 0.676314, 0.796986)` 米。
+
+验证必须使用实际蒙皮后的顶点与原生货物三角形，包含绑绳；不能只比较包围盒或几个对象原点。原生检查覆盖坐/站/跳跃/左右Q等9个姿势，运行时检查连续切换、倾斜及完整Q窗口。接触误差、净空、动作反转和屏幕构图分别记录，投影通过不能代替遮挡检查或整体美术验收。
+
+```sh
+pnpm test
+Blender --background --factory-startup --python-exit-code 1 --python scripts/test-hero-assets.py
+Blender --background --factory-startup --python-exit-code 1 --python scripts/test-skinned-hero.py
+GAME_URL=http://127.0.0.1:4173/?seed=2817 node scripts/riding-check.mjs
+GAME_URL=http://127.0.0.1:4173/?seed=2817 node scripts/cargo-clearance-check.mjs
+GAME_URL=http://127.0.0.1:4173/?seed=2817 node scripts/hero-check.mjs
+```
+
+`Blender` 需换为本机可执行路径；浏览器检查需要 Playwright。最新实测范围与未测项见 [本轮检查报告](banana-audit-20261028.md)。2026-10-13 的对象关节方案和旧接触数字仅属于历史版本，不能作为当前资产验收依据。

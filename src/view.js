@@ -2,14 +2,38 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
-import {RiderAnimator} from './riderAnimation.js';
+import {MixamoRiderAnimator} from './mixamoRiderAnimation.js';
 import {cargoVisibleCounts} from './cargo.js';
-import {KickCamera} from './kickCamera.js';
+import {KickCamera,cameraHull,cameraRiderBounds} from './kickCamera.js';
 import {VehicleDebris} from './vehicleDebris.js';
 import {clamp} from './game.ts';
 import {roadPosition,roadQuaternion,frameQuaternion,cyclePosition,rebasePosition,rebaseVector} from './route.ts';
 
 const compose=new THREE.Object3D(),tint=new THREE.Color();
+export const RUNTIME_ASSETS=['bicycle','riderSkinned','bananaRack','looseBanana','truck','car','pedestrian','goat','barrier','crate','wall','train','boost','shield','double','dust','spark','burst','burstGlow','roadCourse','valley','sky'];
+export function authoredPrototypes(root){
+  const prototypes=new Map();
+  root.traverse(object=>{if(object.isMesh&&object.userData.kind&&!prototypes.has(object.userData.kind))
+    prototypes.set(object.userData.kind,{geometry:object.geometry,material:object.material});});
+  return prototypes;
+}
+export function paintedMaterial(source,{gradient,name,anisotropy}){
+  if(source.map)source.map.anisotropy=anisotropy;
+  const material=source.metalness>.2?source:new THREE.MeshToonMaterial({
+    color:source.color,map:source.map,vertexColors:source.vertexColors,gradientMap:gradient,
+    side:['shield','burst'].includes(name)?THREE.DoubleSide:source.side,
+    transparent:source.transparent,opacity:source.opacity,alphaTest:source.alphaTest,
+    depthWrite:source.depthWrite,emissive:source.emissive,emissiveIntensity:source.emissiveIntensity,
+  });
+  material.flatShading=!['rider','riderSkinned'].includes(name);
+  return material;
+}
+export function impactMaterial(source,glow=false){
+  return new THREE.MeshBasicMaterial({color:source.color,map:source.map,vertexColors:source.vertexColors,
+    alphaTest:source.alphaTest,opacity:source.opacity,transparent:glow||source.transparent,
+    blending:glow?THREE.AdditiveBlending:THREE.NormalBlending,depthWrite:!glow,
+    side:THREE.DoubleSide,toneMapped:false});
+}
 // Deterministic 0..1 noise per instance index, so color variation never flickers between frames.
 export const instanceNoise=(i,salt=0)=>{const x=Math.sin((i+1)*12.9898+salt*78.233)*43758.5453;return x-Math.floor(x);};
 // Small HSL offsets on top of the authored vertex colors; magnitudes stay below a visible palette change.
@@ -80,7 +104,7 @@ export function kickJoints(side,amount,base){
 export class GameView {
   constructor(canvas,onProgress){
     this.canvas=canvas;this.onProgress=onProgress;this.assets={};this.obstacleModels=new Map();this.pool=new Map();
-    this.assetAnimations={};this.rigMode=new URLSearchParams(location.search).get('rig')==='legacy'?'legacy':'skinned';
+    this.assetAnimations={};this.rigMode='skinned';
     this.kickCamera=new KickCamera();this.pendingDebris=new Set();this.landingPlayed=new Set();
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
     this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.NeutralToneMapping;
@@ -89,7 +113,7 @@ export class GameView {
     this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#8dcff1');this.scene.fog=new THREE.Fog('#c3e0e6',110,460);
     this.camera=new THREE.PerspectiveCamera(52,1,.1,1800);this.panoramaCamera=this.camera.clone();this.panoramaCamera.layers.set(1);
     const fill=new THREE.HemisphereLight(0xcfe6ff,0x8a6248,1.35);fill.layers.enable(1);this.scene.add(fill);
-    this.sun=new THREE.DirectionalLight(0xffe2ae,3.0);this.sun.layers.enable(1);this.sun.castShadow=true;
+    this.sun=new THREE.DirectionalLight(0xffefd4,2.8);this.sun.layers.enable(1);this.sun.castShadow=true;
     this.sun.position.set(35,70,-30);this.sun.target.position.set(0,0,16);
     this.sun.shadow.mapSize.set(2048,2048);Object.assign(this.sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:160});
     this.sun.shadow.bias=-.00003;this.sun.shadow.normalBias=.028;this.sun.shadow.radius=2.5;this.scene.add(this.sun,this.sun.target);
@@ -115,7 +139,7 @@ export class GameView {
     const loader=new GLTFLoader(),base=import.meta.env.BASE_URL+'assets/',physicsModule=import('./physics.ts');
     loader.setMeshoptDecoder(MeshoptDecoder);
     const response=await fetch(base+'course.json');if(!response.ok)throw new Error('路线配置载入失败');this.course=await response.json();
-    const names=['bicycle','rider','riderSkinned','banana','bananaRack','looseBanana','truck','car','pedestrian','goat','barrier','crate','wall','train','boost','shield','double','palm','tree','bananaPlant','rock','bush','hut','stall','foundation','sign','dust','spark','burst','burstGlow','roadTile','roadCourse','valley','cliff','sky','rockA','rockB','rockC','rockD','rockE','rockF'];
+    const names=RUNTIME_ASSETS;
     const gradient=new THREE.DataTexture(new Uint8Array([80,170,255]),3,1,THREE.RedFormat);gradient.minFilter=gradient.magFilter=THREE.NearestFilter;gradient.needsUpdate=true;
     const materials=new Map();let done=0;
     await Promise.all(names.map(async name=>{
@@ -123,23 +147,26 @@ export class GameView {
       gltf.scene.traverse(o=>{if(!o.isMesh)return;
         const convert=source=>{
           if(materials.has(source))return materials.get(source);
-          if(source.map)source.map.anisotropy=Math.min(8,this.renderer.capabilities.getMaxAnisotropy());
-          const m=source.metalness>.2?source:new THREE.MeshToonMaterial({color:source.color,map:source.map,vertexColors:true,
-            gradientMap:gradient,side:['shield','burst'].includes(name)?THREE.DoubleSide:source.side,
-            emissive:source.emissive,emissiveIntensity:source.emissiveIntensity});
-          m.flatShading=!['rider','riderSkinned'].includes(name);materials.set(source,m);return m;
+          const m=paintedMaterial(source,{gradient,name,anisotropy:Math.min(8,this.renderer.capabilities.getMaxAnisotropy())});
+          materials.set(source,m);return m;
         };
-        o.material=Array.isArray(o.material)?o.material.map(convert):convert(o.material);o.castShadow=true;o.receiveShadow=true;
+        o.material=Array.isArray(o.material)?o.material.map(convert):convert(o.material);
+        o.castShadow=o.receiveShadow=!['boost','shield','double','burst','burstGlow','dust','spark'].includes(name);
       });this.assets[name]=gltf.scene;this.assetAnimations[name]=gltf.animations;onProgress?.(++done,names.length);
     }));
-    this.terrainGrid=this.assets.roadTile.getObjectByName('EndlessRoadTile').userData.terrainGrid;
-    this.roadChunks=this.assets.roadCourse.getObjectByName('EndlessRoadCourse').children.map(chunk=>({
+    const authoredCourse=this.assets.roadCourse.getObjectByName('EndlessRoadCourse');
+    this.layoutPrototypes=authoredPrototypes(authoredCourse);
+    this.terrainGrid=authoredCourse.children.find(chunk=>chunk.userData.segment===0).userData.terrainGrid;
+    this.roadChunks=authoredCourse.children.map(chunk=>({
       segment:chunk.userData.segment,
       surfaces:chunk.children.filter(o=>o.userData.surfaceRole).map(o=>({
         role:o.userData.surfaceRole,geometry:o.geometry.clone().applyMatrix4(o.matrixWorld),material:o.material,
       })),
       scenery:chunk.children.filter(o=>o.userData.kind).map(o=>({kind:o.userData.kind,matrix:o.matrixWorld.clone(),name:o.name,building:o.userData.building})),
     })).sort((a,b)=>a.segment-b.segment);
+    // Convex support is immutable and shared by every clone of this vehicle.
+    // Build it while loading instead of on the first impact's render frame.
+    this.cameraSupports=Object.fromEntries(['truck','car'].map(name=>[name,cameraHull(this.assets[name])]));
     this.buildScene();
     const surfaces=this.roadChunks.flatMap(chunk=>chunk.surfaces.map(({geometry})=>{
       const p=geometry.getAttribute('position'),vertices=new Float32Array(p.count*3);for(let i=0;i<p.count;i++){vertices[i*3]=p.getX(i);vertices[i*3+1]=p.getY(i);vertices[i*3+2]=p.getZ(i);}return {segment:chunk.segment,vertices,
@@ -150,6 +177,8 @@ export class GameView {
   }
   clone(name){return name==='riderSkinned'?cloneSkeleton(this.assets[name]):this.assets[name].clone(true);}
   geometry(name){
+    const prototype=this.layoutPrototypes?.get(name);
+    if(prototype)return {geometry:prototype.geometry.clone(),material:prototype.material};
     let mesh;this.assets[name].traverse(o=>{if(o.isMesh&&!mesh)mesh=o;});
     return {geometry:mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),material:mesh.material};
   }
@@ -187,8 +216,8 @@ export class GameView {
         m.name={terrain:'RoadsideTerrain',road:'PaintedRoadSurface',guard:'StoneGuardrailsAndMarkings'}[surface.role];m.receiveShadow=true;group.add(m);}
       this.scene.add(group);return group;
     });
-    this.scenery={};for(const name of ['palm','tree','bananaPlant','rock','bush','hut','stall','foundation','sign','cliff','rockA','rockB','rockC','rockD','rockE','rockF'])this.scenery[name]=this.instances(name,160);
-    const sceneryVariation={palm:{hue:.05,sat:.14,light:.20},tree:{hue:.07,sat:.16,light:.22},bananaPlant:{hue:.05,sat:.16,light:.22},bush:{hue:.07,sat:.16,light:.24},rock:{hue:.03,sat:.12,light:.20},cliff:{hue:.025,sat:.14,light:.16}};
+    this.scenery={};for(const name of this.layoutPrototypes.keys())this.scenery[name]=this.instances(name,160);
+    const sceneryVariation={palm:{hue:.05,sat:.14,light:.20},tree:{hue:.07,sat:.16,light:.22},bananaPlant:{hue:.05,sat:.16,light:.22},bush:{hue:.07,sat:.16,light:.24},rock:{hue:.03,sat:.12,light:.20}};
     for(const name of ['rockA','rockB','rockC','rockD','rockE','rockF'])sceneryVariation[name]={hue:.025,sat:.12,light:.16};
     this.sceneryColors={};
     for(const [name,vary] of Object.entries(sceneryVariation)){
@@ -226,11 +255,17 @@ export class GameView {
     }
     this.farPanorama=new THREE.Group();this.scene.add(this.farPanorama);this.farPanorama.add(...panoramaGroups.map(group=>this.valleyBatches[group]));
     this.panoramaFog=new THREE.Fog('#a8d4e6',560,2000);
-    for(const name of ['ValleyClouds','ValleyCloudsB','ValleyCloudsC'])this.valleyBatches[name].receiveShadow=false;
-    this.player=new THREE.Group();this.bike=this.clone('bicycle');this.rider=this.clone(this.rigMode==='skinned'?'riderSkinned':'rider');this.player.add(this.bike,this.rider);this.scene.add(this.player);
-    if(this.rigMode==='skinned')this.riderAnimator=new RiderAnimator(this.rider,this.assetAnimations.riderSkinned);
+    for(const name of ['ValleyClouds','ValleyCloudsB','ValleyCloudsC']){
+      const clouds=this.valleyBatches[name],source=clouds.material;
+      clouds.receiveShadow=false;
+      clouds.material=new THREE.MeshBasicMaterial({color:source.color.clone().multiplyScalar(2.2),map:source.map,vertexColors:source.vertexColors,side:source.side,toneMapped:false});
+      for(const mesh of this.assets.valley.getObjectByName(name).children)if(mesh.isMesh)mesh.material=clouds.material;
+    }
+    this.player=new THREE.Group();this.bike=this.clone('bicycle');this.rider=this.clone('riderSkinned');this.player.add(this.bike,this.rider);this.scene.add(this.player);
+    this.riderAnimator=new MixamoRiderAnimator(this.rider,this.assetAnimations.riderSkinned,this.bike);
     this.wheels=['WheelFront','WheelRear'].map(n=>this.bike.getObjectByName(n));this.crank=this.bike.getObjectByName('Crank');
-    this.pedals=['Pedal_L','Pedal_R'].map(n=>this.bike.getObjectByName(n));this.cargoRopes=this.bike.getObjectByName('CargoRopes');this.cargoRopes.visible=false;
+    this.pedals=['Pedal_L','Pedal_R'].map(n=>this.bike.getObjectByName(n));
+    this.cargoRopes=this.assets.bananaRack.getObjectByName('CargoTieDowns').clone(true);this.cargoRopes.visible=false;this.player.add(this.cargoRopes);
     const joint=n=>this.riderAnimator?.bones[n]??this.rider.getObjectByName(n);
     this.legs=['Leg_L','Leg_R'].map(joint);this.knees=['Knee_L','Knee_R'].map(joint);
     this.feet=['Foot_L','Foot_R'].map(joint);this.arms=['Arm_L','Arm_R'].map(joint);this.torso=this.riderAnimator?new THREE.Object3D():joint('BalanceBody');
@@ -246,15 +281,21 @@ export class GameView {
     this.player.add(this.cargo);
     this.pickupMeshes={};for(const name of ['banana','boost','shield','double'])this.pickupMeshes[name]=this.instances(name==='banana'?'looseBanana':name,name==='banana'?400:48);
     this.burst=this.clone('burst');this.burst.visible=false;this.scene.add(this.burst);
-    this.burst.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,toneMapped:false});});
+    this.burst.traverse(o=>{if(o.isMesh)o.material=Array.isArray(o.material)?o.material.map(m=>impactMaterial(m)):impactMaterial(o.material);});
     this.burstGlow=this.clone('burstGlow');this.burstGlow.visible=false;this.scene.add(this.burstGlow);
-    this.burstGlow.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});});
+    this.burstGlow.traverse(o=>{if(o.isMesh)o.material=Array.isArray(o.material)?o.material.map(m=>impactMaterial(m,true)):impactMaterial(o.material,true);});
     this.shieldBadge=this.clone('shield');this.shieldBadge.position.set(0,3.2,0);this.shieldBadge.scale.setScalar(.35);this.shieldBadge.visible=false;this.player.add(this.shieldBadge);
     this.particleMeshes={};for(const name of ['dust','spark','rock']){const m=this.instances(name,48);m.frustumCulled=false;m.castShadow=false;this.particleMeshes[name]=m;}
   }
   reset(g){
     this.lastGame=g;this.lastDistance=g.s;this.effects=[];this.shake=0;this.cameraReady=false;this.time=0;this.stanceBlend=g.stance==='standing'?1:0;this.kickBlend=[0,0];
-    this.debrisView?.reset();this.pendingDebris.clear();this.landingPlayed.clear();this.kickCamera.reset();this.riderAnimator?.reset();
+    this.debrisView?.reset();this.pendingDebris.clear();this.landingPlayed.clear();this.kickCamera.reset();this.riderAnimator?.reset(g.stance);
+    // Procedural ids repeat across seeds; an early restart can change their kinds.
+    for(const model of this.obstacleModels.values()){
+      this.scene.remove(model);const kind=model.userData.kind;
+      if(!this.pool.has(kind))this.pool.set(kind,[]);this.pool.get(kind).push(model);
+    }
+    this.obstacleModels.clear();
     this.physics.reset(g);this.wheels.forEach(w=>w.rotation.x=0);this.crank.rotation.x=0;this.pedals.forEach(p=>p.rotation.x=0);
     for(const m of Object.values(this.particleMeshes))m.count=0;
   }
@@ -305,33 +346,14 @@ export class GameView {
     this.player.position.copy(worldAt(this.course,g.s,g.lane,g.jumpHeight,g.s));this.player.quaternion.copy(roadQuaternion(this.course,g.s,g.s));
     this.player.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),g.lateralSpeed*.045));
     this.sun.position.set(35,70,-30).applyQuaternion(new THREE.Quaternion().copy(frameQuaternion(this.course,g.s)));
-    const desiredStance=g.stance==='standing'?1:0;
-    if(g.phase==='ready')this.stanceBlend=desiredStance;else this.stanceBlend+=(desiredStance-this.stanceBlend)*(1-Math.exp(-delta*12));
-    const stance=this.stanceBlend;
+    const stance=this.riderAnimator.stanceBlend;
     if(active){this.wheels.forEach(w=>w.rotation.x+=g.speed*delta/.36);this.crank.rotation.x+=(5+Math.max(0,g.speed-12)*.16)*(1-stance*.72)*delta;this.pedals.forEach(p=>p.rotation.x=-this.crank.rotation.x);}
-    const crouch=g.jumpHeight>0?.04+.065*Math.max(0,g.jumpVelocity/6.4):.008+stance*.010+Math.sin(this.time*3)*(.006+stance*.006);
-    const sway=(clamp(g.lateralSpeed*.009,-.035,.035)+Math.sin(this.time*1.8)*.008)*(.3+stance*.7);
-    this.torso.position.set(sway,THREE.MathUtils.lerp(1.30,1.86,stance)-crouch,THREE.MathUtils.lerp(-.22,-.04,stance));
-    this.torso.rotation.set(.98*(1-stance),-g.lateralSpeed*.025,0);
-    const kickLeg=g.kickSide>0?0:1,kickTarget=g.kickPose>0?Math.sin((1-g.kickPose/.7)*Math.PI):Math.min(.18,g.charge*.15);
-    this.riderAnimator?.update(g,g.phase==='ready'||g.phase==='finished'&&g.endReason==='collision'?Math.min(visualDt,.1):delta,this.crank.rotation.x);
-    const contactLegs=[],contactArms=[];
-    for(let i=0;i<2;i++){
-      const side=i===0?-1:1,hip=new THREE.Vector3(side*.17+sway,this.torso.position.y,this.torso.position.z);
-      const ankle=pedalAnkle(side,this.crank.rotation.x).lerp(support(side),stance);ankle.y+=Math.sin(Math.PI*stance)*.38;
-      const pose=legJoints(side,hip,ankle),arm=armJoints(side,this.torso.position,this.torso.quaternion,stance,this.time);
-      this.kickBlend[i]+=((i===kickLeg?kickTarget:0)-this.kickBlend[i])*(1-Math.exp(-delta*20));
-      const final=this.kickBlend[i]>.0001?{...pose,...kickJoints(side,this.kickBlend[i],pose)}:pose;
-      contactLegs.push(final);contactArms.push(arm);
-      if(!this.riderAnimator){
-        this.legs[i].position.copy(final.hip);this.legs[i].quaternion.copy(final.upper);this.knees[i].quaternion.copy(final.lower);this.feet[i].quaternion.copy(final.foot);
-        this.arms[i].quaternion.copy(arm.upper);if(this.elbows[i])this.elbows[i].quaternion.copy(arm.lower);if(this.hands[i])this.hands[i].quaternion.copy(arm.hand);
-      }
-    }
-    this.riderAnimator?.applyContactPose({torso:{position:this.torso.position,quaternion:this.torso.quaternion},legs:contactLegs,arms:contactArms});
+    const kickLeg=g.kickSide>0?0:1;
+    this.riderAnimator.update(g,g.phase==='ready'||g.phase==='finished'&&g.endReason==='collision'?Math.min(visualDt,.1):delta,this.crank.rotation.x);
+    this.riderAnimator.applyContactPose();this.stanceBlend=this.riderAnimator.stanceBlend;
     const cargoCounts=cargoVisibleCounts(this.cargoGroups.map(m=>m.userData.globalIndices),g.bananas);
     this.cargoGroups.forEach((m,i)=>{if(m.count!==cargoCounts[i]){m.count=cargoCounts[i];m.boundingBox=null;m.computeBoundingSphere();}});
-    this.cargo.count=cargoCounts.reduce((a,b)=>a+b,0);this.cargoRopes.visible=g.bananas>=20;this.shieldBadge.visible=g.buffs.shield>0;
+    this.cargo.count=cargoCounts.reduce((a,b)=>a+b,0);this.cargoRopes.visible=g.bananas>=80;this.shieldBadge.visible=g.buffs.shield>0;
     this.shieldBadge.rotation.y=this.time*1.2;
     this.physics.sync(g,delta);
     const visibleIds=new Set();
@@ -380,24 +402,33 @@ export class GameView {
     if(this.burst.visible){this.feet[kickLeg].getWorldPosition(this.burst.position);this.burst.position.add(new THREE.Vector3(g.kickSide>0?-.1:.1,0,.04).applyQuaternion(this.player.quaternion));
       const t=clamp((.56-g.kickPose)/.32,0,1);this.burst.scale.setScalar(1.25+.55*Math.sin(Math.PI*Math.min(1,t*1.6)));}
     const ready=g.phase==='ready',portrait=1-clamp((this.camera.aspect-.6)/.6,0,1);
-    const offset=ready?THREE.MathUtils.lerp(3.4,1.2,portrait):THREE.MathUtils.lerp(1.6,1.0,portrait);
-    const height=ready?3.0:THREE.MathUtils.lerp(2.45,2.7,portrait),distance=ready?THREE.MathUtils.lerp(5.4,6.6,portrait):THREE.MathUtils.lerp(4.8,8.2,portrait);
-    const desired=new THREE.Vector3(-g.lane-offset,height+g.jumpHeight,-distance);
-    const target=worldAt(this.course,g.s+(ready?1.5:8),ready?g.lane*THREE.MathUtils.lerp(.65,.96,portrait):g.lane,ready?1.48:1.0,g.s);
-    if(!ready)target.x+=THREE.MathUtils.lerp(1.5,.6,portrait);
+    const offset=ready?THREE.MathUtils.lerp(3.4,1.2,portrait):1.6;
+    let cameraSide=this.cameraReady?(this.cameraRoadSide??-1):-1;
+    if(!ready&&Math.abs(-g.lane+cameraSide*offset)>4.2)cameraSide=Math.sign(g.lane)||-1;
+    const sideChanged=this.cameraReady&&cameraSide!==this.cameraRoadSide;this.cameraRoadSide=cameraSide;
+    const height=ready?3.0:THREE.MathUtils.lerp(2.25,2.7,portrait),distance=ready?THREE.MathUtils.lerp(5.4,6.6,portrait):THREE.MathUtils.lerp(3.9,7.2,portrait);
+    const desired=new THREE.Vector3(-g.lane+cameraSide*offset,height+g.jumpHeight,-distance);
+    const target=worldAt(this.course,g.s+(ready?1.5:6),ready?g.lane*THREE.MathUtils.lerp(.65,.96,portrait):g.lane,ready?1.48:.8,g.s);
+    if(!ready)target.x-=cameraSide*THREE.MathUtils.lerp(1.5,1.2,portrait);
     target.y+=g.jumpHeight;
     let fov=ready?52:52+clamp((g.speed-12)*.34,0,7),kickShot=false;
     const flying=g.obstacles.filter(o=>o.kicked&&o.flight<1.2&&this.obstacleModels.has(o.id)).sort((a,b)=>a.flight-b.flight)[0];
-    if(portrait>0&&this.motion&&(flying||this.kickCamera.weight>.0001)){
+    if(flying||this.kickCamera.weight>.0001||this.kickCamera.retreat>.001||(this.kickCamera.lastFov??fov)-fov>.05){
       this.player.updateWorldMatrix(true,true);
-      const heroBox=new THREE.Box3().setFromObject(this.rider,true).union(new THREE.Box3().setFromObject(this.bike,true));
+      const riderBounds=cameraRiderBounds(this.rider),heroBox=riderBounds.box.union(new THREE.Box3().setFromObject(this.bike,true));
+      if(this.cargoRopes.visible)heroBox.union(new THREE.Box3().setFromObject(this.cargoRopes,true));
       for(const m of this.cargoGroups)if(m.count){m.computeBoundingBox();heroBox.union(new THREE.Box3().setFromObject(m));}
-      const vehicleBox=flying?new THREE.Box3().setFromObject(this.obstacleModels.get(flying.id),true):null;
+      const vehicleModel=flying?this.obstacleModels.get(flying.id):null;
+      const vehicleBox=vehicleModel?new THREE.Box3().setFromObject(vehicleModel,true):null;
+      const vehiclePoints=vehicleModel?this.cameraSupports[flying.type]:null;
+      const wheelCenters=this.wheels.map(w=>w.getWorldPosition(new THREE.Vector3())),below=new THREE.Vector3(0,-.36,0).applyQuaternion(this.player.quaternion);
+      const subjectPoints=[riderBounds.top,...wheelCenters.map(p=>p.clone().add(below))];
       fov=this.kickCamera.adjust({desired,target,fov,camera:this.camera,vehicleBox,heroBox,flight:flying?.flight??Infinity,
+        vehiclePoints,vehicleMatrix:vehicleModel?.matrixWorld,subjectPoints,wheelCenters,kickSide:flying?.kickSide??g.kickSide,
         delta,reducedMotion:!this.motion,paused:g.phase==='paused'||g.phase==='finished'});
-      kickShot=!!flying||this.kickCamera.weight>.0001;
+      kickShot=!!flying;
     }
-    if(!this.cameraReady){this.camera.position.copy(desired);this.lookTarget.copy(target);this.cameraReady=true;}
+    if(!this.cameraReady||sideChanged){this.camera.position.copy(desired);this.lookTarget.copy(target);this.cameraReady=true;}
     const t=1-Math.exp(-delta*8),vertical=1-Math.exp(-delta*64),cameraY=this.camera.position.y,targetY=this.lookTarget.y;
     this.camera.position.lerp(desired,t);this.lookTarget.lerp(target,t);
     this.camera.position.y=THREE.MathUtils.lerp(cameraY,desired.y,vertical);this.lookTarget.y=THREE.MathUtils.lerp(targetY,target.y,vertical);

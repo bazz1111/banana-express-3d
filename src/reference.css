@@ -7,3 +7,5 @@
 .skill-ring kbd { background: #33383b; box-shadow: none; }
 .skill.charged { border-color: #ffe48a; }
 .race-active .vignette { background: linear-gradient(0deg, #1d2b271c, transparent 25%); }
+.buff > span { display: inline-flex; align-items: center; gap: 4px; }
+.buff img { width: 23px; height: 23px; object-fit: contain; }

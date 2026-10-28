@@ -7,7 +7,7 @@ export interface ObstacleDefinition {
   frequency?:number;speed?:number;lift?:number;
 }
 export interface ObstacleState extends ObstacleDefinition {
-  originalLane:number;kicked:boolean;hit:boolean;passed:boolean;flight:number;kickSide?:1|-1;
+  originalLane:number;kicked:boolean;hit:boolean;passed:boolean;jumpCleared:boolean;flight:number;kickSide?:1|-1;
 }
 export interface PickupDefinition {id:string;type:PickupKind;s:number;lane:number;height:number}
 export interface PickupState extends PickupDefinition {collected:boolean}
@@ -60,7 +60,7 @@ export const obstacleSpecs:Readonly<Record<ObstacleKind,{width:number;length:num
 export {roadAt} from './route.ts';
 
 const freshObstacle = (o:ObstacleDefinition):ObstacleState => ({...o,originalLane:o.lane,
-  kicked:false,hit:false,passed:false,flight:0});
+  kicked:false,hit:false,passed:false,jumpCleared:false,flight:0});
 
 export function createGame(course:Course, handling:Partial<Handling> = {}):GameState {
   const g:GameState = {
@@ -114,13 +114,17 @@ function reward(g:GameState, base:number) {
   return points;
 }
 
+function kickTarget(g:GameState, maxDistance=9) {
+  return g.obstacles.filter(o => !o.kicked && !o.hit &&
+    (o.type === 'truck' || o.type === 'car') && o.s - g.s >= -2 && o.s - g.s <= maxDistance &&
+    Math.abs(o.lane - g.lane) <= 3.2)
+    .sort((a,b) => Math.abs(a.s-g.s) - Math.abs(b.s-g.s))[0];
+}
+
 function kick(g:GameState) {
   const charged = g.charge >= .8 - 1e-9;
   g.kickPose = .7; g.cooldowns.kick = 18;
-  const target = g.obstacles.filter(o => !o.kicked && !o.hit &&
-    (o.type === 'truck' || o.type === 'car') && o.s - g.s >= -2 && o.s - g.s <= 9 &&
-    Math.abs(o.lane - g.lane) <= 3.2)
-    .sort((a,b) => Math.abs(a.s-g.s) - Math.abs(b.s-g.s))[0];
+  const target = kickTarget(g);
   if (target && (charged || target.type === 'car')) {
     target.kicked = true; target.flight = 0; target.kickSide = target.lane >= g.lane ? 1 : -1;
     g.kickSide = target.kickSide; g.kickedCount++; reward(g, target.type === 'truck' ? 200 : 100);
@@ -214,12 +218,19 @@ function step(g:GameState, input:PlayerInput, dt:number) {
         } else {g.events.push({type:'collision',id:o.id}); finish(g,'collision'); return;}
       }
     }
+    // Contact can end sideways before the rear edge is passed; retain that successful clearance.
+    if (!o.hit && contact && spec.jumpable && clear > spec.height+.1) o.jumpCleared = true;
     if (!o.passed && g.s-o.s > extentS) {
       o.passed = true;
-      if (!o.hit && contact && spec.jumpable && clear > spec.height+.1) {
+      if (!o.hit && o.jumpCleared) {
         const points = reward(g,50); g.events.push({type:'stunt',points,label:'跳跃越障'});
       }
     }
+  }
+  if (g.charge > 0) {
+    // Choose the wind-up leg before an approached vehicle enters release range.
+    const target = kickTarget(g, 9 + g.speed * .8);
+    if (target) g.kickSide = target.lane >= g.lane ? 1 : -1;
   }
 }
 
@@ -235,7 +246,8 @@ function chunkRandom(seed:number, index:number) {
 }
 
 function generateChunk(g:GameState, index:number) {
-  const rng = chunkRandom(g.course.seed,index), start = index * g.course.chunkLength;
+  // Keep the first two teaching chunks learnable; new run seeds vary the encounters after 160m.
+  const rng = chunkRandom(index < 2 ? 137 : g.course.seed,index), start = index * g.course.chunkLength;
   let pickupIndex = 0;
   const pick = <T>(items:T[]) => items[Math.floor(rng() * items.length)];
   const addPickup = (type:PickupKind,s:number,lane:number,height=1.25) => g.pickups.push({

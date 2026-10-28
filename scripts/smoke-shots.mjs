@@ -112,8 +112,13 @@ try{
       await page.screenshot({path:path.join(out,`${label}-${name}.png`)});await page.evaluate(()=>{window.__freeze=false;});
     };
     await capture('kick',()=>window.__bananaGame.game.kickPose>0&&window.__bananaGame.game.kickPose<=.5);
-    const state=await page.evaluate(()=>{const g=window.__bananaGame.game;return {phase:g.phase,kicks:g.kickedCount,bananas:g.bananas,hud:document.getElementById('banana-count').textContent,quality:window.__bananaGame.view.quality};});
+    const state=await page.evaluate(()=>{const {game:g,view:v}=window.__bananaGame,o=g.obstacles.find(o=>o.id==='smoke-truck'),model=v.obstacleModels.get(o?.id);
+      const bounds=points=>{const min=[Infinity,Infinity],max=[-Infinity,-Infinity];for(const p of points){p.project(v.camera);for(let i=0;i<2;i++){const n=i?p.y:p.x;min[i]=Math.min(min[i],n);max[i]=Math.max(max[i],n);}}return {min,max};};
+      const points=[];model?.traverseVisible(m=>{if(m.isMesh)for(let i=0;i<m.geometry.attributes.position.count;i++)points.push(m.getVertexPosition(i,v.player.position.clone()).applyMatrix4(m.matrixWorld));});
+      return {phase:g.phase,kicks:g.kickedCount,bananas:g.bananas,hud:document.getElementById('banana-count').textContent,quality:v.quality,flight:o?.flight,vehicleBounds:points.length?bounds(points):null,
+        supportBounds:model?bounds(v.cameraSupports.truck.map(p=>p.clone().applyMatrix4(model.matrixWorld))):null,camera:v.camera.position.toArray(),fov:v.camera.fov};});
     stage('kick-captured',state);
+    if(state.flight<=.6)assert.ok(state.vehicleBounds&&state.vehicleBounds.min.every(n=>n>=-1)&&state.vehicleBounds.max.every(n=>n<=1),'The actual truck silhouette must fit the impact frame');
     await capture('kick-after',()=>window.__bananaGame.game.kickPose===0);
     assert.equal(state.phase,'racing');assert.equal(state.kicks,1,'Charged Q must launch the staged truck');
     assert.equal(state.quality,quality,'Smoke must use the reported quality tier');

@@ -7,6 +7,7 @@ const tag=process.env.LANDSCAPE_ART_TAG||'current',url=process.env.GAME_URL||'ht
 try{
   const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(url);await page.locator('#start:not([disabled])').waitFor({timeout:45000});await page.clock.install();await page.clock.pauseAt(new Date());await page.click('#start');await page.clock.runFor(3200);
+  const loadedBuild=await page.evaluate(()=>({page:location.href,moduleScripts:[...document.querySelectorAll('script[type="module"][src]')].map(script=>script.src)}));
   const samples=[];
   for(const [viewport,width,height] of [['desktop',1440,900],['medium',960,900],['portrait',390,844]]){
   await page.setViewportSize({width,height});await page.evaluate(()=>window.__bananaGame.view.resize());
@@ -30,24 +31,34 @@ try{
       let bayPixels=0,bayUpperLeftPixels=0;
       for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4;
         if(Math.abs(on[i]-noWater[i])+Math.abs(on[i+1]-noWater[i+1])+Math.abs(on[i+2]-noWater[i+2])>5){bayPixels++;if(x<w/2&&y>h/2)bayUpperLeftPixels++;}}
+      const city=[...v.valleyTiles.flatMap(tile=>['ValleyVillageHouse','ValleyVillageLonghouse','ValleyTower'].map(group=>tile.getObjectByName(v.valleyBatches[group].name))),
+        ...['ValleyPanoramaHouse','ValleyPanoramaLonghouse','ValleyPanoramaTower'].map(group=>v.valleyBatches[group])];
+      if(city.some(mesh=>!mesh))throw new Error('Actual authored city groups are missing');
+      city.forEach(mesh=>mesh.visible=false);const noCity=pixels();city.forEach(mesh=>mesh.visible=true);
+      let cityPixels=0;for(let i=0;i<on.length;i+=4)if(Math.abs(on[i]-noCity[i])+Math.abs(on[i+1]-noCity[i+1])+Math.abs(on[i+2]-noCity[i+2])>5)cityPixels++;
       pixels();
-      const Matrix=v.player.matrix.constructor;let maxMatrixError=0,shared=true;
-      const groups=['ValleyMountains','ValleyMountainsB','ValleyMidMountains','ValleyMidMountainsB','ValleyFoothills','ValleyFoothillsB','ValleyClouds','ValleyCloudsB','ValleyCloudsC'],counts={};
+      const Matrix=v.player.matrix.constructor;let maxMatrixError=0,shared=true,nativeGroupsValid=true;
+      const groups=['ValleyMountains','ValleyMountainsB','ValleyMidMountains','ValleyMidMountainsB','ValleyFoothills','ValleyFoothillsB','ValleyClouds','ValleyCloudsB','ValleyCloudsC'],counts={},authoredCounts={};
       for(const group of groups){const batch=v.valleyBatches[group],sources=v.assets.valley.getObjectByName(group)?.children.filter(o=>o.isMesh);
-        counts[group]=batch?.count??0;if(!batch||!sources)continue;
+        counts[group]=batch?.count??0;authoredCounts[group]=sources?.length??0;
+        if(!batch||!sources?.length){nativeGroupsValid=false;continue;}
+        nativeGroupsValid&&=sources.every(source=>source.userData.sourceId===(group.includes('Clouds')?'cloud':'mountain')&&source.userData.provider==='Tripo'&&source.userData.model==='H3.1'&&!!source.userData.sourceSha256);
         if(batch.parent!==v.farPanorama)throw new Error('Panorama group was rebased as a valley tile');
         for(let i=0;i<sources.length;i++){const matrix=new Matrix();batch.getMatrixAt(i,matrix);maxMatrixError=Math.max(maxMatrixError,...matrix.elements.map((n,k)=>Math.abs(n-sources[i].matrixWorld.elements[k])));
           shared&&=batch.geometry===sources[i].geometry&&batch.material===sources[i].material;}
       }
-      return {distance:s,renderDistance:g.s,hudDistance:document.getElementById('distance').textContent,width:w,height:h,mountainPixels:changed,mountainFraction:changed/(w*h),bayPixels,bayFraction:bayPixels/(w*h),bayUpperLeftFraction:bayUpperLeftPixels/(w*h/4),counts,maxMatrixError,shared,geometry:v.renderer.info.memory.geometries,textures:v.renderer.info.memory.textures};
+      return {distance:s,renderDistance:g.s,hudDistance:document.getElementById('distance').textContent,speed:g.speed,cameraFov:v.camera.fov,width:w,height:h,mountainPixels:changed,mountainFraction:changed/(w*h),bayPixels,bayFraction:bayPixels/(w*h),bayUpperLeftFraction:bayUpperLeftPixels/(w*h/4),cityPixels,cityFraction:cityPixels/(w*h),counts,authoredCounts,nativeGroupsValid,maxMatrixError,shared,geometry:v.renderer.info.memory.geometries,textures:v.renderer.info.memory.textures};
     },distance);
     await page.screenshot({path:`artifacts/landscape-art-${tag}-${viewport}-${String(distance).replace('.','-')}.png`});samples.push({viewport,...report});
   }
   }
-  const report={tag,url,samples,errors,scope:'Exact frozen scene-distance fixtures after real Start. HUD distance is from the preceding RAF; 100 bananas are injected. Not earned player distance or full-image fidelity.'};
+  const checks={mountainPixels:samples.every(s=>s.mountainFraction>.0115),
+    sourceGroups:samples.every(s=>s.nativeGroupsValid&&Object.entries(s.counts).every(([name,count])=>count>0&&count===s.authoredCounts[name])),
+    sourceMatricesAndSharing:samples.every(s=>s.maxMatrixError<1e-4&&s.shared),exactDistances:samples.every(s=>s.renderDistance===s.distance),noPageErrors:errors.length===0};
+  const report={tag,url,loadedBuild,samples,checks,mountainPixelThreshold:.0115,unmetMountainSamples:samples.filter(s=>s.mountainFraction<=.0115).map(s=>({viewport:s.viewport,distance:s.distance,fraction:s.mountainFraction})),errors,scope:'Exact frozen scene-distance fixtures after real Start. HUD distance is from the preceding RAF; 100 bananas are injected. Not earned player distance or full-image fidelity. Mountain threshold is unchanged; water/city visibility are measured without inventing new acceptance thresholds.'};
   fs.writeFileSync(`artifacts/landscape-art-${tag}.json`,JSON.stringify(report,null,2)+'\n');console.log('LANDSCAPE_ART_REPORT',JSON.stringify(report));
-  assert.ok(samples.every(s=>s.mountainFraction>.0115),'The native mid + far blue mountain bands must remain visible after turns and periods');
-  assert.ok(samples.every(s=>s.counts.ValleyMountains+s.counts.ValleyMountainsB===24&&s.counts.ValleyMidMountains+s.counts.ValleyMidMountainsB===16&&s.counts.ValleyFoothills+s.counts.ValleyFoothillsB===18&&s.counts.ValleyClouds+s.counts.ValleyCloudsB+s.counts.ValleyCloudsC===24),'Panorama requires all native depth-band/shape variants');
+  assert.ok(checks.mountainPixels,'The native mid + far blue mountain bands must remain visible after turns and periods');
+  assert.ok(checks.sourceGroups,'Panorama requires every actual saved source instance across all native depth-band/shape groups');
   assert.ok(samples.every(s=>s.maxMatrixError<1e-4&&s.shared),'Preserve native source matrices and shared geometry');assert.equal(errors.length,0);console.log('LANDSCAPE_ART_PASS');
   assert.ok(samples.every(s=>s.renderDistance===s.distance),'Render both exact sides of the course period');
 }finally{await browser.close();}

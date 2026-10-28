@@ -1,205 +1,408 @@
 {
-  "source": "rider-hero.blend",
-  "reference": "style-a.png",
-  "referenceStatus": "authored draft, not user-confirmed",
-  "rig": "Native Rigify basic.super_copy controls baked to deformation armature",
-  "rigifyAvailable": true,
+  "source": "assets/sources/banana-tripo-v1/hero-rigged.glb",
+  "sha256": "c5e49d048684b79f3070e9e52a00d6638b7843594ce0e7f5f4ff1c07b8b8de7c",
+  "sourceBytes": 25928308,
+  "bones": 65,
+  "triangles": 19121,
+  "sourceHeight": 0.9769090712070465,
+  "contactConfig": {
+    "seat": [
+      0.0,
+      0.9517059326171875,
+      -0.2640330493450165
+    ],
+    "grips": [
+      [
+        -0.3021095097064972,
+        1.0428266525268555,
+        0.2818843126296997
+      ],
+      [
+        0.3021095097064972,
+        1.075249195098877,
+        0.2818843126296997
+      ]
+    ],
+    "standing": [
+      [
+        -0.3021095097064972,
+        1.0428266525268555,
+        0.2818843126296997
+      ],
+      [
+        0.03999999910593033,
+        0.9480373859405518,
+        -0.2640330493450165
+      ]
+    ],
+    "pedalCenter": [
+      0.0,
+      0.3144436776638031,
+      -0.04168595001101494
+    ],
+    "pedalWidth": 0.20999999344348907,
+    "crankRadius": 0.18000000715255737,
+    "pedalOffsets": [
+      [
+        0.0,
+        0.013258665800094604,
+        0.0
+      ],
+      [
+        0.0,
+        0.020504802465438843,
+        0.0
+      ]
+    ]
+  },
+  "contactConfigSha256": "8bc3caeb1885b128377eefe5ec4b33c30734c7c72b49c43f0d6dff091f5a0fc9",
+  "provider": "Tripo",
+  "model": "H3.1",
+  "rig": "Original Tripo Mixamo65 skin; no old visible mesh",
   "fps": 60,
-  "triangles": 10896,
-  "vertices": 5912,
-  "bones": 15,
-  "maxInfluences": 2,
+  "naturalHeight": 1.85,
+  "uniformScale": 1.8937274781232802,
+  "runtimeTriangles": 19121,
+  "vertices": 22184,
+  "textures": [
+    {
+      "size": [
+        2048,
+        2048
+      ],
+      "bytes": 1156433,
+      "format": "JPEG"
+    }
+  ],
+  "contactMarkers": {
+    "Sole_L": {
+      "bone": "mixamorig:RightFoot",
+      "restPosition": [
+        -0.2983696460723877,
+        9.597657113502578e-10,
+        -0.012712481431663036
+      ]
+    },
+    "Palm_L": {
+      "bone": "mixamorig:RightHand",
+      "restPosition": [
+        -0.5484833121299744,
+        1.0028380155563354,
+        0.01991218328475952
+      ],
+      "sourceVertex": 19744
+    },
+    "Sole_R": {
+      "bone": "mixamorig:LeftFoot",
+      "restPosition": [
+        0.2907537519931793,
+        4.780958988703787e-07,
+        -0.01926625333726406
+      ]
+    },
+    "Palm_R": {
+      "bone": "mixamorig:LeftHand",
+      "restPosition": [
+        0.5593444108963013,
+        0.9883565902709961,
+        0.016291465610265732
+      ],
+      "sourceVertex": 15178
+    },
+    "SeatContact": {
+      "bone": "mixamorig:Hips",
+      "restPosition": [
+        0.005430492572486401,
+        0.9123287200927734,
+        -0.07421720027923584
+      ],
+      "sourceVertex": 2186
+    }
+  },
   "clips": [
     {
       "name": "Rider_Idle_Ready",
-      "seconds": 2.0,
       "frames": 120,
-      "impact": null
+      "seconds": 2.0
     },
     {
       "name": "Rider_Ride_SeatedPedal",
-      "seconds": 1.0,
       "frames": 60,
-      "impact": null
+      "seconds": 1.0
     },
     {
       "name": "Rider_Ride_StandingBalance",
-      "seconds": 2.0,
       "frames": 120,
-      "impact": null
+      "seconds": 2.0
     },
     {
       "name": "Rider_Trans_SitToStand",
-      "seconds": 0.35,
       "frames": 21,
-      "impact": null
+      "seconds": 0.35
     },
     {
       "name": "Rider_Trans_StandToSit",
-      "seconds": 0.35,
       "frames": 21,
-      "impact": null
+      "seconds": 0.35
     },
     {
       "name": "Rider_Jump_Takeoff",
-      "seconds": 0.15,
       "frames": 9,
-      "impact": null
+      "seconds": 0.15
     },
     {
       "name": "Rider_Jump_Air",
-      "seconds": 0.5,
       "frames": 30,
-      "impact": null
+      "seconds": 0.5
     },
     {
       "name": "Rider_Jump_Land",
-      "seconds": 0.25,
       "frames": 15,
-      "impact": null
+      "seconds": 0.25
     },
     {
       "name": "Rider_Kick_Charge_L",
-      "seconds": 0.4,
       "frames": 24,
-      "impact": null
+      "seconds": 0.4
     },
     {
       "name": "Rider_Kick_Charge_R",
-      "seconds": 0.4,
       "frames": 24,
-      "impact": null
+      "seconds": 0.4
     },
     {
       "name": "Rider_Kick_Strike_L",
-      "seconds": 0.7,
       "frames": 42,
-      "impact": 8
+      "seconds": 0.7
     },
     {
       "name": "Rider_Kick_Strike_R",
-      "seconds": 0.7,
       "frames": 42,
-      "impact": 8
+      "seconds": 0.7
     },
     {
       "name": "Rider_Lean_L",
-      "seconds": 0.016666666666666666,
       "frames": 1,
-      "impact": null
+      "seconds": 0.016666666666666666
     },
     {
       "name": "Rider_Lean_R",
-      "seconds": 0.016666666666666666,
       "frames": 1,
-      "impact": null
+      "seconds": 0.016666666666666666
     },
     {
       "name": "Rider_Hit_Shield",
-      "seconds": 0.4,
       "frames": 24,
-      "impact": null
+      "seconds": 0.4
     },
     {
       "name": "Rider_Crash",
-      "seconds": 1.0,
       "frames": 60,
-      "impact": null
+      "seconds": 1.0
     }
   ],
-  "coordinateConvention": "Blender Z up, forward -Y. GLB Y up, forward +Z. Runtime bone rest world quaternion is retained when applying legacy delta rotations.",
-  "restPositions": {
-    "BalanceBody": [
-      0.0,
-      0.03999999910593033,
-      1.8600000143051147
+  "maxChildPoseTranslation": 7.545345366699793e-07,
+  "authoringContactErrors": [
+    {
+      "name": "Rider_Idle_Ready",
+      "maxSupportError": 3.152871497627777e-07,
+      "maxGripError": 1.2040864121216897e-07
+    },
+    {
+      "name": "Rider_Ride_SeatedPedal",
+      "maxSupportError": 3.534295171275123e-07,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Ride_StandingBalance",
+      "maxSupportError": 2.427653074051431e-07,
+      "maxGripError": 0
+    },
+    {
+      "name": "Rider_Trans_SitToStand",
+      "maxSupportError": 1.0687888527581244e-06,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Trans_StandToSit",
+      "maxSupportError": 1.0670693206012973e-06,
+      "maxGripError": 1.2030308960072018e-07
+    },
+    {
+      "name": "Rider_Jump_Takeoff",
+      "maxSupportError": 1.078635180559855e-06,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Jump_Air",
+      "maxSupportError": 1.0792169071501343e-06,
+      "maxGripError": 1.1263983161959551e-07
+    },
+    {
+      "name": "Rider_Jump_Land",
+      "maxSupportError": 1.0784167943805476e-06,
+      "maxGripError": 1.2032216693958207e-07
+    },
+    {
+      "name": "Rider_Kick_Charge_L",
+      "maxSupportError": 3.19744446323915e-07,
+      "maxGripError": 1.18262072197706e-07
+    },
+    {
+      "name": "Rider_Kick_Charge_R",
+      "maxSupportError": 1.13152656978272e-06,
+      "maxGripError": 1.18262072197706e-07
+    },
+    {
+      "name": "Rider_Kick_Strike_L",
+      "maxSupportError": 1.3249702187690203e-06,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Kick_Strike_R",
+      "maxSupportError": 2.164070653814013e-06,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Lean_L",
+      "maxSupportError": 3.349324606629203e-07,
+      "maxGripError": 1.1531073856957902e-07
+    },
+    {
+      "name": "Rider_Lean_R",
+      "maxSupportError": 2.9022754986388337e-07,
+      "maxGripError": 1.0900942757529794e-07
+    },
+    {
+      "name": "Rider_Hit_Shield",
+      "maxSupportError": 3.110819058465626e-07,
+      "maxGripError": 1.203697435356913e-07
+    },
+    {
+      "name": "Rider_Crash",
+      "maxSupportError": 4.805407058272987e-07,
+      "maxGripError": 1.2197846014672152e-07
+    }
+  ],
+  "coordinateConvention": "Blender metres, Z up, forward -Y; glTF Y up, forward +Z. Canonical L is actor -X (actual Right).",
+  "verification": {
+    "bones": 65,
+    "clips": [
+      {
+        "name": "Rider_Idle_Ready",
+        "seconds": 2,
+        "rotationSpan": 0.02325818823905004,
+        "vertexSpan": 0.005269592675059239,
+        "maxAdjacentRotationDegrees": 0.041006644601668515
+      },
+      {
+        "name": "Rider_Ride_SeatedPedal",
+        "seconds": 1,
+        "rotationSpan": 1.1196390542988408,
+        "vertexSpan": 0.3801018099646132,
+        "maxAdjacentRotationDegrees": 3.2110448406280443
+      },
+      {
+        "name": "Rider_Ride_StandingBalance",
+        "seconds": 2,
+        "rotationSpan": 0.008160359396194004,
+        "vertexSpan": 0.005215302272566611,
+        "maxAdjacentRotationDegrees": 0.014435273365756136
+      },
+      {
+        "name": "Rider_Trans_SitToStand",
+        "seconds": 0.3499999940395355,
+        "rotationSpan": 2.900220712566879,
+        "vertexSpan": 1.3310148709108436,
+        "maxAdjacentRotationDegrees": 14.508116792492407
+      },
+      {
+        "name": "Rider_Trans_StandToSit",
+        "seconds": 0.3499999940395355,
+        "rotationSpan": 2.8865864276656086,
+        "vertexSpan": 1.3307590946341656,
+        "maxAdjacentRotationDegrees": 14.499958470933432
+      },
+      {
+        "name": "Rider_Jump_Takeoff",
+        "seconds": 0.15000000596046448,
+        "rotationSpan": 0.8441480290721197,
+        "vertexSpan": 0.2284678818984172,
+        "maxAdjacentRotationDegrees": 6.874893470512111
+      },
+      {
+        "name": "Rider_Jump_Air",
+        "seconds": 0.5,
+        "rotationSpan": 0.028223227303177292,
+        "vertexSpan": 0.004487397158903909,
+        "maxAdjacentRotationDegrees": 0.06231036242891322
+      },
+      {
+        "name": "Rider_Jump_Land",
+        "seconds": 0.25,
+        "rotationSpan": 0.8427205941098136,
+        "vertexSpan": 0.22828448934831533,
+        "maxAdjacentRotationDegrees": 4.1981335970588844
+      },
+      {
+        "name": "Rider_Kick_Charge_L",
+        "seconds": 0.4000000059604645,
+        "rotationSpan": 0.01660203496694928,
+        "vertexSpan": 0.003562775473097857,
+        "maxAdjacentRotationDegrees": 0.04325715726853343
+      },
+      {
+        "name": "Rider_Kick_Charge_R",
+        "seconds": 0.4000000059604645,
+        "rotationSpan": 0.01660203496694928,
+        "vertexSpan": 0.003560645557776066,
+        "maxAdjacentRotationDegrees": 0.04325715726853343
+      },
+      {
+        "name": "Rider_Kick_Strike_L",
+        "seconds": 0.699999988079071,
+        "rotationSpan": 1.8693772961990571,
+        "vertexSpan": 1.3064526905358032,
+        "maxAdjacentRotationDegrees": 14.708194956594712
+      },
+      {
+        "name": "Rider_Kick_Strike_R",
+        "seconds": 0.699999988079071,
+        "rotationSpan": 2.030106826673835,
+        "vertexSpan": 1.0492730854286514,
+        "maxAdjacentRotationDegrees": 16.260928825977228
+      },
+      {
+        "name": "Rider_Lean_L",
+        "seconds": 0.01666666753590107,
+        "rotationSpan": 0.0007423409000953239,
+        "vertexSpan": 0.00016225106047548812,
+        "maxAdjacentRotationDegrees": 2.4148365394514667e-06
+      },
+      {
+        "name": "Rider_Lean_R",
+        "seconds": 0.01666666753590107,
+        "rotationSpan": 0.0007254764240538036,
+        "vertexSpan": 0.00016233014039520555,
+        "maxAdjacentRotationDegrees": 2.9575586669421963e-06
+      },
+      {
+        "name": "Rider_Hit_Shield",
+        "seconds": 0.4000000059604645,
+        "rotationSpan": 0.3506829061694878,
+        "vertexSpan": 0.08675827081184627,
+        "maxAdjacentRotationDegrees": 2.6240874066238
+      },
+      {
+        "name": "Rider_Crash",
+        "seconds": 1,
+        "rotationSpan": 2.1706708378569672,
+        "vertexSpan": 1.6771941854213799,
+        "maxAdjacentRotationDegrees": 12.096019086103114
+      }
     ],
-    "Spine": [
-      0.0,
-      0.014999999664723873,
-      2.0999999046325684
-    ],
-    "Head": [
-      0.0,
-      -0.05999999865889549,
-      2.4600000381469727
-    ],
-    "Leg_L": [
-      -0.17000000178813934,
-      0.03999999910593033,
-      1.8600000143051147
-    ],
-    "Knee_L": [
-      -0.19126975536346436,
-      -0.49205195903778076,
-      1.7701761722564697
-    ],
-    "Foot_L": [
-      -0.30000001192092896,
-      -0.5799999833106995,
-      1.3109999895095825
-    ],
-    "Arm_L": [
-      -0.27000001072883606,
-      -0.02500000037252903,
-      2.309999942779541
-    ],
-    "Elbow_L": [
-      -0.47999998927116394,
-      -0.05999999865889549,
-      2.180000066757202
-    ],
-    "Hand_L": [
-      -0.6800000071525574,
-      -0.11999999731779099,
-      2.2300000190734863
-    ],
-    "Leg_R": [
-      0.17000000178813934,
-      0.03999999910593033,
-      1.8600000143051147
-    ],
-    "Knee_R": [
-      0.07581940293312073,
-      -0.2363978773355484,
-      1.4057598114013672
-    ],
-    "Foot_R": [
-      0.03999999910593033,
-      0.20999999344348907,
-      1.2330000400543213
-    ],
-    "Arm_R": [
-      0.27000001072883606,
-      -0.02500000037252903,
-      2.309999942779541
-    ],
-    "Elbow_R": [
-      0.47999998927116394,
-      -0.05999999865889549,
-      2.180000066757202
-    ],
-    "Hand_R": [
-      0.6800000071525574,
-      -0.11999999731779099,
-      2.2300000190734863
-    ]
-  },
-  "parents": {
-    "BalanceBody": null,
-    "Spine": "BalanceBody",
-    "Head": "Spine",
-    "Leg_L": null,
-    "Knee_L": "Leg_L",
-    "Foot_L": "Knee_L",
-    "Arm_L": "BalanceBody",
-    "Elbow_L": "Arm_L",
-    "Hand_L": "Elbow_L",
-    "Leg_R": null,
-    "Knee_R": "Leg_R",
-    "Foot_R": "Knee_R",
-    "Arm_R": "BalanceBody",
-    "Elbow_R": "Arm_R",
-    "Hand_R": "Elbow_R"
+    "maxChildTranslation": 8.378209949100173e-07,
+    "maxContactError": 7.818730113353273e-07,
+    "repeatError": 0
   }
 }

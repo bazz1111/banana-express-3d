@@ -16,16 +16,18 @@ try{
     const result=await page.evaluate(async()=>{
       const {view,game}=window.__bananaGame;
       view.update(game,0);view.scene.updateMatrixWorld(true);
-      const feet=view.feet.map(o=>view.player.position.clone().setFromMatrixPosition(o.matrixWorld).applyMatrix4(view.player.matrixWorld.clone().invert()).toArray());
+      const local=o=>o.getWorldPosition(view.player.position.clone()).applyMatrix4(view.player.matrixWorld.clone().invert()).toArray();
+      const feet=['L','R'].map(tag=>local(view.rider.getObjectByName('Sole_'+tag)));
+      const supports=['L','R'].map(tag=>local(view.bike.getObjectByName('RiderStand_'+tag)));
       const forest=view.valleyBatches.ValleyForest;
       let cargoRendered=false;for(const mesh of view.cargoGroups)mesh.onAfterRender=()=>{cargoRendered=true;};
       game.bananas=30;view.update(game,0);const cargoBounds=Math.max(...view.cargoGroups.filter(m=>m.count).map(m=>m.boundingSphere.radius));
       game.bananas=0;view.update(game,0);for(const mesh of view.cargoGroups)mesh.onAfterRender=()=>{};
-      return {feet,cargoRendered,cargoBounds,forest:forest.count,scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
+      return {feet,supports,cargoRendered,cargoBounds,forest:forest.count,scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
     });
     assert.ok(result.forest>500,'Imported forest must sit on actual layer-1 hills');
     assert.ok(result.cargoRendered&&result.cargoBounds>0,'Collected Blender banana bundles must be drawn on the rack');
-    for(const [i,target] of [[0,[-.30,1.311,.58]],[1,[.04,1.233,-.21]]])for(let c=0;c<3;c++)assert.ok(Math.abs(result.feet[i][c]-target[c])<.00001,'Actual imported foot must remain on Blender support');
+    for(let i=0;i<2;i++)assert.ok(Math.hypot(...result.feet[i].map((n,c)=>n-result.supports[i][c]))<.00001,'Actual imported sole must remain on this bicycle’s authored bar/saddle support');
     assert.equal(result.scrollWidth,result.width,'UI must not overflow horizontally');
     await page.click('#stance');await page.clock.runFor(100);
     assert.equal(await page.evaluate(()=>window.__bananaGame.game.stance),'seated');

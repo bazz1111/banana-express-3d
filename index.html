@@ -27,7 +27,7 @@
       <div class="eyebrow"><span></span> 山路不停，快乐不断</div>
       <h1>一路香蕉，<br><em>一路开彪。</em></h1>
       <p class="hero-copy">二八大杠自动向前。沿山路拾取香蕉，<br>跳过路栏，躲开高墙和列车，越骑越快！</p>
-      <div class="mission-pills"><span>∞ 无尽骑行</span><span>🍌 拾取加分</span><span>✦ 蓄力踢车</span></div>
+      <div class="mission-pills"><span>∞ 无尽骑行</span><span>香蕉拾取加分</span><span>✦ 蓄力踢车</span></div>
       <button id="start" class="primary-button" disabled>正在准备山路… <span>→</span></button>
       <div class="welcome-foot"><span class="status-dot"></span><span id="load-status">载入场景与车辆</span></div>
       <p id="ready-best" class="ready-best">本机最佳 0 分 · 最远 0 m</p>
@@ -42,7 +42,7 @@
 
     <div id="countdown" class="countdown hidden" aria-live="polite">3</div>
     <section id="hud" class="hud hidden" aria-label="骑行状态">
-      <div class="hud-card banana-hud" aria-label="拾取香蕉，货架容量 100 根"><img class="hud-icon" src="/ui/banana.svg" alt="" /><b id="banana-count">0</b><span id="banana-capacity" class="banana-capacity">/ 100</span></div>
+      <div class="hud-card banana-hud" aria-label="累计拾取香蕉，货架展示上限 100 根"><img class="hud-icon" src="/ui/banana.png" alt="" /><b id="banana-count">0</b><span id="banana-capacity" class="banana-capacity">/ 100</span></div>
       <div class="hud-card timer-hud" aria-label="骑行用时"><b id="timer">00:00</b></div>
       <div class="hud-card speed-hud" aria-label="骑行速度"><b><span id="speed">0</span><em> km/h</em></b></div>
       <div class="hud-secondary" aria-label="得分与连击">
@@ -52,9 +52,9 @@
       </div>
     </section>
     <section id="buffs" class="buffs hidden" aria-label="道具剩余时间">
-      <div id="buff-boost" class="buff boost"><span>↗ 加速</span><b id="buff-boost-time">—</b></div>
-      <div id="buff-shield" class="buff shield"><span>◇ 护盾</span><b id="buff-shield-time">—</b></div>
-      <div id="buff-double" class="buff double"><span>×2 双倍分</span><b id="buff-double-time">—</b></div>
+      <div id="buff-boost" class="buff boost"><span><img src="/ui/boost.png" alt="" />加速</span><b id="buff-boost-time">—</b></div>
+      <div id="buff-shield" class="buff shield"><span><img src="/ui/shield.png" alt="" />护盾</span><b id="buff-shield-time">—</b></div>
+      <div id="buff-double" class="buff double"><span><img src="/ui/double.png" alt="" />双倍分</span><b id="buff-double-time">—</b></div>
     </section>
     <div id="toast" class="toast hidden" role="status"></div>
     <div id="speed-lines" class="speed-lines" aria-hidden="true"></div>
@@ -102,6 +102,7 @@
           <div><small>骑行用时</small><b id="result-time">00:00</b></div>
         </div>
         <div class="result-ending"><span>结束原因</span><b id="result-reason">主动结束</b></div>
+        <div class="result-ending"><span>本局种子</span><b><a id="result-seed" href="./">重放本局</a></b></div>
         <p id="personal-best" class="personal-best"></p>
         <button id="restart" class="primary-button">再来一局 <span>↗</span></button>
       </section>
