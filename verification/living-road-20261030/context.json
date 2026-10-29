@@ -1,0 +1,6 @@
+{
+  "status": "pass",
+  "command": "node scripts/context-check.mjs",
+  "output": "ENDLESS_CONTEXT_RECOVERY_PASS",
+  "scope": "WebGL loss/recovery, pause and explicit resume; functional test before shoulder-gate-only generator addition"
+}

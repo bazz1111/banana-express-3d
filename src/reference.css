@@ -9,3 +9,17 @@
 .race-active .vignette { background: linear-gradient(0deg, #1d2b271c, transparent 25%); }
 .buff > span { display: inline-flex; align-items: center; gap: 4px; }
 .buff img { width: 23px; height: 23px; object-fit: contain; }
+.run-objective { position: absolute; top: 163px; left: var(--hud-edge); width: 280px; padding: 8px 11px 7px; border: 1px solid #ffffff30; border-radius: 10px; background: #23282ab8; color: #fffdf1; pointer-events: none; }
+.run-objective > span { display: flex; gap: 8px; align-items: baseline; white-space: nowrap; font-size: 11px; }
+.run-objective small { color: #e4ddbd; font-size: 9px; }
+.run-objective strong { margin-left: auto; font-variant-numeric: tabular-nums; }
+.run-objective em { font-style: normal; font-size: 10px; color: #ffe885; }
+.run-objective progress { display: block; width: 100%; height: 3px; border: 0; margin-top: 7px; appearance: none; background: #ffffff20; border-radius: 3px; }
+.run-objective progress::-webkit-progress-bar { background: #ffffff20; border-radius: 3px; }
+.run-objective progress::-webkit-progress-value { background: #f4cc42; border-radius: 3px; }
+.run-objective progress::-moz-progress-bar { background: #f4cc42; border-radius: 3px; }
+@media (max-width: 760px) {
+  .run-objective { top: 179px; left: 12px; width: 270px; padding: 6px 9px; }
+  .toast { top: 227px; }
+}
+.impact { white-space: nowrap; font-size: clamp(40px, 8vw, 75px); }

@@ -4,9 +4,11 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 import {MixamoRiderAnimator} from './mixamoRiderAnimation.js';
 import {cargoVisibleCounts} from './cargo.js';
-import {KickCamera,cameraHull,cameraRiderBounds} from './kickCamera.js';
+import {KickCamera,cameraHull,cameraRiderBounds,anticipatedSupport} from './kickCamera.js';
+import {ObstacleAnimator} from './obstacleAnimation.js';
+import {CameraFollow} from './cameraFollow.js';
 import {VehicleDebris} from './vehicleDebris.js';
-import {clamp} from './game.ts';
+import {clamp,KICK,kickTarget} from './game.ts';
 import {roadPosition,roadQuaternion,frameQuaternion,cyclePosition,rebasePosition,rebaseVector} from './route.ts';
 
 const compose=new THREE.Object3D(),tint=new THREE.Color();
@@ -118,7 +120,7 @@ export class GameView {
     this.sun.shadow.mapSize.set(2048,2048);Object.assign(this.sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:160});
     this.sun.shadow.bias=-.00003;this.sun.shadow.normalBias=.028;this.sun.shadow.radius=2.5;this.scene.add(this.sun,this.sun.target);
     this.quality='high';this.motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;this.time=0;this.shake=0;
-    this.effects=[];this.windTime={value:0};this.cameraReady=false;this.lastDistance=0;
+    this.effects=[];this.windTime={value:0};this.cameraReady=false;this.lastDistance=0;this.cameraFollow=new CameraFollow();
     this.lookTarget=new THREE.Vector3();this.resize();window.addEventListener('resize',()=>this.resize());
     this.canvas.addEventListener('webglcontextrestored',()=>{this.needsRender=true;});
   }
@@ -174,7 +176,8 @@ export class GameView {
       const p=geometry.getAttribute('position'),vertices=new Float32Array(p.count*3);for(let i=0;i<p.count;i++){vertices[i*3]=p.getX(i);vertices[i*3+1]=p.getY(i);vertices[i*3+2]=p.getZ(i);}return {segment:chunk.segment,vertices,
         indices:geometry.index?new Uint32Array(geometry.index.array):Uint32Array.from({length:p.count},(_,i)=>i)};
     }));
-    const {ScenePhysics}=await physicsModule;this.physics=await ScenePhysics.create(this.course,surfaces);this.debrisView=new VehicleDebris(this.physics,this.scene);
+    const {ScenePhysics,KICK_IMPULSE}=await physicsModule;this.kickImpulse=KICK_IMPULSE;
+    this.physics=await ScenePhysics.create(this.course,surfaces);this.debrisView=new VehicleDebris(this.physics,this.scene);
     // The low tier disables the shadow renderer but keeps the sun as a shadow
     // light. That is a different shader variant from the panorama's shadowless
     // sun. Compile both shipped tiers, including actors not yet on the road.
@@ -316,6 +319,7 @@ export class GameView {
   reset(g){
     this.needsRender=true;this.lastRenderedPhase=null;
     this.lastGame=g;this.lastDistance=g.s;this.effects=[];this.shake=0;this.cameraReady=false;this.time=0;this.stanceBlend=g.stance==='standing'?1:0;this.kickBlend=[0,0];
+    this.cameraFollow?.reset();
     this.debrisView?.reset();this.pendingDebris.clear();this.landingPlayed.clear();this.kickCamera.reset();this.riderAnimator?.reset(g.stance);
     // Procedural ids repeat across seeds; an early restart can change their kinds.
     for(const model of this.obstacleModels.values()){
@@ -388,17 +392,16 @@ export class GameView {
     for(const o of g.obstacles){
       if(o.s-g.s>260||o.s-g.s< -45)continue;visibleIds.add(o.id);
       let model=this.obstacleModels.get(o.id);
-      if(!model){model=this.pool.get(o.type)?.pop()??this.clone(o.type);model.userData.kind=o.type;this.obstacleModels.set(o.id,model);this.scene.add(model);}
+      if(!model){model=this.pool.get(o.type)?.pop()??this.clone(o.type);model.userData.kind=o.type;
+        model.userData.animator??=new ObstacleAnimator(model,o.type);model.userData.animator.reset();
+        this.obstacleModels.set(o.id,model);this.scene.add(model);}
       model.visible=!o.kicked||o.flight<3;model.traverse(m=>{if(m.isMesh)m.castShadow=o.s-g.s<55;});
       if(o.kicked){const body=this.physics.vehicles.get(o.id);if(body){model.position.copy(body.translation());model.quaternion.copy(body.rotation());}}
       else{
         model.position.copy(worldAt(this.course,o.s,o.lane,o.lift??0,g.s));model.quaternion.copy(roadQuaternion(this.course,o.s,g.s));
-        const direction=o.crossing?(Math.cos(g.elapsed*(o.frequency??1)+(o.seed??0))>0?Math.PI/2:-Math.PI/2):(o.speed<0?Math.PI:0);
-        model.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),direction));
-        if(o.crossing)model.position.y+=Math.abs(Math.sin(this.time*7))*.035;
-        for(const [i,name] of (o.type==='goat'?['GoatLeg_Front_L','GoatLeg_Front_R','GoatLeg_Rear_L','GoatLeg_Rear_R']:['PedLeg_L','PedLeg_R']).entries()){
-          const leg=model.getObjectByName(name);if(leg)leg.rotation.x=Math.sin(this.time*7+i*Math.PI)*.32;
-        }
+        const pose=model.userData.animator.update(o,delta);
+        model.position.y+=pose.lift;
+        model.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),pose.heading));
       }
     }
     for(const [id,model] of this.obstacleModels)if(!visibleIds.has(id)){
@@ -433,37 +436,50 @@ export class GameView {
     const offset=ready?THREE.MathUtils.lerp(3.4,1.2,portrait):1.6;
     let cameraSide=this.cameraReady?(this.cameraRoadSide??-1):-1;
     if(!ready&&Math.abs(-g.lane+cameraSide*offset)>4.2)cameraSide=Math.sign(g.lane)||-1;
-    const sideChanged=this.cameraReady&&cameraSide!==this.cameraRoadSide;this.cameraRoadSide=cameraSide;
+    this.cameraRoadSide=cameraSide;
     const height=ready?3.0:THREE.MathUtils.lerp(2.25,2.7,portrait),distance=ready?THREE.MathUtils.lerp(5.4,6.6,portrait):THREE.MathUtils.lerp(3.9,7.2,portrait);
     const desired=new THREE.Vector3(-g.lane+cameraSide*offset,height+g.jumpHeight,-distance);
     const target=worldAt(this.course,g.s+(ready?1.5:6),ready?g.lane*THREE.MathUtils.lerp(.65,.96,portrait):g.lane,ready?1.48:.8,g.s);
     if(!ready)target.x-=cameraSide*THREE.MathUtils.lerp(1.5,1.2,portrait);
     target.y+=g.jumpHeight;
-    let fov=ready?52:52+clamp((g.speed-12)*.34,0,7),kickShot=false;
+    let fov=ready?52:52+clamp((g.speed-12)*.34,0,7);
+    const cameraDelta=g.phase==='paused'||g.phase==='finished'?0:Math.min(visualDt,.1);
     const flying=g.obstacles.filter(o=>o.kicked&&o.flight<1.2&&this.obstacleModels.has(o.id)).sort((a,b)=>a.flight-b.flight)[0];
-    if(flying||this.kickCamera.weight>.0001||this.kickCamera.retreat>.001||(this.kickCamera.lastFov??fov)-fov>.05){
+    const preview=!flying&&g.charge>.05?kickTarget(g,KICK.range+g.speed*KICK.charge):null;
+    const framed=flying??preview;
+    if(framed||this.kickCamera.weight>.0001||this.kickCamera.retreat>.001||(this.kickCamera.lastFov??fov)-fov>.05){
       this.player.updateWorldMatrix(true,true);
       const riderBounds=cameraRiderBounds(this.rider),heroBox=riderBounds.box.union(new THREE.Box3().setFromObject(this.bike,true));
       if(this.cargoRopes.visible)heroBox.union(new THREE.Box3().setFromObject(this.cargoRopes,true));
       for(const m of this.cargoGroups)if(m.count){m.computeBoundingBox();heroBox.union(new THREE.Box3().setFromObject(m));}
-      const vehicleModel=flying?this.obstacleModels.get(flying.id):null;
+      const vehicleModel=framed?this.obstacleModels.get(framed.id):null;
       const vehicleBox=vehicleModel?new THREE.Box3().setFromObject(vehicleModel,true):null;
-      const vehiclePoints=vehicleModel?this.cameraSupports[flying.type]:null;
+      let vehiclePoints=vehicleModel?this.cameraSupports[framed.type]:null;
+      let vehicleMatrix=vehicleModel?.matrixWorld.clone();
+      if(preview&&vehicleBox){
+        // Anticipate the release position during the wind-up instead of cutting
+        // to a distant vehicle, or waiting for the first impact frame to reframe.
+        const shift=worldAt(this.course,g.s+5,preview.lane,0,g.s).sub(vehicleModel.position);
+        vehicleBox.translate(shift);vehicleMatrix.setPosition(vehicleModel.position.clone().add(shift));
+      }
+      if(vehiclePoints){
+        const body=this.physics.vehicles.get(framed.id),side=flying?.kickSide??g.kickSide;
+        const velocity=flying?body?.linvel():null,spin=flying?body?.angvel():null,center=body?.localCom();
+        const impulse=this.kickImpulse;
+        const linear=velocity?new THREE.Vector3(velocity.x,velocity.y,velocity.z-g.speed):new THREE.Vector3(-side*impulse.outward,impulse.up,impulse.forward);
+        const angular=spin?new THREE.Vector3(spin.x,spin.y,spin.z):new THREE.Vector3(1.2,0,side*impulse.roll);
+        vehiclePoints=anticipatedSupport(vehiclePoints,vehicleMatrix,new THREE.Vector3(center?.x??0,center?.y??1.3,center?.z??0),linear,angular);
+        vehicleMatrix=undefined;
+      }
       const wheelCenters=this.wheels.map(w=>w.getWorldPosition(new THREE.Vector3())),below=new THREE.Vector3(0,-.36,0).applyQuaternion(this.player.quaternion);
       const subjectPoints=[riderBounds.top,...wheelCenters.map(p=>p.clone().add(below))];
-      fov=this.kickCamera.adjust({desired,target,fov,camera:this.camera,vehicleBox,heroBox,flight:flying?.flight??Infinity,
-        vehiclePoints,vehicleMatrix:vehicleModel?.matrixWorld,subjectPoints,wheelCenters,kickSide:flying?.kickSide??g.kickSide,
-        delta,reducedMotion:!this.motion,paused:g.phase==='paused'||g.phase==='finished'});
-      kickShot=!!flying;
+      fov=this.kickCamera.adjust({desired,target,fov,camera:this.camera,vehicleBox,heroBox,flight:framed?(flying?.flight??0):Infinity,
+        vehiclePoints,vehicleMatrix,subjectPoints,wheelCenters,kickSide:flying?.kickSide??g.kickSide,
+        delta:cameraDelta,reducedMotion:!this.motion,paused:g.phase==='paused'||g.phase==='finished'});
     }
-    if(!this.cameraReady||sideChanged){this.camera.position.copy(desired);this.lookTarget.copy(target);this.cameraReady=true;}
-    const t=1-Math.exp(-delta*8),vertical=1-Math.exp(-delta*64),cameraY=this.camera.position.y,targetY=this.lookTarget.y;
-    this.camera.position.lerp(desired,t);this.lookTarget.lerp(target,t);
-    this.camera.position.y=THREE.MathUtils.lerp(cameraY,desired.y,vertical);this.lookTarget.y=THREE.MathUtils.lerp(targetY,target.y,vertical);
-    if(kickShot){this.camera.position.copy(desired);this.lookTarget.copy(target);}
+    this.cameraFollow.update(this.camera,desired,target,fov,cameraDelta);this.cameraReady=true;
+    this.lookTarget.copy(this.cameraFollow.target);
     this.shake=Math.max(0,this.shake-delta);if(this.motion&&this.shake&&active)this.camera.position.y+=(Math.random()-.5)*this.shake*.15;
-    if(Math.abs(this.camera.fov-fov)>.1){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
-    this.camera.lookAt(this.lookTarget);
     if(this.burst.visible)this.burst.quaternion.copy(this.camera.quaternion);
     this.burstGlow.visible=this.burst.visible;if(this.burstGlow.visible){this.burstGlow.position.copy(this.burst.position);this.burstGlow.quaternion.copy(this.burst.quaternion);this.burstGlow.scale.copy(this.burst.scale).multiplyScalar(1.10);}
     this.sky.position.copy(this.camera.position);

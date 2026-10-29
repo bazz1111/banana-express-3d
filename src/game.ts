@@ -5,9 +5,12 @@ export interface RoadPoint {s:number;x:number;y:number;z:number;yaw?:number}
 export interface ObstacleDefinition {
   id:string;type:ObstacleKind;s:number;lane:number;crossing?:boolean;seed?:number;
   frequency?:number;speed?:number;lift?:number;
+  wakeDistance?:number;crossDistance?:number;crossDuration?:number;
 }
 export interface ObstacleState extends ObstacleDefinition {
   originalLane:number;kicked:boolean;hit:boolean;passed:boolean;jumpCleared:boolean;flight:number;kickSide?:1|-1;
+  motionTime:number;travel:number;velocityS:number;velocityLane:number;heading:number;
+  nearMissGap:number;nearMissBlocked:boolean;
 }
 export interface PickupDefinition {id:string;type:PickupKind;s:number;lane:number;height:number}
 export interface PickupState extends PickupDefinition {collected:boolean}
@@ -22,6 +25,7 @@ export type GameEvent =
   |{type:'pickup';kind:PickupKind;count:number;points:number}
   |{type:'kick';id:string;charged:boolean}|{type:'miss';charged:boolean}
   |{type:'collision'|'shield';id:string}|{type:'stunt';points:number;label:string}
+  |{type:'nearMiss';id:string;points:number}|{type:'objective';label:string;points:number}
   |{type:'jump'|'launch'|'go'|'finish'|'dash'};
 export interface Handling {
   steerSpeed:number;steerResponse:number;laneLimit:number;chargeSteerFactor:number;
@@ -36,6 +40,7 @@ export interface GameState {
   stance:'seated'|'standing';
   s:number;lane:number;lateralSpeed:number;speed:number;baseSpeed:number;elapsed:number;
   score:number;bananas:number;combo:number;chain:number;chainTimer:number;
+  nearMisses:number;objective:{index:number;progress:number;completed:number};
   countdown:number;accumulator:number;jumpHeight:number;jumpVelocity:number;airTime:number;
   charge:number;kickPose:number;kickSide:1|-1;kickedCount:number;invulnerable:number;
   cooldowns:{kick:number;dash:number};buffs:{boost:number;shield:number;double:number};held:{jump:boolean;dash:boolean};
@@ -45,6 +50,12 @@ export interface GameState {
 export const FIXED_STEP = 1 / 60;
 // E sprint: a short boost-buff burst on its own cooldown; it never shortens a longer boost pickup.
 export const DASH = Object.freeze({duration:1.5,cooldown:6});
+export const KICK = Object.freeze({cooldown:8,charge:.8,range:9});
+export const OBJECTIVES = Object.freeze([
+  {kind:'banana',label:'收集香蕉',target:12,points:150},
+  {kind:'pass',label:'安全通过障碍',target:6,points:200},
+  {kind:'trick',label:'跳障 / 踢车 / 险避',target:3,points:250},
+] as const);
 export const clamp = (v:number, min:number, max:number) => Math.max(min, Math.min(max, v));
 export const obstacleSpecs:Readonly<Record<ObstacleKind,{width:number;length:number;height:number;jumpable:boolean}>> = {
   barrier:{width:2.2,length:.7,height:.5,jumpable:true},
@@ -60,13 +71,17 @@ export const obstacleSpecs:Readonly<Record<ObstacleKind,{width:number;length:num
 export {roadAt} from './route.ts';
 
 const freshObstacle = (o:ObstacleDefinition):ObstacleState => ({...o,originalLane:o.lane,
-  kicked:false,hit:false,passed:false,jumpCleared:false,flight:0});
+  kicked:false,hit:false,passed:false,jumpCleared:false,flight:0,
+  motionTime:0,travel:0,velocityS:0,velocityLane:0,
+  heading:o.crossing?-Math.sign(o.crossDistance??-2.1)*Math.PI/2:(o.speed??0)<0?Math.PI:0,
+  nearMissGap:Infinity,nearMissBlocked:false});
 
 export function createGame(course:Course, handling:Partial<Handling> = {}):GameState {
   const g:GameState = {
     course,handling:{...DEFAULT_HANDLING,...handling},phase:'ready',resumePhase:'racing',stance:'seated',
     s:0,lane:0,lateralSpeed:0,speed:0,baseSpeed:12,elapsed:0,score:0,bananas:0,
     combo:1,chain:0,chainTimer:0,countdown:3,accumulator:0,jumpHeight:0,jumpVelocity:0,airTime:0,
+    nearMisses:0,objective:{index:0,progress:0,completed:0},
     charge:0,kickPose:0,kickSide:1,kickedCount:0,invulnerable:0,
     cooldowns:{kick:0,dash:0},buffs:{boost:0,shield:0,double:0},held:{jump:false,dash:false},
     events:[],failure:'',endReason:'',obstacles:(course.obstacles ?? []).map(freshObstacle),
@@ -107,6 +122,15 @@ export function endRun(g:GameState) {
 
 function resetChain(g:GameState) {g.chain = 0; g.combo = 1; g.chainTimer = 0;}
 
+function progressObjective(g:GameState,...kinds:string[]) {
+  const current=OBJECTIVES[g.objective.index];
+  if(!kinds.includes(current.kind))return;
+  if(++g.objective.progress<current.target)return;
+  g.score+=current.points;g.objective.completed++;
+  g.objective.index=(g.objective.index+1)%OBJECTIVES.length;g.objective.progress=0;
+  g.events.push({type:'objective',label:current.label,points:current.points});
+}
+
 function reward(g:GameState, base:number) {
   g.chain++; g.chainTimer = 2.5; g.combo = Math.min(2, 1 + Math.floor(g.chain / 5) * .2);
   const points = Math.round(base * g.combo * (g.buffs.double > 0 ? 2 : 1));
@@ -114,7 +138,7 @@ function reward(g:GameState, base:number) {
   return points;
 }
 
-function kickTarget(g:GameState, maxDistance=9) {
+export function kickTarget(g:GameState, maxDistance:number=KICK.range) {
   return g.obstacles.filter(o => !o.kicked && !o.hit &&
     (o.type === 'truck' || o.type === 'car') && o.s - g.s >= -2 && o.s - g.s <= maxDistance &&
     Math.abs(o.lane - g.lane) <= 3.2)
@@ -122,13 +146,14 @@ function kickTarget(g:GameState, maxDistance=9) {
 }
 
 function kick(g:GameState) {
-  const charged = g.charge >= .8 - 1e-9;
-  g.kickPose = .7; g.cooldowns.kick = 18;
+  const charged = g.charge >= KICK.charge - 1e-9;
+  g.kickPose = .7; g.cooldowns.kick = KICK.cooldown;
   const target = kickTarget(g);
   if (target && (charged || target.type === 'car')) {
     target.kicked = true; target.flight = 0; target.kickSide = target.lane >= g.lane ? 1 : -1;
     g.kickSide = target.kickSide; g.kickedCount++; reward(g, target.type === 'truck' ? 200 : 100);
     g.events.push({type:'kick',id:target.id,charged});
+    target.passed=true;progressObjective(g,'pass','trick');
   } else g.events.push({type:'miss',charged});
   g.charge = 0;
 }
@@ -147,6 +172,22 @@ function sweep(axes:Array<[number,number,number]>):[number,number]|null {
 }
 
 const remaining = (time:number, dt:number) => time - dt > 1e-9 ? time - dt : 0;
+
+function moveObstacle(o:ObstacleState,playerS:number,dt:number) {
+  o.velocityS=0;o.velocityLane=0;
+  if(o.wakeDistance!==undefined&&o.s-playerS>o.wakeDistance)return;
+  const oldS=o.s,oldLane=o.lane;
+  o.motionTime=(o.motionTime??0)+dt;
+  o.s+=(o.speed??0)*dt;
+  if(o.crossing){
+    // Local one-way crossing: no global-clock teleport or instantaneous U-turn.
+    const t=clamp(o.motionTime/(o.crossDuration??4),0,1);
+    o.lane=clamp(o.originalLane+(o.crossDistance??-2.1)*t*t*(3-2*t),-4.1,4.1);
+  }
+  o.velocityS=(o.s-oldS)/dt;o.velocityLane=(o.lane-oldLane)/dt;
+  o.travel=(o.travel??0)+Math.hypot(o.s-oldS,o.lane-oldLane);
+  if(Math.hypot(o.velocityS,o.velocityLane)>.001)o.heading=Math.atan2(-o.velocityLane,o.velocityS);
+}
 
 function step(g:GameState, input:PlayerInput, dt:number) {
   if (g.phase === 'countdown') {
@@ -199,16 +240,28 @@ function step(g:GameState, input:PlayerInput, dt:number) {
     if (p.type === 'banana') {g.bananas++; points = reward(g,10);}
     else g.buffs[p.type] = p.type === 'boost' ? 5 : p.type === 'shield' ? 8 : 10;
     g.events.push({type:'pickup',kind:p.type,count:1,points});
+    if(p.type==='banana')progressObjective(g,'banana');
   }
 
   for (const o of g.obstacles) {
     if (o.kicked) {o.flight += dt; continue;}
     const oldOS = o.s, oldOLane = o.lane;
-    o.s += (o.speed ?? 0) * dt;
-    if (o.crossing) o.lane = Math.sin(g.elapsed * (o.frequency ?? .25) + (o.seed ?? 0)) * 4;
-    const spec = obstacleSpecs[o.type], extentS = spec.length / 2 + .8;
+    moveObstacle(o,g.s,dt);
+    const spec = obstacleSpecs[o.type],angle=o.heading??0;
+    // The crossing goat turns its long body across the road; collision and
+    // near-miss widths must follow that orientation rather than its idle AABB.
+    const c=Math.abs(Math.cos(angle)),s=Math.abs(Math.sin(angle));
+    const extentS=(spec.length*c+spec.width*s)/2+.8,extentLane=(spec.width*c+spec.length*s)/2+.36;
     const contact = sweep([[oldS-oldOS,g.s-o.s,extentS],
-      [oldLane-oldOLane,g.lane-o.lane,spec.width/2+.36]]);
+      [oldLane-oldOLane,g.lane-o.lane,extentLane]]);
+    const alongside=sweep([[oldS-oldOS,g.s-o.s,extentS]]);
+    if(alongside&&!o.passed){
+      const a=oldLane-oldOLane,b=g.lane-o.lane;
+      const gaps=alongside.map(t=>a+(b-a)*t);
+      const gap=(gaps[0]*gaps[1]<=0?0:Math.min(...gaps.map(Math.abs)))-extentLane;
+      o.nearMissGap=Math.min(o.nearMissGap??Infinity,gap);
+      o.nearMissBlocked ||= oldHeight>.05||g.jumpHeight>.05||g.invulnerable>0||g.buffs.shield>0;
+    }
     const clear = contact ? Math.min(...contact.map(t => oldHeight+(g.jumpHeight-oldHeight)*t)) : 0;
     if (!o.hit && contact && (!spec.jumpable || clear <= spec.height+.1)) {
       o.hit = true;
@@ -226,11 +279,14 @@ function step(g:GameState, input:PlayerInput, dt:number) {
       if (!o.hit && o.jumpCleared) {
         const points = reward(g,50); g.events.push({type:'stunt',points,label:'跳跃越障'});
       }
+      const nearMiss=!o.hit&&!o.jumpCleared&&!o.nearMissBlocked&&o.nearMissGap>=.08&&o.nearMissGap<=.4;
+      if(nearMiss){g.nearMisses++;g.events.push({type:'nearMiss',id:o.id,points:reward(g,25)});}
+      if(!o.hit)progressObjective(g,'pass',o.jumpCleared||nearMiss?'trick':'');
     }
   }
   if (g.charge > 0) {
     // Choose the wind-up leg before an approached vehicle enters release range.
-    const target = kickTarget(g, 9 + g.speed * .8);
+    const target = kickTarget(g, KICK.range + g.speed * KICK.charge);
     if (target) g.kickSide = target.lane >= g.lane ? 1 : -1;
   }
 }
@@ -258,14 +314,17 @@ function generateChunk(g:GameState, index:number) {
     const s = start + offset;
     const crossing = index > 3 && (type === 'goat' || type === 'pedestrian') && rng() < .5;
     const phase = rng()*Math.PI*2;
-    const o = freshObstacle({id:`o:${index}:${slot}`,type,s,lane:crossing ? Math.sin(phase)*4 : lane,
-      ...(crossing ? {crossing:true,seed:phase,frequency:.25} : {})});
+    const walker=type==='goat'||type==='pedestrian';
+    const speed=type==='car'?-2.5:type==='truck'?1.6:type==='train'?-1:walker&&!crossing?.55:0;
+    const o = freshObstacle({id:`o:${index}:${slot}`,type,s,lane,speed,
+      ...(speed||crossing?{wakeDistance:60}:{}),
+      ...(crossing ? {crossing:true,seed:phase,crossDistance:(lane>0?-1:lane<0?1:phase<Math.PI?1:-1)*2.1,crossDuration:4} : {})});
     g.obstacles.push(o);
     for (let i = 0; i < 5; i++) {
       if (type === 'barrier') {
         const offsetS = (i-2)*3;
         addPickup('banana',s+offsetS,lane,1.25+.9*(1-Math.abs(offsetS)/6));
-      } else if (crossing) addPickup('banana',s+8+i*2,0);
+      } else if (crossing) addPickup('banana',s+8+i*2,lane>=0?-2.8:2.8);
       else addPickup('banana',s+(i-2)*4,lane >= 0 ? -2.8 : 2.8);
     }
   };
@@ -274,7 +333,11 @@ function generateChunk(g:GameState, index:number) {
     encounter('barrier',76,0,0);
   } else if (index === 1) encounter('wall',64,0,1);
   else {
-    encounter(pick<ObstacleKind>(['train','truck','car','wall','barrier']),24,pick([-2.4,0,2.4]),0);
+    const firstType=pick<ObstacleKind>(['train','truck','car','wall','barrier']),firstLane=pick([-2.4,0,2.4]);
+    // One shoulder gate every 480m, alternating sides. The center remains open;
+    // holding a single edge forever must not bypass the entire endless loop.
+    const shoulderGate=index>=4&&index%6===4;
+    encounter(shoulderGate?'wall':firstType,24,shoulderGate?(Math.floor(index/6)%2?-3.3:3.3):firstLane,0);
     // A short second obstacle keeps even a 14m train's exit at least .9s from the next contact.
     encounter(pick<ObstacleKind>(['barrier','crate','wall','pedestrian','goat']),64,pick([-2.4,0,2.4]),1);
   }

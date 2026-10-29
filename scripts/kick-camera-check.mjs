@@ -8,6 +8,7 @@ const channel=process.env.PLAYWRIGHT_CHANNEL??'chrome';
 const browser=await chromium.launch({...(channel?{channel}:{}),headless:true,args:['--ignore-gpu-blocklist','--enable-unsafe-swiftshader']});
 const sizes=(process.env.KICK_CAMERA_SIZES||'1280x720,390x844,360x780').split(',').map(size=>size.split('x').map(Number));
 const modes=(process.env.KICK_CAMERA_MOTION||'normal,reduced').split(',');
+const stance=process.env.KICK_CAMERA_STANCE||'seated';assert.ok(['seated','standing'].includes(stance));
 const layouts=(process.env.KICK_CAMERA_LAYOUTS||'left:0:-2.6:-1,right:0:2.6:1').split(',').map(value=>{const [name,heroLane,truckLane,side]=value.split(':');return{name,heroLane:Number(heroLane),truckLane:Number(truckLane),side:Number(side)};});
 const report=[];
 try{
@@ -19,7 +20,7 @@ try{
   await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173/');await page.locator('#start:not([disabled])').waitFor();
   await page.clock.install();await page.clock.pauseAt(new Date());
   await page.click('#start');await page.clock.runFor(3200);
-  await page.evaluate(({heroLane,truckLane,side})=>{
+  await page.evaluate(({heroLane,truckLane,side,stance})=>{
    const {game:g,view:v}=window.__bananaGame;
    const adjust=v.kickCamera.adjust.bind(v.kickCamera);
    v.kickCamera.adjust=parameters=>{
@@ -27,7 +28,7 @@ try{
     window.__cameraInput={hero:box(parameters.heroBox),truck:box(parameters.vehicleBox),desired:parameters.desired.toArray(),target:parameters.target.toArray(),flight:parameters.flight};
     return adjust(parameters);
    };
-   g.phase='racing';g.course.procedural=false;g.bananas=100;g.lane=heroLane;g.lateralSpeed=0;g.speed=12;g.s=30;g.obstacles=[];g.pickups=[];g.cooldowns.kick=0;v.reset(g);
+   g.phase='racing';g.course.procedural=false;g.stance=stance;g.bananas=100;g.lane=heroLane;g.lateralSpeed=0;g.speed=12;g.s=30;g.obstacles=[];g.pickups=[];g.cooldowns.kick=0;v.reset(g);
    g.obstacles.push({id:'kick-check',type:'truck',s:g.s+15.2,lane:truckLane,originalLane:truckLane,speed:0,kicked:false,hit:false,passed:false,flight:0});v.update(g,0);
    window.__cameraProbe=()=>{
     const bounds=model=>{
@@ -55,7 +56,7 @@ try{
     return {wheelGapX,wheelbase,star,flight:g.obstacles[0]?.flight??null,truck:v.obstacleModels.has('kick-check')?bounds(v.obstacleModels.get('kick-check')):null,
      hero:bounds(v.player),debris:v.physics.debris.size,camera:v.camera.position.toArray(),target:v.lookTarget.toArray(),fov:v.camera.fov,motion:v.motion,bananas:g.bananas,cargoCount:v.cargo.count,retreat:v.kickCamera.retreat,input:window.__cameraInput??null};
    };
-  },{heroLane,truckLane,side});
+  },{heroLane,truckLane,side,stance});
   const riding=await page.evaluate(()=>window.__cameraProbe());
   assert.equal(riding.motion,mode==='normal');assert.equal(riding.bananas,100);assert.equal(riding.cargoCount,20);assert.ok(Math.abs(riding.wheelbase-1.22)<.01);
   assert.ok(riding.hero.allInside&&riding.wheelGapX>width*.035,'Default native riding shot fits with separated wheels');
@@ -107,7 +108,7 @@ try{
   assert.ok(returned.retreat<.001,'Framing state clears before another kick');assert.ok(returned.hero.allInside,'Return to default riding does not crop the rider');
   assert.ok(Math.abs(returned.camera[2]-riding.camera[2])<.01,'Return to the normal chase distance');
   assert.deepEqual(errors.filter(e=>!/GL Driver Message|GPU stall/.test(e)),[]);
-  report.push({gameUrl:page.url(),browser:await browser.version(),ranAt:new Date().toISOString(),width,height,mode,name,heroLane,truckLane,side,minimumHeight:Math.abs(heroLane)>=4.5?.17:.18,strict18Percent:samples.every(sample=>(sample.hero.max.y-sample.hero.min.y)/2>=.18),input:'Real Start; Q held 850ms and released; real Escape pause/resume',charge,riding,samples,midPauses,returned,errors});await page.close();
+  report.push({gameUrl:page.url(),browser:await browser.version(),ranAt:new Date().toISOString(),width,height,mode,stance,name,heroLane,truckLane,side,minimumHeight:Math.abs(heroLane)>=4.5?.17:.18,strict18Percent:samples.every(sample=>(sample.hero.max.y-sample.hero.min.y)/2>=.18),input:'Real Start; Q held 850ms and released; real Escape pause/resume',charge,riding,samples,midPauses,returned,errors});await page.close();
   fs.writeFileSync(path.join(out,'kick-camera-report.json'),JSON.stringify(report,null,2));console.log('KICK_CAMERA_CASE_PASS',label);
  }
  console.log('KICK_CAMERA_PASS');

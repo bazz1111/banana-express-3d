@@ -1,0 +1,198 @@
+{
+  "method": "Real keyboard/touch input; virtual clock functional checks with explicitly staged traffic; not performance or human fun evidence",
+  "cases": [
+    {
+      "width": 1280,
+      "height": 720,
+      "status": "pass",
+      "frames": 1973,
+      "max": {
+        "position": 1.2,
+        "rotation": 0.08116028963666737,
+        "fov": 0.24324878228164692
+      },
+      "perTag": {
+        "start": {
+          "position": 1.2,
+          "rotation": 0.08116028963666737,
+          "fov": 0
+        },
+        "animals": {
+          "position": 0.19200000000000017,
+          "rotation": 0.012293053004090016,
+          "fov": 0
+        },
+        "recenter": {
+          "position": 0.0000012856418336593123,
+          "rotation": 0.000023186819710887968,
+          "fov": 0
+        },
+        "kick": {
+          "position": 0.07034113223176316,
+          "rotation": 0.022601107172937313,
+          "fov": 0.24324878228164692
+        },
+        "car-tap": {
+          "position": 0.08648752965978146,
+          "rotation": 0.028800239908718366,
+          "fov": 0.23740309689711836
+        }
+      },
+      "errors": [],
+      "layout": {
+        "goal": {
+          "x": 19.828125,
+          "y": 163,
+          "w": 280,
+          "h": 43
+        },
+        "score": {
+          "x": 19.828125,
+          "y": 84,
+          "w": 200.796875,
+          "h": 35
+        },
+        "buffs": {
+          "x": 19.828125,
+          "y": 123,
+          "w": 328.421875,
+          "h": 37
+        }
+      },
+      "touchKick": false,
+      "objectives": true,
+      "pauseFrozen": true,
+      "restart": true,
+      "cooldownSeconds": 8
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "status": "pass",
+      "frames": 1946,
+      "max": {
+        "position": 0.22733377453671103,
+        "rotation": 0.02880024859133603,
+        "fov": 0.24324878228164692
+      },
+      "perTag": {
+        "start": {
+          "position": 0.22733377453671103,
+          "rotation": 0.028800248454451234,
+          "fov": 0
+        },
+        "animals": {
+          "position": 0.19200000000000017,
+          "rotation": 0.009478531528031795,
+          "fov": 0
+        },
+        "recenter": {
+          "position": 0.000006896950559331927,
+          "rotation": 0.000018562206098652213,
+          "fov": 0
+        },
+        "kick": {
+          "position": 0.19200000000000023,
+          "rotation": 0.028800134600462067,
+          "fov": 0.24324878228164692
+        },
+        "car-tap": {
+          "position": 0.19200000000000006,
+          "rotation": 0.02880024859133603,
+          "fov": 0.23740318552217587
+        }
+      },
+      "errors": [],
+      "layout": {
+        "goal": {
+          "x": 12,
+          "y": 179,
+          "w": 270,
+          "h": 40
+        },
+        "score": {
+          "x": 12,
+          "y": 109,
+          "w": 169.078125,
+          "h": 29
+        },
+        "buffs": {
+          "x": 12,
+          "y": 143,
+          "w": 366,
+          "h": 35
+        }
+      },
+      "touchKick": true,
+      "objectives": true,
+      "pauseFrozen": true,
+      "restart": true,
+      "cooldownSeconds": 8
+    },
+    {
+      "width": 740,
+      "height": 390,
+      "status": "pass",
+      "frames": 1943,
+      "max": {
+        "position": 0.45599999999999985,
+        "rotation": 0.03302043173259295,
+        "fov": 0.24324878228164692
+      },
+      "perTag": {
+        "start": {
+          "position": 0.45599999999999985,
+          "rotation": 0.03302043173259295,
+          "fov": 0
+        },
+        "animals": {
+          "position": 0.19200000000000017,
+          "rotation": 0.012290258344449844,
+          "fov": 0
+        },
+        "recenter": {
+          "position": 0.000007979934921964471,
+          "rotation": 0.0000245942299976234,
+          "fov": 0
+        },
+        "kick": {
+          "position": 0.08924617530894859,
+          "rotation": 0.024934181888240314,
+          "fov": 0.24324878228164692
+        },
+        "car-tap": {
+          "position": 0.08359472257032109,
+          "rotation": 0.02880023923986854,
+          "fov": 0.23740316644470738
+        }
+      },
+      "errors": [],
+      "layout": {
+        "goal": {
+          "x": 12,
+          "y": 179,
+          "w": 270,
+          "h": 40
+        },
+        "score": {
+          "x": 12,
+          "y": 109,
+          "w": 169.078125,
+          "h": 29
+        },
+        "buffs": {
+          "x": 12,
+          "y": 143,
+          "w": 716,
+          "h": 35
+        }
+      },
+      "touchKick": false,
+      "objectives": true,
+      "pauseFrozen": true,
+      "restart": true,
+      "cooldownSeconds": 8
+    }
+  ],
+  "versionScope": "Same rendering and input code as final production build. Only subsequent runtime change was shoulder-gate generation, disabled inside staged fixtures."
+}

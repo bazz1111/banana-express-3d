@@ -2,7 +2,7 @@ import './style.css';
 import './reference.css';
 import { GameView } from './view.js';
 import { GameAudio } from './audio.js';
-import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH } from './game.ts';
+import { createGame, startRun, advance, togglePause, toggleStance, endRun, resultFor, clamp, DASH, KICK, OBJECTIVES } from './game.ts';
 import { createSessionCourse, readPreferences, savePreferences } from './session.js';
 import { ActionBuffer } from './inputBuffer.js';
 
@@ -15,7 +15,7 @@ const keys = new Set();
 const pointers = new Map();
 const actions = new ActionBuffer();
 const bestKey = 'banana-endless-best';
-const RACK_CAPACITY = 100, KICK_COOLDOWN = 18;
+const RACK_CAPACITY = 100;
 // Presentation-only freeze on a landed kick; the fixed-step simulation simply receives no time.
 const HIT_STOP = .085;
 let view, game, previousPhase = '', contextLost = false, resultSaved = false, toastRemaining = 0, lastFrame = 0, hitStop = 0;
@@ -242,6 +242,7 @@ function saveResult() {
   $('result-bananas').textContent = `${result.bananas.toLocaleString()} 根`;
   $('result-time').textContent = formatTime(result.elapsed);
   $('result-total').textContent = result.total.toLocaleString();
+  $('result-objectives').textContent = `${game.objective.completed} 个目标 · ${game.nearMisses} 次险避`;
   const replay = new URL(location.href);
   replay.searchParams.set('seed', String(game.course.seed));
   $('result-seed').textContent = `${game.course.seed} · 重放`;
@@ -299,13 +300,20 @@ function updateUI() {
   $('timer').textContent = formatTime(game.elapsed);
   $('combo').textContent = `×${game.combo.toFixed(1)}`;
   $('chain').textContent = `${game.chain} 连击`;
+  const objective=OBJECTIVES[game.objective.index];
+  $('objective-label').textContent=objective.label;
+  $('objective-progress').textContent=`${game.objective.progress} / ${objective.target}`;
+  $('objective-reward').textContent=`+${objective.points} 分`;
+  $('objective-meter').value=game.objective.progress;
+  $('objective-meter').max=objective.target;
+  $('objective-meter').setAttribute('aria-label',objective.label);
   const kick = game.cooldowns.kick;
-  const charge = clamp(game.charge / .8, 0, 1);
+  const charge = clamp(game.charge / KICK.charge, 0, 1);
   $('kick-seconds').textContent = kick > 0 ? `${Math.ceil(kick)}s` : charge > 0 ? `${Math.round(charge * 100)}%` : '就绪';
   $('kick-skill').classList.toggle('cooldown', kick > 0);
   $('kick-skill').classList.toggle('charged', charge === 1);
   $('kick-status').textContent = kick > 0 ? `${Math.ceil(kick)} 秒后再踢` : charge === 1 ? '蓄力完成，靠近卡车松开！' : charge > 0 ? '按住 Q 蓄力，松开飞踢' : '点踢汽车 · 蓄力 0.8 秒踢卡车';
-  $('kick-ring').style.setProperty('--p', kick > 0 ? 1 - kick / KICK_COOLDOWN : charge || 1);
+  $('kick-ring').style.setProperty('--p', kick > 0 ? 1 - kick / KICK.cooldown : charge || 1);
   $('kick-ring').classList.toggle('charging', kick === 0 && charge > 0 && charge < 1);
   const dash = game.cooldowns.dash;
   $('dash-seconds').textContent = dash > 0 ? `${Math.ceil(dash)}s` : '就绪';
@@ -345,6 +353,8 @@ function feedback() {
     if (event.type === 'miss') toast(event.charged ? '踢空了，靠近车辆再松开 Q。' : '汽车可以点踢，卡车需蓄力 0.8 秒。');
     if (event.type === 'shield') toast('护盾挡住了！继续向前。', 1800);
     if (event.type === 'stunt') toast(`${event.label} +${event.points} 分`, 1200);
+    if (event.type === 'nearMiss') toast(`贴边险避 +${event.points} 分`,1200);
+    if (event.type === 'objective') toast(`目标完成：${event.label} +${event.points} 分`,2400);
     if (event.type === 'go') toast('自动向前 · 左右避障 · Space 跳跃 · E 冲刺', 2800);
   }
 }

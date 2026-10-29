@@ -160,7 +160,7 @@ test('successive individual bananas raise the combo while a quiet gap resets it'
   g.pickups.push({ ...pickup('banana', g.s), collected: false }); advance(g, {}, 1 / 60);
   assert.equal(g.chain, 1); assert.equal(g.events.find(e => e.type === 'pickup').points, 10);
   const many = racer(course([], Array.from({ length: 30 }, (_, i) => pickup('banana', .2, 0, 1.25, `cap${i}`))));
-  advance(many, {}, 1 / 60); assert.equal(many.combo, 2); near(many.score, 460.2);
+  advance(many, {}, 1 / 60); assert.equal(many.combo, 2); near(many.score, 610.2);
 });
 
 test('a reward exactly two and a half seconds later still extends the chain', () => {
@@ -242,11 +242,11 @@ test('a different obstacle touched during shield immunity cannot kill on a later
   assert.equal(g.obstacles[0].hit, true); assert.equal(g.obstacles[1].hit, true);
 });
 
-test('charged kicks launch trucks and award simulation points with an eighteen-second cooldown', () => {
+test('charged kicks launch trucks and award simulation points with an eight-second cooldown', () => {
   const g = racer(course([obstacle('truck', 15, 2)]));
   ticks(g, .8, { kick: true }); advance(g, {}, 1 / 60);
   assert.equal(g.obstacles[0].kicked, true); assert.equal(g.kickedCount, 1);
-  assert.equal(g.cooldowns.kick, 18); assert.equal(g.charge, 0);
+  assert.equal(g.cooldowns.kick, 8); assert.equal(g.charge, 0);
   assert.deepEqual(g.events.find(e => e.type === 'kick'), { type: 'kick', id: 'truck', charged: true });
   near(g.score, g.s + 200); ticks(g, .5, { kick: true });
   assert.ok(g.obstacles[0].flight > .4); assert.equal(g.charge, 0);
@@ -265,7 +265,7 @@ test('charge previews the release target side before a vehicle enters the nine-m
     assert.ok(g.obstacles[0].s - g.s <= 9);
     advance(g, {}, 1 / 60);
     assert.equal(g.kickSide, chargedSide); assert.equal(g.obstacles[0].kickSide, chargedSide);
-    assert.equal(g.kickedCount, 1); assert.equal(g.cooldowns.kick, 18);
+    assert.equal(g.kickedCount, 1); assert.equal(g.cooldowns.kick, 8);
     assert.deepEqual(g.events.find(event => event.type === 'kick'), { type: 'kick', id: type, charged: true });
   }
 });
@@ -291,7 +291,7 @@ test('a car accepts a tap while short truck charges and tall obstacles consume a
   for (const type of ['truck', 'train', 'wall']) {
     const g = racer(course([obstacle(type, 8, 2.8)])); ticks(g, .2, { kick: true });
     advance(g, {}, 1 / 60); assert.equal(g.obstacles[0].kicked, false);
-    assert.equal(g.cooldowns.kick, 18); assert.equal(g.events.find(e => e.type === 'miss').charged, false);
+    assert.equal(g.cooldowns.kick, 8); assert.equal(g.events.find(e => e.type === 'miss').charged, false);
   }
 });
 

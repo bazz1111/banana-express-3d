@@ -133,7 +133,7 @@ test('real charged kick keeps its preselected leg when a distant vehicle enters 
     const maxAngle = Math.max(...bones.map((bone, index) => bone.quaternion.angleTo(previous[index]) * 180 / Math.PI));
     const maxFootMove = Math.max(...a.chains.map((chain, index) => chain.sole.object.getWorldPosition(new THREE.Vector3()).distanceTo(feet[index])));
     const report = { stance, side, chargedState, strikeState: a.state, maxAngle, maxFootMove }; reports.push(report);
-    assert.equal(g.obstacles[0].kicked, true); assert.equal(g.cooldowns.kick, 18);
+    assert.equal(g.obstacles[0].kicked, true); assert.equal(g.cooldowns.kick, 8);
     assert.ok(maxAngle < 15, `Release switched the charged leg: ${JSON.stringify(report)}`);
     assert.ok(maxFootMove < .025, `Release snapped a foot: ${JSON.stringify(report)}`);
     assert.ok(chargeSides.every(value => value === side), 'Wind-up selected the wrong side before the target reached 9m');
