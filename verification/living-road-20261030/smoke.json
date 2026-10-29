@@ -1,0 +1,123 @@
+{
+  "desktop": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "quality": "high",
+    "input": "keyboard",
+    "fixture": {
+      "trafficDisabledForControls": true,
+      "temporaryReleaseFreeze": true,
+      "s": 57.49999999999997,
+      "charge": 1.016666666666668,
+      "lane": 0
+    },
+    "cancellationChecks": null,
+    "shaders": {
+      "newImpactPrograms": 0,
+      "firstUseQueries": 0
+    },
+    "paused": {
+      "unchangedDrawCalls": 0,
+      "resizeRedrawn": true,
+      "simulationFrozen": true
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 85,
+    "hud": "85",
+    "flight": 0.39999999999999997,
+    "vehicleBounds": {
+      "min": [
+        -0.20654033378091038,
+        0.3161493284569833
+      ],
+      "max": [
+        0.2340537195378694,
+        0.9402179029227397
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.20654033378091038,
+        0.3161493284569833
+      ],
+      "max": [
+        0.23405371953786933,
+        0.9402179029227398
+      ]
+    },
+    "camera": [
+      2.18597400708293,
+      2.276340602507389,
+      -3.5767688712902643
+    ],
+    "fov": 56.30288846986125,
+    "callsPerFrame": 106.75,
+    "msPerFrame": 16.899999996026356,
+    "loadMs": 1480
+  },
+  "mobile": {
+    "status": "passed",
+    "browser": "chromium",
+    "browserVersion": "156.0.8078.48",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "quality": "high",
+    "input": "real touch",
+    "fixture": {
+      "trafficDisabledForControls": true,
+      "temporaryReleaseFreeze": true,
+      "s": 79.30000000000027,
+      "charge": 1.0000000000000013,
+      "lane": 0
+    },
+    "cancellationChecks": {
+      "touchCancelPreservedCooldown": true,
+      "keyboardReleaseAfterTouchCancel": true
+    },
+    "shaders": {
+      "newImpactPrograms": 0,
+      "firstUseQueries": 0
+    },
+    "paused": {
+      "unchangedDrawCalls": 0,
+      "resizeRedrawn": true,
+      "simulationFrozen": true
+    },
+    "phase": "racing",
+    "kicks": 1,
+    "bananas": 85,
+    "hud": "85",
+    "flight": 0.3833333333333333,
+    "vehicleBounds": {
+      "min": [
+        -0.5577916434706855,
+        0.1391848628511096
+      ],
+      "max": [
+        0.7737082753794863,
+        0.5874759065138051
+      ]
+    },
+    "supportBounds": {
+      "min": [
+        -0.5577916434706855,
+        0.13918486285110956
+      ],
+      "max": [
+        0.7737082753794863,
+        0.5874759065138051
+      ]
+    },
+    "camera": [
+      3.4754562137181804,
+      2.657667918971584,
+      -6.339336828012226
+    ],
+    "fov": 56.26932709651611,
+    "callsPerFrame": 104.66666666666667,
+    "msPerFrame": 16.916666666666668,
+    "loadMs": 1072
+  }
+}

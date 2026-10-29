@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "method": "Replay the failed autoplayer approach with real production rules and a continuous left input; no shields, boost, Q or jumps",
+  "start": {
+    "s": 3269.8666666666,
+    "lane": -2.86617,
+    "lateralSpeed": 0.13216,
+    "trainS": 3302.95,
+    "trainLane": -2.4
+  },
+  "end": {
+    "s": 3344.8666666665727,
+    "lane": -4.6,
+    "phase": "racing",
+    "trainS": 3299.9499999999616
+  },
+  "cause": "Driver clearance padding of .90m rejected the real 2.15m outer gap (actual collision extent 1.66m)."
+}

@@ -1,0 +1,2359 @@
+{
+  "preparedAt": "2026-10-29T19:11:17.945Z",
+  "completed": true,
+  "scope": "Only this task-created artifacts/living-road-20261030 tree and the nine newly created smoke outputs whose birth times were checked. Symlinks are unlinked without following targets; no global cache or original assets are deleted.",
+  "files": [
+    {
+      "path": "artifacts/living-road-20261030/1280-frames.json",
+      "kind": "file",
+      "bytes": 802695,
+      "sha256": "35782a138a118bec494f081792e82da626b0cd788e8a123483b879bfb988cf4e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/1280-goal.png",
+      "kind": "file",
+      "bytes": 1019955,
+      "sha256": "1f2d65959a4506cd3ba07ff57f5a7b45a6e3fa7e4963636c39ff210b3a4c0874"
+    },
+    {
+      "path": "artifacts/living-road-20261030/1280-kick.png",
+      "kind": "file",
+      "bytes": 951699,
+      "sha256": "4d167996fb6aa12eac0ed52f15afdc2368b0dba4b9a6114e36989a8cd2d8c871"
+    },
+    {
+      "path": "artifacts/living-road-20261030/1280-walk-1.png",
+      "kind": "file",
+      "bytes": 982548,
+      "sha256": "dbd89744e5f588ef9fc379f20a6590f9ce753721bb6c0a595c5aec96f7410146"
+    },
+    {
+      "path": "artifacts/living-road-20261030/1280-walk-4.png",
+      "kind": "file",
+      "bytes": 982779,
+      "sha256": "a97b87615a154a841362b9c374d74f30d707140c08ca3c98d5d1e9ff5b0633df"
+    },
+    {
+      "path": "artifacts/living-road-20261030/1280-walk-7.png",
+      "kind": "file",
+      "bytes": 1007158,
+      "sha256": "05090839a26d71ddc58650cf5ce534629359a8a581ebbda4f8731ffeb5de3d48"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-frames.json",
+      "kind": "file",
+      "bytes": 782582,
+      "sha256": "54fcefc161776300f060a2b508e980f2164f5578ba738d81007826effb5ff1e2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-goal.png",
+      "kind": "file",
+      "bytes": 381033,
+      "sha256": "7163d00b80f0e53a2b598b92cc7363bdba03e9a1f1400ce9344eec444405d0ac"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-kick.png",
+      "kind": "file",
+      "bytes": 392053,
+      "sha256": "84524217270a1f0d24a3cda2709825f171f5472c6be7c231bc54fc8c8495d7bb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-walk-1.png",
+      "kind": "file",
+      "bytes": 371323,
+      "sha256": "f74b240931806c1a81922275020a0b6e3834ad7e9d1fef7c8cf33bb52f672c5d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-walk-4.png",
+      "kind": "file",
+      "bytes": 372904,
+      "sha256": "d43dae5486609babc395ec43a5d296e3084e64efcb2baeedb92dc890fdb4bce8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/390-walk-7.png",
+      "kind": "file",
+      "bytes": 376888,
+      "sha256": "854672c5e15d3019afe6b34d363260f883c2963e230ff93811fb0b64d1c3a418"
+    },
+    {
+      "path": "artifacts/living-road-20261030/animation-red.log",
+      "kind": "file",
+      "bytes": 2153,
+      "sha256": "da038fc115546e9a38c456b1ae2bc3f90777d623d52abd1a599978a3c25e5842"
+    },
+    {
+      "path": "artifacts/living-road-20261030/assets.log",
+      "kind": "file",
+      "bytes": 198,
+      "sha256": "297482685a61dd0b7bb0434ab95f236a6b1026dba113636638e204e813a04d17"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay/endless-browser-report.json",
+      "kind": "file",
+      "bytes": 1536,
+      "sha256": "2c080b4546989116a2928ff9be2d3d0fb6a16974ad92f84ba1087dfd532bbbd5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay/endless-kick.png",
+      "kind": "file",
+      "bytes": 1397746,
+      "sha256": "5f1ce060f3942e71ceee3df173941136a7e6b0cc55ac10b4119561311cd3fd15"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay/endless-ready.png",
+      "kind": "file",
+      "bytes": 1237180,
+      "sha256": "9f42ea2af0f742acb379977bc1dbe66e579890296c734d671cc814f486b09929"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay/endless-result.png",
+      "kind": "file",
+      "bytes": 599265,
+      "sha256": "31dcb8d07342b0ea81f5115201e0e938395ebfce1ec044701fb15d55fc83a02d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay/endless-running.png",
+      "kind": "file",
+      "bytes": 1421680,
+      "sha256": "ff69da96b63918a677c9f8a24f79e328ac39488b50fdcc21532edf47bc5ee109"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay-diagnosis.json",
+      "kind": "file",
+      "bytes": 534,
+      "sha256": "645018a15aaff413ca643ee4be9c91d2aeb2606c3e79fa695de21d55e1d89456"
+    },
+    {
+      "path": "artifacts/living-road-20261030/autoplay.log",
+      "kind": "file",
+      "bytes": 1634,
+      "sha256": "18a86043adf128e30914d7f51ecd7edeeb323224dae633e94ba19f030ff37a98"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/banana.glb",
+      "kind": "file",
+      "bytes": 253316,
+      "sha256": "c9c10b653ea70c0e3dbd0564bddd7f59c71ead933221f2e3eb0419229877b9b1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bananaB.glb",
+      "kind": "file",
+      "bytes": 253420,
+      "sha256": "c52641c30380a45df3e352b6d4a4528fb01017f91c0db00709e09a54485f24e5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bananaC.glb",
+      "kind": "file",
+      "bytes": 253604,
+      "sha256": "19fff79e5343285e7440fc955c17e325ce06be5bed04b5bcf425117c17aa10fe"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bananaD.glb",
+      "kind": "file",
+      "bytes": 253448,
+      "sha256": "7ec6b7131c359245e8d61d7fc4681cb1cb2ae2b21a8ba1b50afd300deda25a59"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bananaPlant.glb",
+      "kind": "file",
+      "bytes": 342620,
+      "sha256": "9bc0e61d4fa2011ad2e6efd0cf2f8606847c379c4d63b97911f86ae15e08e970"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bananaRack.glb",
+      "kind": "file",
+      "bytes": 464012,
+      "sha256": "a66450a9f8e9a3844278ee48b8fd57e25e3a1e2e0a8760a4ba8b02b76641bdb0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/barrier.glb",
+      "kind": "file",
+      "bytes": 319816,
+      "sha256": "9497fb2a60019f459d186e0e88764a93b25fa1f481aec9e03d749ea597654f23"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bicycle.glb",
+      "kind": "file",
+      "bytes": 1456288,
+      "sha256": "85998f22d2a5f661794f3f303ab8773e531111381e2c77f91b90b1335dcfed6d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/boost.glb",
+      "kind": "file",
+      "bytes": 84040,
+      "sha256": "45092840823a069a5acbebd7227ff4d7c7dfb561c2d9bbc2251317e50dfcab97"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/burst.glb",
+      "kind": "file",
+      "bytes": 99600,
+      "sha256": "a67790aabd9887aedeffec53ee2a9144b282ddeb9ceb223a343304969e39e66f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/burstGlow.glb",
+      "kind": "file",
+      "bytes": 99608,
+      "sha256": "ac84fbe98617aa1189d328e9c4e6e2e796c1b6fd211d8437cc76d1d1de2cfc17"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/bush.glb",
+      "kind": "file",
+      "bytes": 125796,
+      "sha256": "e7e9d13face0c2049f1514e7866a68ae0a6e96a2f86e721085a970a99f58edc5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/car.glb",
+      "kind": "file",
+      "bytes": 617264,
+      "sha256": "cd4400f3917eda76d1fd71605e3dae922ebc5e14bacaf84f94594f9972e746c1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/cliff.glb",
+      "kind": "file",
+      "bytes": 392032,
+      "sha256": "7617f28286acd04408a183788c446e14949020061427d6a83eee88f4fc9f64bc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/cloud.glb",
+      "kind": "file",
+      "bytes": 62868,
+      "sha256": "d41bd7674cf01f129331fdbe0907f0b960fa13862dbd6c007c8810558a15f655"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/cloudB.glb",
+      "kind": "file",
+      "bytes": 62892,
+      "sha256": "5b978a4873eaf418d18ff06349a21bfd82ccab37a5c39768339bd8bbfd3aa604"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/cloudC.glb",
+      "kind": "file",
+      "bytes": 62876,
+      "sha256": "b5164dbe1e7bbd13b32ad3facb0f762e283d259b7284a08ad6fa3318fd69ca5d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/course.json",
+      "kind": "file",
+      "bytes": 74775,
+      "sha256": "729f6a7ecddbfef8b28566d8694d9a7fd3c8b75b5707f528195c82282687c169"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/crate.glb",
+      "kind": "file",
+      "bytes": 434488,
+      "sha256": "b774a8828ca0c3e6f31a2afb225d1d4d1625e749766ae431151ae7e053e57934"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/double.glb",
+      "kind": "file",
+      "bytes": 97964,
+      "sha256": "9effb3728bf241d0d4008406e4b8df6b349cac0a364a732fe3c5f8be13c4fc70"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/dust.glb",
+      "kind": "file",
+      "bytes": 3692,
+      "sha256": "02607d236cd04b38106af9c1b196cc299c76ada54c7d03163367b41719d9eb0a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/forestHill.glb",
+      "kind": "file",
+      "bytes": 379616,
+      "sha256": "a7a941c5e6026d609ba5e07bebd02fe37e133c8f4aed2bc70fba2e204223bcaf"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/forestHillB.glb",
+      "kind": "file",
+      "bytes": 379716,
+      "sha256": "a2ec84a7276a9496462d375a4a4b28a438a299e41e974141acb1ee80e0dbdcc7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/forestTree.glb",
+      "kind": "file",
+      "bytes": 10188,
+      "sha256": "048c893b48932f15e66a0c2c37e495464ef2cb3e56f50ad2f8a87cf3bf8d6429"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/forestTreeLOD1.glb",
+      "kind": "file",
+      "bytes": 5092,
+      "sha256": "a74d6a37f4b54b1ee0777decb8a60402f503e71098612722f79c98542e270cd4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/forestTreeLOD2.glb",
+      "kind": "file",
+      "bytes": 5092,
+      "sha256": "c0cafde4fbcaf2935c6401e9cd5ebef54917b9132d87de38223c8ed247309751"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/foundation.glb",
+      "kind": "file",
+      "bytes": 97872,
+      "sha256": "b19c1f57b4e23bb65b7d9532e8e304c971a4f5715f49b142ed5dc2b2d4297e27"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/goat.glb",
+      "kind": "file",
+      "bytes": 414252,
+      "sha256": "f8d3b005c544dbcff0b38c9504fb930994f0c215a6971f8268e3da82a63390e9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/hut.glb",
+      "kind": "file",
+      "bytes": 495860,
+      "sha256": "e151feacf9b3fc46562df8a04ec468e73814098122010ebaa298d02330854f87"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/index-7RPEIEDR.css",
+      "kind": "file",
+      "bytes": 16016,
+      "sha256": "9e2e46a2255a7be2d72e397bc131dfbeffaf47afc250c66c2db9cc5f2e1190fd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/index-Cz-eVTJw.js",
+      "kind": "file",
+      "bytes": 740011,
+      "sha256": "4cec8dc1caffbea6565d2da2b6f718203870cb4590512f81428d92e92bce7a39"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/lake.glb",
+      "kind": "file",
+      "bytes": 36240,
+      "sha256": "3b2325dc2c50f31bd60c672c9bbfe2bfac76e476829c3481463374015a3f7423"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/looseBanana.glb",
+      "kind": "file",
+      "bytes": 75440,
+      "sha256": "8a03966a546a33713508c94e28d970967e06532e6d080cac6f90e6d56c17a83e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/manifest.json",
+      "kind": "file",
+      "bytes": 14990,
+      "sha256": "b50bc640df5084a6cc2fc5b863f6d10bbbc7a36ccaee9e716b8d4b4605b64b58"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/midMountain.glb",
+      "kind": "file",
+      "bytes": 379824,
+      "sha256": "abe6de5cf2cbb18bfc7920510e312a06bbf763990a633a0d1d82b2988a7f26d3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/midMountainB.glb",
+      "kind": "file",
+      "bytes": 379912,
+      "sha256": "86b1705a4349d247af6f68666ff98756ff648d2d422c218f4382ecd738308ef2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/mountain.glb",
+      "kind": "file",
+      "bytes": 379812,
+      "sha256": "0fc1cd19c83b096e18acd0347d3c0ec94eacfcb6e361ff01a59739ee47f6e6f0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/mountainB.glb",
+      "kind": "file",
+      "bytes": 379908,
+      "sha256": "c3e87d0f807f881a538434f47c6dafe36ad4e04593b12ceee049c96f5d33d763"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/palm.glb",
+      "kind": "file",
+      "bytes": 406344,
+      "sha256": "fefc265c5c5a8b55652d44b3b3d9d31e019c74784ca462abff4ac292612844fd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/pedestrian.glb",
+      "kind": "file",
+      "bytes": 443724,
+      "sha256": "01108909411e3e3e1f8ca1b7a071c26a0a8abbe57bee36ffb7addc08b9fc1f16"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/physics-CPnSlmoZ.js",
+      "kind": "file",
+      "bytes": 4339515,
+      "sha256": "d8fbff4369e8a0b38fccd4e91dd024c48920fe1c213950568b5f0262bbaf5c1e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rider.glb",
+      "kind": "file",
+      "bytes": 3107108,
+      "sha256": "8749a1385330e54e1539a5bb121e37aaa2e315ab68718d128838efe499f02343"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/riderSkinned.glb",
+      "kind": "file",
+      "bytes": 3107108,
+      "sha256": "8749a1385330e54e1539a5bb121e37aaa2e315ab68718d128838efe499f02343"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/roadCourse.glb",
+      "kind": "file",
+      "bytes": 8383556,
+      "sha256": "d5971097c00ebcdba914d927c06cf9e79817c4e71bcffe49fb9700aed1895dc1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/roadTile.glb",
+      "kind": "file",
+      "bytes": 551620,
+      "sha256": "209a0ffa88eeaf0a4ce8e535924bf1bf5b15b615c05e4947cafaf1b058972d56"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rock.glb",
+      "kind": "file",
+      "bytes": 261260,
+      "sha256": "1c0fdad406c072cbb0a308d34d239393f91b90a58b53bc1605cc9e48ac8871b3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockA.glb",
+      "kind": "file",
+      "bytes": 392104,
+      "sha256": "cfa50ad58d0016f9f840fc899f6eb13476f9fc91471267b472b494c2699186bb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockB.glb",
+      "kind": "file",
+      "bytes": 392092,
+      "sha256": "5cf4b92f93c9cf6c20cfb2fdc77373da434bf03949ceeead91ec6aa8d9e90b15"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockC.glb",
+      "kind": "file",
+      "bytes": 392140,
+      "sha256": "1eff4e90c35cf2a8999ba7452f28245e60fb992bdac802ee89f6ceebd4f92eca"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockD.glb",
+      "kind": "file",
+      "bytes": 392108,
+      "sha256": "8fa312b8316f926d4998fbe2d5e4d4edee3f17786cca5fe28155d3b81c017369"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockE.glb",
+      "kind": "file",
+      "bytes": 261260,
+      "sha256": "cd07de9ea9edbdade4f77baeade8cfcce569f9cf51eec6c280f6224679eb0708"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/rockF.glb",
+      "kind": "file",
+      "bytes": 261244,
+      "sha256": "1492f8ee8d71701d10fe4e66e45d9db0f00d0c5d5062d686f33024d1a7d319d2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/shield.glb",
+      "kind": "file",
+      "bytes": 109932,
+      "sha256": "380be8d3d05ecb56570ef21b8340d0801ff491f0b92643bac7358783b8e9e663"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/sign.glb",
+      "kind": "file",
+      "bytes": 114496,
+      "sha256": "99eb9f838ba2f3518aaf9b71319f86a4ddf34b4e710adb4e8b9ad58d0f090610"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/sky.glb",
+      "kind": "file",
+      "bytes": 20176,
+      "sha256": "9ddcb92eb8622db3c930aecd9076fc47f2992634488cd59ac491f806ad8672b7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/spark.glb",
+      "kind": "file",
+      "bytes": 3708,
+      "sha256": "09ef434162d117340ea5b4e9ce12f7b5b6fa7c2db7d7500d89d9206eac2a1f75"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/stall.glb",
+      "kind": "file",
+      "bytes": 464376,
+      "sha256": "da2791e3603a57f7d79c50c9e86f8c065b4ce0a3175bedbbf8543a246a8c562c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/tower.glb",
+      "kind": "file",
+      "bytes": 26860,
+      "sha256": "327d722c2fa93044d32c9288d27ebf0798b461969b89a4b0fdaf0e5104ee4261"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/train.glb",
+      "kind": "file",
+      "bytes": 528416,
+      "sha256": "7d0b0cae86c63d9d3ea8fbf025030c3100e7dfb8ea50449fef9e4c931dceee6e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/tree.glb",
+      "kind": "file",
+      "bytes": 55532,
+      "sha256": "0bf35d9686a9d1b2c338619a310315370bae904d0108b8ab522a665a2d648433"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/truck.glb",
+      "kind": "file",
+      "bytes": 2108912,
+      "sha256": "00031e44e5c13f31165c81ee65a27eb15c40ded81bf8739ef5d739b7c840b3e3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/valley.glb",
+      "kind": "file",
+      "bytes": 8124332,
+      "sha256": "baab0a20ef8221004612a8cf7cbeeec7ab4c4ec279bc347f03e0415e91b329fc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/villageHouse.glb",
+      "kind": "file",
+      "bytes": 26864,
+      "sha256": "39fba604e5d1f16d6a95824e8bfc818c116000e82b964accc8000333e56dbd95"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/villageLonghouse.glb",
+      "kind": "file",
+      "bytes": 21152,
+      "sha256": "c1c0d44d705a9a5c1ee6837361299cc9758b1ddbdd943d57f62abcf8b82975dd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/assets/wall.glb",
+      "kind": "file",
+      "bytes": 385604,
+      "sha256": "fd777f7c0dc29f44c83c5dd6ca866fc3c74f26abd1a40ae372522a2eee9df537"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/LICENSE-impact.txt",
+      "kind": "file",
+      "bytes": 586,
+      "sha256": "94283f9120e58e6a1cae5762053df42ee280d37fe34be22589c92b7dbc7b2d39"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/LICENSE-interface.txt",
+      "kind": "file",
+      "bytes": 553,
+      "sha256": "cefbf7ebb51b02ecf4748b1112d5c6a2d04aa0ea82e885e74680b62ea6d3a712"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/LICENSES.md",
+      "kind": "file",
+      "bytes": 6299,
+      "sha256": "b912ad7718d0340126ca0897e36c6ee4f3d3c83cd267dddea5e2ea9090fb3f9a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/banana_pickup_01.m4a",
+      "kind": "file",
+      "bytes": 1945,
+      "sha256": "d15f4d5bc5276f89b23e96c13a5e4f905e06f6be79e4f2df6ece20a790db7bb5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/banana_pickup_02.m4a",
+      "kind": "file",
+      "bytes": 2012,
+      "sha256": "7db647d554217919e44602c2a3a98656458d8db92dbb06f2f5349f4ad9006758"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/banana_pickup_03.m4a",
+      "kind": "file",
+      "bytes": 4327,
+      "sha256": "e547c6707c270d30d18fe0ee8f4ba18c023a8a4af11a27e8f99ee0a75d5e05a8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/bike_chain_loop.m4a",
+      "kind": "file",
+      "bytes": 34687,
+      "sha256": "4f566aa2df5e886c9b1febbda4d9b88df21b82b5acd1bf1500e5a840a66ad0af"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/crash_01.m4a",
+      "kind": "file",
+      "bytes": 5298,
+      "sha256": "7826fc4418b347b8ae6aa31e1cf9e5d682be9c03082d7b82cedd0323402efd62"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/debris_scatter_01.m4a",
+      "kind": "file",
+      "bytes": 14377,
+      "sha256": "d9abb23908a89edf3c6448e24cd463efaef4d078caa4ef55ec13aabe6c8a9180"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/finish_01.m4a",
+      "kind": "file",
+      "bytes": 8880,
+      "sha256": "a6fee0e85882c0a0196a1bee47834003a2712a76ed5224db5d1975770ac1dc79"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/go_01.m4a",
+      "kind": "file",
+      "bytes": 6856,
+      "sha256": "87a1c488dd71b2ff9f352abef565b5b366d05b10b179758bc9031c95cc177e00"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/jump_01.m4a",
+      "kind": "file",
+      "bytes": 2818,
+      "sha256": "c2c30e42297180659e3a53d5898fd463734ebedc2a35050591f91951b9ed6a94"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/kick_impact_heavy_01.m4a",
+      "kind": "file",
+      "bytes": 9752,
+      "sha256": "343d9516b338471c90eda1e70e474989bc2f98ee2b0d9066b8447d515bb56f38"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/kick_impact_heavy_02.m4a",
+      "kind": "file",
+      "bytes": 9490,
+      "sha256": "54b1d16810c2f7e143635ead23b9fec6774bf835333b9082b6dec2b65e6b5a94"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/kick_impact_heavy_03.m4a",
+      "kind": "file",
+      "bytes": 8561,
+      "sha256": "e41cdf8e35e298fc6a8f9b9723a605d4baf411dbe3fae686f9a0f17a25fbb26d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/kick_impact_light_01.m4a",
+      "kind": "file",
+      "bytes": 6952,
+      "sha256": "620559da21653d8423c05e6ef0f623d7d6e81f9eea99e969c2b480b8f0f485cf"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/kick_impact_light_02.m4a",
+      "kind": "file",
+      "bytes": 5163,
+      "sha256": "5583c8accf648ce5b9a7970b28eab7378e526f06ade92fb80a27d1ce1d665e16"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/launch_01.m4a",
+      "kind": "file",
+      "bytes": 3682,
+      "sha256": "0f5d6538b5504b690af7faf347eea25f4f88cf34bf5e92ecbee8fca9d65c6402"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/metal_crunch_01.m4a",
+      "kind": "file",
+      "bytes": 8878,
+      "sha256": "c3cd060886183773a8438cf541d48a82b32a063108ad44a5fd92fcdda6075a92"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/metal_crunch_02.m4a",
+      "kind": "file",
+      "bytes": 6700,
+      "sha256": "cfb38863dc6071058d461b7e84268f44c019aa9d4a87ca0232a748227c19c8c0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/powerup_01.m4a",
+      "kind": "file",
+      "bytes": 5886,
+      "sha256": "37121af8524dd075e4bb045bb7c7df84ad9b34c9a3fd8af28d57dacf0e03e848"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/shield_block_01.m4a",
+      "kind": "file",
+      "bytes": 9185,
+      "sha256": "1a6e5189b459a111428ba4ed8ffbc398e915131ed80badb6be17d2e8d201dbe2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/stunt_01.m4a",
+      "kind": "file",
+      "bytes": 5877,
+      "sha256": "07260d2d015d3f5e43406e095284ea3bb2ebe48e3bf1991217b06d04d02bfa72"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/truck_land_thud_01.m4a",
+      "kind": "file",
+      "bytes": 4008,
+      "sha256": "bc9c993458923a755a9af85def04ed16c9f40f0e6847bd2412bb38bb9e8d4260"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/truck_land_thud_02.m4a",
+      "kind": "file",
+      "bytes": 6871,
+      "sha256": "f030359ade4f51c82b8895d6183d0fa888ea3e68e0a54a8ab183927b7bc187fc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/whoosh_dash_01.m4a",
+      "kind": "file",
+      "bytes": 8753,
+      "sha256": "5c3f07323921458d36894e8b9070537bc1cae2e38c9ba5209048d50fabb7742e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/whoosh_kick_01.m4a",
+      "kind": "file",
+      "bytes": 5784,
+      "sha256": "3d8da619bccf506c18bb51ba2d25350417992da69b1152ec4d643308365fb349"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/audio/wind_loop.m4a",
+      "kind": "file",
+      "bytes": 66454,
+      "sha256": "dff71e4e6340db26ede75b8db8b196cbadc3cf891e81980c688773078aa9611e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/favicon.svg",
+      "kind": "file",
+      "bytes": 249,
+      "sha256": "0ea884a15fc5451910bcf57e75780ecc7cbb9393e0fbbc99b6b9c7b84a34ffb5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/index.html",
+      "kind": "file",
+      "bytes": 8359,
+      "sha256": "3c6976bd09998ce81a949a54b4171f85ae8b730f6e5e7cd1d5bdcb5bb4a5ee79"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/ui/banana.png",
+      "kind": "file",
+      "bytes": 34293,
+      "sha256": "9b0e0706a165356469dd83b70fc5ec5327213f6b40a7ac59c87cac99f7f0e065"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/ui/banana.svg",
+      "kind": "file",
+      "bytes": 634,
+      "sha256": "b331a0e4d591336fea258d34bebbf3e86728942ebb38b9cf71bf8cc33b64d007"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/ui/boost.png",
+      "kind": "file",
+      "bytes": 36652,
+      "sha256": "cdf656fbfc9a63123589ae19e854385b871c703db1ce27fcd19c169553dd88ee"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/ui/double.png",
+      "kind": "file",
+      "bytes": 41591,
+      "sha256": "daf4abe1f6954cf130095ce1143baf1daa1e23827f233bb17002f4cf65f77323"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/dist/ui/shield.png",
+      "kind": "file",
+      "bytes": 43191,
+      "sha256": "67ccd20f075f9d7a813bcdf9ffa2453330f3722bc086cb587a926510151ac087"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/index.html",
+      "kind": "file",
+      "bytes": 8262,
+      "sha256": "5a7239717be90684104add02fd9573ab08b588603553ee3a7a699ed9e45a5044"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/node_modules",
+      "kind": "symlink",
+      "target": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/node_modules",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/package.json",
+      "kind": "file",
+      "bytes": 1290,
+      "sha256": "6bf72eee2a19987fc6112e93892bf44b9b60476c2937fa7bbdc6e72e516bb1b7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/public",
+      "kind": "symlink",
+      "target": "/Users/bazzi/.codex/worktrees/banana-comprehensive/game/public",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/audio.js",
+      "kind": "file",
+      "bytes": 9761,
+      "sha256": "eef6c5e42ec42de077bd4754c31841d6eb3c6f639fca531ce9c98f83712de2c9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/cargo.js",
+      "kind": "file",
+      "bytes": 274,
+      "sha256": "acc4bf0987bba7c6107b789003fa72531c01538e3a047e7ff1da207834121291"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/game.ts",
+      "kind": "file",
+      "bytes": 15122,
+      "sha256": "272b47010eb43a42e82d0964dad16ad9ab4f571cd28b555c03de95159e5491ca"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/inputBuffer.js",
+      "kind": "file",
+      "bytes": 998,
+      "sha256": "679c2ecb3fea15735d0f6403c1fa9ddd53f5aed6151543cb5343bf8a5a273e41"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/kickCamera.js",
+      "kind": "file",
+      "bytes": 7979,
+      "sha256": "b1eead84dfb3d57afc1b5ed1123096dfcba87d994557f404e66e5dd5cf194410"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/main.js",
+      "kind": "file",
+      "bytes": 17243,
+      "sha256": "d319a58fdaaa7d501b393c7fb5cde0eb7c0a70f01b1cb021e821646ee77c5bdd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/mixamoRiderAnimation.js",
+      "kind": "file",
+      "bytes": 17454,
+      "sha256": "559d9c0c32aef2e95877a47d40e76b2ded3f4d3069aaa0c099ecc1ed5afa3c90"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/physics.ts",
+      "kind": "file",
+      "bytes": 10624,
+      "sha256": "7de4fe8a28472399d8f4a4d57f2db9f8f5ef0575bdb2d62236e4855b14e3209f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/reference.css",
+      "kind": "file",
+      "bytes": 718,
+      "sha256": "abce6d8b125f42dabc11c2ef86fa7210cc9bea7e9c97a4b34a0624165c0d8080"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/riderAnimation.js",
+      "kind": "file",
+      "bytes": 7107,
+      "sha256": "407faf5dc3c71d122b50d8448380dead95bc0b02733250b69137d5a74403e09c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/route.ts",
+      "kind": "file",
+      "bytes": 3180,
+      "sha256": "954e5a62aacfc1a75df6ab1c3a6f117150416236280df50f637f1889a89d4dbf"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/session.js",
+      "kind": "file",
+      "bytes": 1106,
+      "sha256": "6f3279f336f9e7922da381c7ffa4de8df31f09c398893f6aaf230ce2a1c6a94d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/style.css",
+      "kind": "file",
+      "bytes": 17810,
+      "sha256": "4583f02cd224341abb933f52f9e42cc7844df9708dda101597d46d9ad5f68085"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/vehicleDebris.js",
+      "kind": "file",
+      "bytes": 1608,
+      "sha256": "ffeb8661b2033d0eaebf2ec8f7b498f646ff3437972be28887bcbc1416289561"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/src/view.js",
+      "kind": "file",
+      "bytes": 40837,
+      "sha256": "090c76ac2a6c5f5ba2b4ebe56b288b9124a1cfff83c3e2cb08df4504d706eac3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline/tsconfig.json",
+      "kind": "file",
+      "bytes": 341,
+      "sha256": "09fca266970988337f72ef9cdffc323aff937e1aec53a08e7d96ccc61e1e6a03"
+    },
+    {
+      "path": "artifacts/living-road-20261030/baseline-build.log",
+      "kind": "file",
+      "bytes": 953,
+      "sha256": "f1313e36c0e4dae3eb60cd6cbdc73affc55fde9594d2b57a60c3753a03dd82bc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/browser-first.log",
+      "kind": "file",
+      "bytes": 2420,
+      "sha256": "25f64bcd5dc18468d68f828ae6d8f59e0ea9e9b3a267808b394aba4b1a036e3f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/browser.json",
+      "kind": "file",
+      "bytes": 2419,
+      "sha256": "e6fad685aeaaf1f131d126948fb37ef3ac296bc6ff0c8ed49dbf7fefa3ac031f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/build.log",
+      "kind": "file",
+      "bytes": 1165,
+      "sha256": "e95f7fb3e91127d0f46b5a7a4005e795bf2cb60d459a025a89a2011e7a81d6ef"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 1148038,
+      "sha256": "7c3a051f21128c75d4a2f86ee56ca2eec0eae941b65145c29f708f038b1d7cba"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 1083340,
+      "sha256": "cc9d76f6da82c9d5d7114a6977b4f223fe21f3045e97320c7c4e707a42d20634"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 1034326,
+      "sha256": "73fc5ffa47bf253b6d9d9c1425fd2a5be90d5fcc12e68cf7c6777456405b648d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 1049102,
+      "sha256": "67ed1737672f44c68ed2f26b5ea6f36ad344c48fbdd94e13d90408401647eaa8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 1023523,
+      "sha256": "05348bd72956fe473321bc459dd2242d3cdf0ea0b792f54f283d47e168170f3d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 1018488,
+      "sha256": "a022bd1724899499f9ae357cf03e6e87755bff2b3e3720a332de2634366aed5a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 1050988,
+      "sha256": "5928ccea6bd9f4ef1dd8c49a95a40e1014b76b8dfe6db6e0cb3e612c5c2af56f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 970189,
+      "sha256": "af89e41bc27e7650bdf57d64ded04f82e3f2e3dafd9fb8e1af076b458f087358"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-left-0.png",
+      "kind": "file",
+      "bytes": 1012404,
+      "sha256": "8c1ffcd7e655e464596e200caa1b16a7aee3b99908bd78b668c5025d1984faff"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-left-18.png",
+      "kind": "file",
+      "bytes": 988427,
+      "sha256": "0a6fc7435cf87dba724598545d3e57ef8560ebfc4d50db552a83edcd4ebc3342"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-left-43.png",
+      "kind": "file",
+      "bytes": 956970,
+      "sha256": "75726989812003f0bed9cc5672de9d2cb61f32b0cef943bbfa08a5cce11e0fed"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-left-riding.png",
+      "kind": "file",
+      "bytes": 1033412,
+      "sha256": "dc46cd0aec8fd66a3fa2b8049f31b5507da9e5d1a668779a7ce8faf38f7d20ec"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-right-0.png",
+      "kind": "file",
+      "bytes": 1045690,
+      "sha256": "d42dbf20089e557189a3d1b5ba46a983a2a831c7e8a23c145f116e14e24c9fb8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-right-18.png",
+      "kind": "file",
+      "bytes": 1026574,
+      "sha256": "ac2c33fa225e6a18520f8871d74af09b918139a0ba008f4838d523b980a050f7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-right-43.png",
+      "kind": "file",
+      "bytes": 1042729,
+      "sha256": "f5987617b2dfbd0345d5309ddc5a7659eb32cce85a4b7d9cfe98de9b8b12fff2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/1280-normal-right-riding.png",
+      "kind": "file",
+      "bytes": 1041472,
+      "sha256": "d9a5f6862f61daca013d7a7a4feaeb24512219c826ed9c75601331438d4041bb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 379798,
+      "sha256": "8715bee27d78681cb3a51bee90d7be5a05304d8e31c8bb03d99342ecd59db4dc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-edge-left-failure.png",
+      "kind": "file",
+      "bytes": 380101,
+      "sha256": "fcaf2bb61bb1d381f5183aabc8a32ae250c5422c3b62681d6a55149deb1a9bd1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 398151,
+      "sha256": "d8ea0b1122b625deb3d055f16cc8b2c33a8a577c9df64217f16eeac681708b56"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-left-0.png",
+      "kind": "file",
+      "bytes": 338680,
+      "sha256": "f48e43563daac472c56a768b0f8e7954f54e8045528a74ec6f3d1938228d05a6"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-left-18.png",
+      "kind": "file",
+      "bytes": 347677,
+      "sha256": "2bcc6a9b510555a91cc6f0fbdc1d8aa2b8d5935de25ef2be1c9752d77b76f9cc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-left-43.png",
+      "kind": "file",
+      "bytes": 351299,
+      "sha256": "7f49ec697f48be036f9b3354db38b042201f92651797585f7af81d3406def0a1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-left-riding.png",
+      "kind": "file",
+      "bytes": 375415,
+      "sha256": "808a86787ccf2c7f5f75263d0f9ef57c33176a9a4220dcb59f47f6f1ff0c760b"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-right-0.png",
+      "kind": "file",
+      "bytes": 419464,
+      "sha256": "2362773c9ac5f1607ebffd19eeba533f9df6b9cd891b09c99db2efc2a3066b31"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-right-18.png",
+      "kind": "file",
+      "bytes": 427034,
+      "sha256": "5cc382bdb6b55a1177465a330b3ca0546070daf8ff02aae5b9cafe8fe2b892d0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-right-43.png",
+      "kind": "file",
+      "bytes": 425058,
+      "sha256": "e3c6817a2857c12d8eae204a8b2f83086187088fbb3d3213b234f31f5e5b1d5c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/390-normal-right-riding.png",
+      "kind": "file",
+      "bytes": 371501,
+      "sha256": "35335a29a5ed9fd36317c7e7b45af11cb7a05bb3963241b5f202bba2634385d0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/kick-camera-failure.json",
+      "kind": "file",
+      "bytes": 19365,
+      "sha256": "a57fb162b733d71261f61b86de8f0f5ff53c13ac1aca7f094109496914841f23"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera/kick-camera-report.json",
+      "kind": "file",
+      "bytes": 609497,
+      "sha256": "aed66947d5db24d27d88916019b32c046c14b9400da807e597cbf6fbf3057c86"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 360827,
+      "sha256": "03356f08d2be535ee80e1978e56222cca27a25940fad0b4840544e15033804e3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 353670,
+      "sha256": "1613cb3eef92d63d9af6e8aead27ec6f13b131723cdb82a1246aa2260053cf2d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 341789,
+      "sha256": "ccf06cef8c2863248e82bc9006a994078f6708251c18e448c7ba16cc85494261"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 397708,
+      "sha256": "75af8e04c20fd95f16b1af628ce1d010bf790612c53f4b52faa27419a955074a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 367808,
+      "sha256": "50d8db2892a6cbcd57cfccc0a8ad26bfbd378454f27dcd20143cb44b839f1eb5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 357950,
+      "sha256": "116354dba982fca31e722ea556bba0a1e4485fba63f7eb1a530d812eddde4f5c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 356321,
+      "sha256": "1d65bc918f3cff6e72a35114d37d3e006bcd0296711ecc1a829e67b657d72fa0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/390-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 402239,
+      "sha256": "4f9145c551c747ac0be36b86feabf844b8230f0d171bd44a91f8053b926fcde8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final/kick-camera-report.json",
+      "kind": "file",
+      "bytes": 204252,
+      "sha256": "0357ac67a39befc3e4b68a8417dbd364546134aa366c35c59d2edddcb17216e9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-final.log",
+      "kind": "file",
+      "bytes": 104,
+      "sha256": "d179813fa0fdf9c537611e9ff72af6ee3806ecb190b99c8cfd1d96cbe8bdd219"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict/390-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 364863,
+      "sha256": "e927a947c3b40a8e9e2883df5cc4743d043d9eb15d2b2af39b65902fc4b7e036"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict/390-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 356165,
+      "sha256": "deaacc5e8ed18314e03bcb4283e283a6fd68aff51096d21e3b9436ec9d05af95"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict/390-normal-edge-left-failure.png",
+      "kind": "file",
+      "bytes": 353039,
+      "sha256": "f4562ca94c72fec0ee54ea30b327e26af84adc160ca003ce39dc09e84d00ee70"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict/390-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 398411,
+      "sha256": "d7b310518f483ddccd53a597ddb52b8e83e0321abae0ee23ff6b02d43eb66718"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict/kick-camera-failure.json",
+      "kind": "file",
+      "bytes": 45654,
+      "sha256": "6c32c8dfdd449848a88a8a35b1dc6c1304a342f797524161719bda6945267a24"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-predict.log",
+      "kind": "file",
+      "bytes": 588,
+      "sha256": "88fabfa86e75db497f1b5dc41237fa7f7632d00c938004c26f85ffc6742aa829"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 1141045,
+      "sha256": "97ce2aeb6bd7ecf899ed2f6ae45c2a9bcaf6677f6492ce6d86ca3882284146bb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 1085651,
+      "sha256": "1fa9bfe9d36906030e3d0cbea0c8af6ebd3e3f38336afc191b658daf192753e3"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 1033506,
+      "sha256": "b7a0f310cb0510f96af646590fa23680a58ac158210e1fe40128611195001b1a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 1046373,
+      "sha256": "9300aa8b948afa4c86c3b29b57922c1d34aa19cdb8c823b2a0bd09c2d8b7639e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 1041964,
+      "sha256": "b82e41bac46e1242f37d5dcb95a0a1cc3ea0fbdd76e43db57743de1cf0a5a26a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 1020720,
+      "sha256": "dc4234a10713c84ee36e4720f0fed3be2b36358b4eb26796dcac1400a405f015"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 1047194,
+      "sha256": "e14c275b05144a803f9ea52ffbda57f8c1cf275a2efc6e3bad9843457c5adfc7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 970078,
+      "sha256": "8148068b2718be32622476b4984c9dc817837d284bfa766fe737ed9508e7aab4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-left-0.png",
+      "kind": "file",
+      "bytes": 1008637,
+      "sha256": "d049e5f6a886b5e41bb0051cba9ddfc23b108a32ef59d88af28d0753c3fb49a2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-left-18.png",
+      "kind": "file",
+      "bytes": 990724,
+      "sha256": "eb6d61f626d4aba7b9349482d6a6c060182ffa70264125d0021b5694dd077375"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-left-43.png",
+      "kind": "file",
+      "bytes": 938716,
+      "sha256": "b8c6678f9dc1cbfef1749e239222a5475892b7ec0f12faea22dbc8bdc1c84fd7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-left-riding.png",
+      "kind": "file",
+      "bytes": 1034795,
+      "sha256": "89d4d4308aef61913c6b052c81caaa867f2b3f799a5e29e8a200c3cf260e57a7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-right-0.png",
+      "kind": "file",
+      "bytes": 1089483,
+      "sha256": "b20e704fcd138a1bbd55ee87782c74015ab8d74b0246cc054656d6295c56f085"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-right-18.png",
+      "kind": "file",
+      "bytes": 1042088,
+      "sha256": "d9d0ff4efe44ce038f44f79ec81b7409fef57cba7fcc66481d7fe2bcde33b122"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-right-43.png",
+      "kind": "file",
+      "bytes": 1051571,
+      "sha256": "08ffbd4a75f000a1ae628119e337414f1f09e4cd09225cac8500c43137ef1038"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-normal-right-riding.png",
+      "kind": "file",
+      "bytes": 1035597,
+      "sha256": "b85536b46ba56ff26b20b108646d4b0cb37f0b2a51cd5cecf889ded32349daa7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-left-0.png",
+      "kind": "file",
+      "bytes": 1090943,
+      "sha256": "f9b0538067b512fbadda9952a7160b186fa5882e84d7424dda45aaa4ad29bf83"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-left-18.png",
+      "kind": "file",
+      "bytes": 1048898,
+      "sha256": "256c0dd161478e5ee3da02638c9ef1383b887806ef987a31abf773fa69ad8c23"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-left-43.png",
+      "kind": "file",
+      "bytes": 1001292,
+      "sha256": "e6abbdf789cc3e725c3de6abadc748edb67a28babfed8d3cda07ec28f99f804a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 1006058,
+      "sha256": "55f32ff8e06cbfbd72ee28d0dfdd89ff7e2197fc7a340c3058e56b0eb0174c52"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-right-0.png",
+      "kind": "file",
+      "bytes": 980159,
+      "sha256": "6a521356d085489e6f3b173aaca7e2a44a7ce3f18ef257038f0fd1bb6254155e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-right-18.png",
+      "kind": "file",
+      "bytes": 989171,
+      "sha256": "4048d60506131036a6d085fd7b76a35123dd153a375bebb692acfb538e6b9baa"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-right-43.png",
+      "kind": "file",
+      "bytes": 1017210,
+      "sha256": "a0f803b2500abba3718c1443ad80c71d69b4cd7341b43c2789721816daae2e5d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 924278,
+      "sha256": "335e0d5c2a2266b907f6f7fcde7ab246d70d7de3996c7175427f7e8d9f880b55"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-left-0.png",
+      "kind": "file",
+      "bytes": 946169,
+      "sha256": "d9ac9b2689e54119ceab2cf3b10724d7145c14981543a5fcc3fdef957acdf0df"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-left-18.png",
+      "kind": "file",
+      "bytes": 958724,
+      "sha256": "8be0101c6b3364c26d194deb3378a68d7a0cf82197e0818e45bd923da80e892a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-left-43.png",
+      "kind": "file",
+      "bytes": 892310,
+      "sha256": "dfd7526a5656dba9af6341ded7614151569155f0e3be5dfe0617ec1f718396b6"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-left-riding.png",
+      "kind": "file",
+      "bytes": 993384,
+      "sha256": "cfcaa01bd1f152c6cc6d97ee15d4e94fb94d76b5b22cfdf3491f20faba66e2c7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-right-0.png",
+      "kind": "file",
+      "bytes": 1026338,
+      "sha256": "18e9fb59ecaff200770e8cca973b9290259ac8443e077eaf1c1e3bd6ba504c2a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-right-18.png",
+      "kind": "file",
+      "bytes": 999157,
+      "sha256": "4e4b76f6e2b4556d0c2e38abed1369ef40cb4f7679d9b944ddb6563f53857c60"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-right-43.png",
+      "kind": "file",
+      "bytes": 1024445,
+      "sha256": "91aacabba9bb269408b0e2f72fed56a4e75b815a1a155a558e61ab4303677304"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/1280-reduced-right-riding.png",
+      "kind": "file",
+      "bytes": 995669,
+      "sha256": "2605f01dc4fc52bcfcd52fd21d18740ff1246c093a20dfe2406388a46d27d933"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 317756,
+      "sha256": "3ec3aa7b2bcd5f7a18e529909428e1880f28606e65fa35e4e5c30bb79dc38423"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 308827,
+      "sha256": "30f778fa6e7fa1c61b3a5f5922a2cf20ae35c8f443fc7a60fe80a9f0c7fc6215"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 299863,
+      "sha256": "0a6ade7202aba9450ac8e3a523f47772dab2f0e0d9f2bf6f22e935b0a7e94dd4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 347125,
+      "sha256": "ef991e41316996cb1f7773c8d74caf436e238f11fac6cc975d92fa96302edb04"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 320261,
+      "sha256": "ea8c082e840760ef1e3b17129cc682cbd3472f67a79aa1099f3e9b13a88ed29f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 311414,
+      "sha256": "0eb18a7f18f10f1523f79654fabd9fba52dc1c78649278d1a347b4c82d00dc38"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 310829,
+      "sha256": "9c1b59652d89abb0a314c8d4af5564e81380d712d2babaae92284d0433b7251b"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 348155,
+      "sha256": "fe255228b825c1ff3a0960e0e48c809730a6c0704c0f5dda5334b72656a80092"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-left-0.png",
+      "kind": "file",
+      "bytes": 299313,
+      "sha256": "f8c340754f1388d1c647b8d05255cfb73034433d7940a655868719e23747f095"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-left-18.png",
+      "kind": "file",
+      "bytes": 304486,
+      "sha256": "dc58ee7f4658907cf7352ad4f2f706101dc7adfd00049b6380a419356ce6cd6f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-left-43.png",
+      "kind": "file",
+      "bytes": 307264,
+      "sha256": "0fe88e27aecf5116b79aba490d6a28411e3c754a13caacb7a557971029a1bbf9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-left-riding.png",
+      "kind": "file",
+      "bytes": 327745,
+      "sha256": "de0b3ce19c58509898f0d63c1bef12e0e4ec3bb017bb352f3cc4a155ca755d2a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-right-0.png",
+      "kind": "file",
+      "bytes": 379150,
+      "sha256": "68e86895700ef539cabc88811eab07b36939a54c8cdae46c805cde7a936fe330"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-right-18.png",
+      "kind": "file",
+      "bytes": 377776,
+      "sha256": "6b0c371e3eb4f2b48b014ce985be10388d9115cf4b5759f54d07d9f59f6597bd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-right-43.png",
+      "kind": "file",
+      "bytes": 370554,
+      "sha256": "b1f4a7c617517c5dadbf3d6ee93e7aed376930a913d967ab268576580dbbdc64"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-normal-right-riding.png",
+      "kind": "file",
+      "bytes": 325406,
+      "sha256": "150f8b8262ff3744460ef95d6f4a264ea8558025d7f20cd7acd7dedf074d8dad"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-left-0.png",
+      "kind": "file",
+      "bytes": 288373,
+      "sha256": "4474d9460d787492994b2358d807b7b12ec044fe44c8f500fdbe60b25bd42b76"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-left-18.png",
+      "kind": "file",
+      "bytes": 285065,
+      "sha256": "99edd0e0985154748285b63e9d145e23875d5e29829945a0166d5636e6c4838f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-left-43.png",
+      "kind": "file",
+      "bytes": 276328,
+      "sha256": "65181b935a2cb098a1cb4463899c892505e9f3719bd2fbe358403ce82fc24b7d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 331440,
+      "sha256": "262c02b5a3a90fc18b88c4bda5f95ada91c0dc778a4cfab4c54419c4fe21efef"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-right-0.png",
+      "kind": "file",
+      "bytes": 298107,
+      "sha256": "33757a6e214639da97e5242c437c1e73721d3c1e30716f9d960248efbd9a2ae4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-right-18.png",
+      "kind": "file",
+      "bytes": 288331,
+      "sha256": "97b915310306b20a5bf9b8eed4ffb649e80e2a6a4898697885d67a3314aa2f66"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-right-43.png",
+      "kind": "file",
+      "bytes": 288225,
+      "sha256": "634f5565a215bf19c9313c2f8b59a5f29267d42e0de17129d8fadb180d6ba602"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 335405,
+      "sha256": "e840249aa3c09db6a6bd44b81d91b421249ad08b6262565ab1d43e338b5f7548"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-left-0.png",
+      "kind": "file",
+      "bytes": 283054,
+      "sha256": "fa08cff7e57d6a2156aa19ac4d6c83b28eae1b3c001941c0fb4ccd37772aaccd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-left-18.png",
+      "kind": "file",
+      "bytes": 294534,
+      "sha256": "8fc3170cdac3c1cc0f0eb51ed7b66d96386f60e6f331ae0b05a20ec4544087b7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-left-43.png",
+      "kind": "file",
+      "bytes": 296772,
+      "sha256": "e7ff156ecb5ba24ec83d4b84dbec0b85210639a27bdab62585b4869ef7a9577a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-left-riding.png",
+      "kind": "file",
+      "bytes": 309062,
+      "sha256": "5a54d5622823d376022f2608c5feb026f8b1f3204b2f01abf730f000b6b3a41c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-right-0.png",
+      "kind": "file",
+      "bytes": 371021,
+      "sha256": "f1fd55fc9ece4b41848347d4e13e3bf200e5edb0e8733750551c041aadf1ed98"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-right-18.png",
+      "kind": "file",
+      "bytes": 360571,
+      "sha256": "33a32190e461c3b763e0503fbbc4f0b5cd3c96c2f69a577ad9f9a1f694c70ba2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-right-43.png",
+      "kind": "file",
+      "bytes": 352913,
+      "sha256": "03a2623a7fd0501785ba54b4d4ed8dbe967144b5cc44a739a85c2eece62e4f81"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/360-reduced-right-riding.png",
+      "kind": "file",
+      "bytes": 307109,
+      "sha256": "ecbc22c24f0909ab7cd3a6000b0a3ab2db646a74ea97ba7959b086b5cb982e3a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 364522,
+      "sha256": "b43648da44f5e48d03668a31365bdacd4c475e5af60d541c6aabd8a1b766ecb8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 356576,
+      "sha256": "2e67fbc68ed8ca30014c4f216350c359bcd77286df10183731e1ea7a73f9cca0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 342295,
+      "sha256": "b50800002245836c9b576a0a6512c440e35b179d4808f1d7e7ec693ebb5d52ff"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 399329,
+      "sha256": "70c7056d0ae9dadfa6975afbdb84930dc4ecba8272d391ea99456f70ac0d1507"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 365300,
+      "sha256": "38be31ad5b306d5e25cfa784b98eda095cc7fb4dee0a33341eaea2bf564e8554"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 357626,
+      "sha256": "22753440f39f5fbd6559d6b8a1c7d7fc0635c14997be1b0b248f6713d1667249"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 355902,
+      "sha256": "e03fef06301cac21627b731350b14abc8154acf5f4b63b064ba85a3db99e8874"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 402273,
+      "sha256": "cc18bb6754f7f0bf49d465fa49d6a7a538d19a22f7fb24e04180d180d88f8231"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-left-0.png",
+      "kind": "file",
+      "bytes": 339940,
+      "sha256": "41a8d336a09cace0ddf958f94e8d198f74a0d5c016c51e89158e4a86655cd56c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-left-18.png",
+      "kind": "file",
+      "bytes": 348774,
+      "sha256": "a0e75fe8ed11b6c1ea735e83abe6685606f9e9650ba7f67adeb9ca7d44bff5d4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-left-43.png",
+      "kind": "file",
+      "bytes": 351591,
+      "sha256": "65910131dc4957b60bd5b8e57be7f862f286a93d4926f842b77020aaaddc99de"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-left-riding.png",
+      "kind": "file",
+      "bytes": 375420,
+      "sha256": "b46a17b2f681eb77854e39ac47497158284ca9f13b47f083a654eca08929dfb0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-right-0.png",
+      "kind": "file",
+      "bytes": 440002,
+      "sha256": "a8a8e61d6d65725f5159a6047e9c663c0b67f2edc12a6402aea065461ec39d9d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-right-18.png",
+      "kind": "file",
+      "bytes": 436661,
+      "sha256": "271fd1544242776722616d147b0d7be76d41bb67eb290a00fb7b9ea698de3b27"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-right-43.png",
+      "kind": "file",
+      "bytes": 429704,
+      "sha256": "2152c908f9cd450b3c23fd8138298cab9d4e407dc7d5685e5cc4cf13faeceff4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-normal-right-riding.png",
+      "kind": "file",
+      "bytes": 372760,
+      "sha256": "c4f529d3667e8a2a9dfc2a40d93fa64ef754855711ff50ac743debd59b7c164d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-left-0.png",
+      "kind": "file",
+      "bytes": 330101,
+      "sha256": "d0d9278f28a713555165cb2ab01a04bbf2946f99dd248517d745f8adf6e8a46d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-left-18.png",
+      "kind": "file",
+      "bytes": 326759,
+      "sha256": "647756602e112a216d004ec6b8f157c5f63e6c1d55c7fd743ac5c9744bf2c8f8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-left-43.png",
+      "kind": "file",
+      "bytes": 316023,
+      "sha256": "565926104da829c6143b10b39b71f056e93c50747406f66f656139277a8fb6ce"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 379571,
+      "sha256": "ccc33ebfb36544e5460db43bad97fe01d9c03201f99855e8ae5454d9a0c9c99d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-right-0.png",
+      "kind": "file",
+      "bytes": 340899,
+      "sha256": "dff88779c5aaa7e0ae48e8fe57b1456e5957fc31e1c86e4ed1f0f4f82fce27cd"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-right-18.png",
+      "kind": "file",
+      "bytes": 332111,
+      "sha256": "323489c74b6a65788e3429d7382745b573e5780812b75874482944f04c3824fc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-right-43.png",
+      "kind": "file",
+      "bytes": 329952,
+      "sha256": "58a54a2d31c33b55796cf4eaf5c3fd48eddd8d792182de0d9d52e97ad8da16f8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 386314,
+      "sha256": "14848e91e7dfa149896c499f07cb708cd2c9c453abdc4b26a42ff9065de1b5c4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-left-0.png",
+      "kind": "file",
+      "bytes": 323963,
+      "sha256": "7d4cce580576a89f8011c931dda5bdbfa1374fd6592b2bdb6a45332af74c992a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-left-18.png",
+      "kind": "file",
+      "bytes": 336066,
+      "sha256": "a2c34b6b20cd13abba424d5887f6511984e0ed97e8059d9fac601a561e22ee13"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-left-43.png",
+      "kind": "file",
+      "bytes": 339854,
+      "sha256": "4eba94da5d42d66e10b42b50b6f4a2f6abfe5d24aab78a5907df0794ac1fbb55"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-left-riding.png",
+      "kind": "file",
+      "bytes": 353659,
+      "sha256": "31b73b66c26ac9257dd641b8366f0e479d022dba168a0399f30f798b935af1b1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-right-0.png",
+      "kind": "file",
+      "bytes": 426694,
+      "sha256": "5cf4fa2ccc6deb0ef80000ba1cec67ee86b0f45e7134489b0218d33424a0f719"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-right-18.png",
+      "kind": "file",
+      "bytes": 418539,
+      "sha256": "f67c7a80eda7ec06a061000e0cd560852310c1911b613de911f664258961fa4e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-right-43.png",
+      "kind": "file",
+      "bytes": 408240,
+      "sha256": "ba313a0e2aefdd9eb495c9c1582fd42f983ef043fecd65a376c30bd242b5ecbc"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/390-reduced-right-riding.png",
+      "kind": "file",
+      "bytes": 351103,
+      "sha256": "0f70f8344ced262822250a69ddd719dff1097fcf8691d91828e886323ff2be85"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production/kick-camera-report.json",
+      "kind": "file",
+      "bytes": 2432071,
+      "sha256": "13ea890d1dc15860ff1d39cfd7eec5981e6a41bf2f8bb354efacdad34fd58aab"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-production.log",
+      "kind": "file",
+      "bytes": 1021,
+      "sha256": "55bc2b6a70288107f6451324e3cd47fde547e9ae91742536eb8133dd5a368567"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-red.log",
+      "kind": "file",
+      "bytes": 2137,
+      "sha256": "c6e2cecb44141a951fee5be47ed61327b847b9fd9c8895cad73ea6a0aa4027c7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 304413,
+      "sha256": "4ed412c1d19673122570e1f1b8ffb41652030018a69380f43fa900691db871e2"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 295440,
+      "sha256": "a045b7cd58d2944f1b5a0d8f72ee27d0a91fb9c1894b464edd660c860f357fe6"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 291129,
+      "sha256": "b0af318ffd677016bada101141c6ad25f283016e39f03de81052e374c94bd50d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 349871,
+      "sha256": "2bbf99de36be180345566348c294623599e892eefcd6f94471ab8e3e1cf0312f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 328512,
+      "sha256": "152d5a0b61f2fd9496583d37e8ba95cbd2617e0bc96e17d0935be6094e99dc65"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 314621,
+      "sha256": "a9aceea41e266f8200f30b7f7e2484e7e7150aee0d9cb6bd397ac10d75c96a52"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 303950,
+      "sha256": "8d01bf112649935b78122e8a2feab55663412ab649bfd41b5772b545220da93a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/360-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 353044,
+      "sha256": "8aea49579d1862ef8cfd2654e91320baea40700ecca84836aacbbc8b4f1fa64c"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-left-0.png",
+      "kind": "file",
+      "bytes": 347224,
+      "sha256": "dc230f26fbb1e67e29a1619c8c81e4831a70c413d9c7424925d27a5a27250319"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-left-18.png",
+      "kind": "file",
+      "bytes": 338731,
+      "sha256": "a38a79d85ac6389ec1bd30e6981ea7eae0679c1bf9eb6a6cbdcfb1663898ecc0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-left-43.png",
+      "kind": "file",
+      "bytes": 332054,
+      "sha256": "2d6292a68505f8cd7785c1ae5ec7f130aa3fa92b6fe18495f486b9718e4df21d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-left-riding.png",
+      "kind": "file",
+      "bytes": 402714,
+      "sha256": "cdbd5adf5347927d3fb21b5d8c8f2f81e753ece20f9a08969cf7b5d9c566cfad"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-right-0.png",
+      "kind": "file",
+      "bytes": 373797,
+      "sha256": "5beaa233d32d1f1c1b14e2f9fd52b5eb75eca0bd429349347573b6807789bce1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-right-18.png",
+      "kind": "file",
+      "bytes": 360576,
+      "sha256": "110dbc4f616170caf17a80f134212b8c694aaa5185008c610bbde6b4d10039fb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-right-43.png",
+      "kind": "file",
+      "bytes": 346923,
+      "sha256": "de9dba95bfeba9136e4b4ff44fb94c71e6e3f44eb83eb51d2106fe5f107981f1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/390-normal-edge-right-riding.png",
+      "kind": "file",
+      "bytes": 410400,
+      "sha256": "bf21b7f72e61ab83e4a7ac50c0a4340aa4320b4425084ee6043b14dd412bfcf1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing/kick-camera-report.json",
+      "kind": "file",
+      "bytes": 408622,
+      "sha256": "aa013c40e5c2ccb42a3024cad4f86ef83fe6c1c03214ff85a286b81eeef28bfb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera-standing.log",
+      "kind": "file",
+      "bytes": 191,
+      "sha256": "9e564be8ed098969103db706a5ea97fc2095ba4221a7ad4f5ca2472e764ddee6"
+    },
+    {
+      "path": "artifacts/living-road-20261030/camera.log",
+      "kind": "file",
+      "bytes": 816,
+      "sha256": "a32a5f6bca66d2a1976cb894e167ac7859ec3f5dbf7408927fd12b642030504f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/context.log",
+      "kind": "file",
+      "bytes": 30,
+      "sha256": "2cdc5e93860f80635873476121563088b34e280ca435fa9aa638ad22cf952e68"
+    },
+    {
+      "path": "artifacts/living-road-20261030/course.json",
+      "kind": "file",
+      "bytes": 59793,
+      "sha256": "f716c66effe17e0e3b85c53de6689ee17f2fa6e9ed01be822e6b39304c5ca8a9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/edge-red.log",
+      "kind": "file",
+      "bytes": 2239,
+      "sha256": "106953e074e708a9cdb6bdf04e6379dd0994df82dcaf60e9d7bf4632d721c1fe"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-autoplay-failure.json",
+      "kind": "file",
+      "bytes": 71243,
+      "sha256": "c1dcd5197d506e4db8cd64ee4374371103ef3b96d1c1cf0a51441b15af7d2e13"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-autoplay-failure.png",
+      "kind": "file",
+      "bytes": 588086,
+      "sha256": "db115ac545fe425e6ba9ec5dc8aee7ee446ea889941be90a6ea4dd860d5637d5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-browser-report.json",
+      "kind": "file",
+      "bytes": 1536,
+      "sha256": "59c6ac6fb48badb2af9d1182ff9169ed8215eb05622e9d91903c57bd549108da"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-kick.png",
+      "kind": "file",
+      "bytes": 1405386,
+      "sha256": "6a10e80ed7e0a13704b8d328e0cbaaa41f399e4700e1c105d092ffef83dde985"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-ready.png",
+      "kind": "file",
+      "bytes": 1237148,
+      "sha256": "0d6578d6d559fb1ae9404b4961f3a71174cac866629496def1165b8a0ab04592"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-result.png",
+      "kind": "file",
+      "bytes": 583976,
+      "sha256": "e84897f2802a43d6811a426d07967c5ac4d72284891f180a3a75164d32311b43"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay/endless-running.png",
+      "kind": "file",
+      "bytes": 1320229,
+      "sha256": "7e2e0d7004cbe2aba76d27891a8c8b6229fb1c92178b0a4b87a1b9da19690f68"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-autoplay.log",
+      "kind": "file",
+      "bytes": 1636,
+      "sha256": "e9f371d79db2d1a1bd420f7173bfc90c29677fcc46a0035033360b3ba3d3abf9"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-performance.json",
+      "kind": "file",
+      "bytes": 1206895,
+      "sha256": "8c2ec5af4973af5f5f5d9f633208ff583f60e8c6b6c17c624a36159f01a3372e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-performance.log",
+      "kind": "file",
+      "bytes": 4460,
+      "sha256": "b1d3845d54eca274016883cc40ec8e5a1ab3b2586eb0002ff3dfa694740f589a"
+    },
+    {
+      "path": "artifacts/living-road-20261030/final-smoke.log",
+      "kind": "file",
+      "bytes": 3362,
+      "sha256": "e097704381a89f2608004b7bd2c699a76ea2e30fdb712b8b03a5b8a9518574f1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/fingerprints.log",
+      "kind": "file",
+      "bytes": 72,
+      "sha256": "b3be2d2aa175da48d3eb24b11ab779effadbc105069bca27f77870237eeb8b70"
+    },
+    {
+      "path": "artifacts/living-road-20261030/footprint-red.log",
+      "kind": "file",
+      "bytes": 2177,
+      "sha256": "81b2ca6e56ddd7c81bd8a2ee34ec0c5bd4c1fee9b1a2437ed57984a06b73fda8"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance-comparison.log",
+      "kind": "file",
+      "bytes": 5606,
+      "sha256": "2399f5503de1c4ea66b68a8b090c43d013d24b0fdd005f4e601f961d1c38107f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance-current-comparison.json",
+      "kind": "file",
+      "bytes": 612260,
+      "sha256": "9f62e780c73b18c009625a0d3a682b3bb5b10afb4a5f19e54faa1c66344974a0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance-main-comparison.json",
+      "kind": "file",
+      "bytes": 643943,
+      "sha256": "e45e7271d2651760cf45b4108fe5d67034a84521d0f159b0a66f6551dddcb300"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance-repeat.json",
+      "kind": "file",
+      "bytes": 1006692,
+      "sha256": "2e701ce8a7d9a881c1ad884fbe61d3c124385d29c3c0b7447ad73fdd1cda675f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance-repeat.log",
+      "kind": "file",
+      "bytes": 2823,
+      "sha256": "9dca55c3297a415090045203bc4c48f9e4604244d5e60a09f0771226947d0468"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance.json",
+      "kind": "file",
+      "bytes": 2772582,
+      "sha256": "25a2a8ef7640800b389fcf05af0d8cdf06d2b7b74a631b27de796717c6f42183"
+    },
+    {
+      "path": "artifacts/living-road-20261030/performance.log",
+      "kind": "file",
+      "bytes": 4479,
+      "sha256": "ce3c0e203d35320d7d0d8879870a11f5a099cf306403abda2f6fc3a862bf1a42"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-frames.json",
+      "kind": "file",
+      "bytes": 808154,
+      "sha256": "0fbdc3cc1bdbbef495863f3178164d90eaeb461ae8f160eabf9a5eb348dc6eef"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-goal.png",
+      "kind": "file",
+      "bytes": 1036978,
+      "sha256": "ceaacf71fa58173bbb1ac012416c470ab3b21bf545342b0a0ffb3cbf7f3f2708"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-kick.png",
+      "kind": "file",
+      "bytes": 973448,
+      "sha256": "983a197e463828003be72c6862528b041c09f7906d3fd309c3d029ec321d9a30"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-walk-1.png",
+      "kind": "file",
+      "bytes": 985375,
+      "sha256": "4c3fda510913ed5158413d3298813302fd5bc7f4c349a99ea5beef2ceff78a53"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-walk-4.png",
+      "kind": "file",
+      "bytes": 986179,
+      "sha256": "4db7bff8b92f0716f80e0c74e50bf2f7672078afb9f31b5785048652883d6b02"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/1280-walk-7.png",
+      "kind": "file",
+      "bytes": 1004358,
+      "sha256": "114e77c8d040038ce73377a1ed631005802d8222b250fb1ecf7a030646802602"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-frames.json",
+      "kind": "file",
+      "bytes": 785532,
+      "sha256": "7b1918c02754d54adbef64f8bdfadcf8da5afe09798d83430c3a58a47b6b474e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-goal.png",
+      "kind": "file",
+      "bytes": 380691,
+      "sha256": "c488fa2135971f4b145cb823ba6631b0dd207474be9e4b67870dac96b3ba5c0d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-kick.png",
+      "kind": "file",
+      "bytes": 405375,
+      "sha256": "e6e9c7e97de2956bc7cf03d3661eecf2330715d47a00109351a6230389f2e077"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-walk-1.png",
+      "kind": "file",
+      "bytes": 371513,
+      "sha256": "29f48fb43361db5677ae4b187332365fb4970b6b0f9344e04c53c127859ed35d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-walk-4.png",
+      "kind": "file",
+      "bytes": 374883,
+      "sha256": "48e93467578538c1e489a664bd1ac6b6b6e0fc1b95a6ea3ac9667528a11e9c93"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/390-walk-7.png",
+      "kind": "file",
+      "bytes": 375723,
+      "sha256": "3c8de802495d0dc6295b88056be69202d2508764ce0b29f6fb0974eade9eaa81"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-frames.json",
+      "kind": "file",
+      "bytes": 785291,
+      "sha256": "71a1a2496b6bbd074390e03bab385ab771d80664415c36c0a27377f806ab9617"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-goal.png",
+      "kind": "file",
+      "bytes": 360805,
+      "sha256": "efab5827489821a49e4a975ef7d84dff48601faab65229443a4c64f431da25aa"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-kick.png",
+      "kind": "file",
+      "bytes": 355913,
+      "sha256": "96df2e37e04bfbefcfc0074d079dc9bf2432841279af47f68de5e605b8d97ff7"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-walk-1.png",
+      "kind": "file",
+      "bytes": 358042,
+      "sha256": "1da53a551c5dbb55b4c47f0305deafb6ab141cc52c5b848cf67ee6ea8c0f4e43"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-walk-4.png",
+      "kind": "file",
+      "bytes": 355735,
+      "sha256": "16d170539004ee27c305d664f0e4da5df5036362c112ecc6670619e04dfde870"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/740-walk-7.png",
+      "kind": "file",
+      "bytes": 360265,
+      "sha256": "c66c463a79d843056929a20d2bd69e542824e173b0fa1ad2b8396a8442f6658d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production/browser.json",
+      "kind": "file",
+      "bytes": 4647,
+      "sha256": "456299db359197135f6148aec8378682abdb517ea693f99b75176208a50fc07b"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-browser.log",
+      "kind": "file",
+      "bytes": 4648,
+      "sha256": "1e85bbd54e1dd504dfb7e1e6a9bb9a4dda25248ec6b559e794091f9643c73ae4"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/desktop-kick-after.png",
+      "kind": "file",
+      "bytes": 1067494,
+      "sha256": "748ed3b51c0037f5b50ad0f5765755bb53bd863d2ae7dbd97f9cb337468180af"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/desktop-kick.png",
+      "kind": "file",
+      "bytes": 1022494,
+      "sha256": "90bb9e497dec9509e2c5c980f2e277b25478b990ae70a61ec35e24ed4e0899e0"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/desktop-ready.png",
+      "kind": "file",
+      "bytes": 858047,
+      "sha256": "22d59d7e535681a8a80714407bed21f7bf1d3f4137cb1c79d19cab74435592bf"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/desktop-riding.png",
+      "kind": "file",
+      "bytes": 1034388,
+      "sha256": "32a24b9a5371a968433fc2a0d14bc2231e75458d0e9f44bbd2257d3dac1da09d"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/mobile-kick-after.png",
+      "kind": "file",
+      "bytes": 376411,
+      "sha256": "3b73816d9e3357ee3ecc0df36ffddbfca9e580e90f4bbe42ccb54401d91d4618"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/mobile-kick.png",
+      "kind": "file",
+      "bytes": 371457,
+      "sha256": "eb4f3bbd58e17ff360f56de09d112af00cac64148fbe3f76e25db8c06a6c41ba"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/mobile-ready.png",
+      "kind": "file",
+      "bytes": 187279,
+      "sha256": "3667f9ab098d07734b30a47f5ec8b2cc866389f535ea548ad0b2aa23c85cbf80"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/mobile-riding.png",
+      "kind": "file",
+      "bytes": 325282,
+      "sha256": "94731fbf20304b9ae52f686ac14c631b0617f3e1888ce61518eeab3377ddcf99"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke/smoke-report.json",
+      "kind": "file",
+      "bytes": 2839,
+      "sha256": "46c8f379be7b0bee1ca3aa657a5db72a867169f80c668a498eff68dbb370e717"
+    },
+    {
+      "path": "artifacts/living-road-20261030/production-smoke.log",
+      "kind": "file",
+      "bytes": 3380,
+      "sha256": "34bf847649e04fef2093ff78d376662cf37b9e96a71d783f9b29a2701f5291fb"
+    },
+    {
+      "path": "artifacts/living-road-20261030/rules-red.log",
+      "kind": "file",
+      "bytes": 6048,
+      "sha256": "b883219369e9d3aee208a0fd39dad8048ac0b4f3a76b60797396e541021c93b5"
+    },
+    {
+      "path": "artifacts/living-road-20261030/shoulder-course.json",
+      "kind": "file",
+      "bytes": 16187,
+      "sha256": "75fe8e643c1888af58f00ba53fef236f77c4e60a3b5aec22bf15f4635c5fdd0f"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/desktop-kick-after.png",
+      "kind": "file",
+      "bytes": 1078767,
+      "sha256": "4db8c7922bac19d1a6c668b314557c04fbe72e3020ff664438a47e8e43d026f1"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/desktop-kick.png",
+      "kind": "file",
+      "bytes": 1016639,
+      "sha256": "5b0e911200b08c74b9cfbf4ccf38c88ac02949c9a987341a66e21c28e7797004"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/desktop-ready.png",
+      "kind": "file",
+      "bytes": 858109,
+      "sha256": "db8b4dedb0360d30f4270f9c2694399aa20d6933d967a195ea4e46cb98677e09"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/desktop-riding.png",
+      "kind": "file",
+      "bytes": 1034418,
+      "sha256": "173ade2301fcd946a7cbb83a9ed18827cc231634c97935fa88b44c3b9bed8991"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/mobile-kick-after.png",
+      "kind": "file",
+      "bytes": 428850,
+      "sha256": "17dc6c28fa148a491a5e1fe26a519ad9a27dcb27d6af9825b6af7c3196d65054"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/mobile-kick.png",
+      "kind": "file",
+      "bytes": 424517,
+      "sha256": "ebcc7e79163726f404d7f5c35b3074a14769e392630d2a90f768bc3fb87bc542"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/mobile-ready.png",
+      "kind": "file",
+      "bytes": 233822,
+      "sha256": "928d30d893c8eab05b3ce19f03f2cbe4aebcffac437ee85c6430d9cfd06b3025"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/mobile-riding.png",
+      "kind": "file",
+      "bytes": 372561,
+      "sha256": "ced30a5fe47bb69c5037f8ece96933016817eb462f0d782e22560fb1c6c14f2e"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke/smoke-report.json",
+      "kind": "file",
+      "bytes": 2817,
+      "sha256": "1e0d94f0f920a83849bf271d4b05b22406f469e9b8a7ac1590aadbb1115e7f31"
+    },
+    {
+      "path": "artifacts/living-road-20261030/smoke.log",
+      "kind": "file",
+      "bytes": 3347,
+      "sha256": "bbaf9a8d03cc353bf4a0ec84770ff72b3f5361893b362b71e020246ac77fd414"
+    },
+    {
+      "path": "artifacts/living-road-20261030/tests-first.log",
+      "kind": "file",
+      "bytes": 19181,
+      "sha256": "975ada6f34eeb1775c2be8fc4c697173f9614dafef69356105c3d544fd92ff04"
+    },
+    {
+      "path": "artifacts/living-road-20261030/tests.log",
+      "kind": "file",
+      "bytes": 19708,
+      "sha256": "0c784e2da2e18089c515ce95a3571b08708cf1d0163d127f9467457d59ddd105"
+    },
+    {
+      "path": "artifacts/living-road-20261030/wheels-red.log",
+      "kind": "file",
+      "bytes": 1138,
+      "sha256": "7441ee438906de5735d2293a138ff57802c7b7bacbd5a8de0ebd372b7527f996"
+    },
+    {
+      "path": "artifacts/shots/desktop-ready.png",
+      "kind": "file",
+      "bytes": 858027,
+      "sha256": "86e44148de6c23643d31c795e598559fe338cce7616d928cf514079633dcff26",
+      "birthtime": "2026-10-29T19:02:42.231Z"
+    },
+    {
+      "path": "artifacts/shots/desktop-riding.png",
+      "kind": "file",
+      "bytes": 1038145,
+      "sha256": "213dccd397d60728f5525fab526957943ab9d55e461d72e319487419d401821b",
+      "birthtime": "2026-10-29T19:02:48.156Z"
+    },
+    {
+      "path": "artifacts/shots/desktop-kick.png",
+      "kind": "file",
+      "bytes": 1024931,
+      "sha256": "e93b96490a202b57184cdc05155cf451e093a91788fe16252dba9addb19dbe2f",
+      "birthtime": "2026-10-29T19:02:51.168Z"
+    },
+    {
+      "path": "artifacts/shots/desktop-kick-after.png",
+      "kind": "file",
+      "bytes": 1097571,
+      "sha256": "c46640080dc95eab98ad99d2cb86d2c6bfcfa4250f489562b7ede6dcca418f50",
+      "birthtime": "2026-10-29T19:02:52.003Z"
+    },
+    {
+      "path": "artifacts/shots/mobile-ready.png",
+      "kind": "file",
+      "bytes": 233841,
+      "sha256": "7acd2a5a8adc8506a118e71b8a09e1b825d3c195541c72808818eb9d10f38c69",
+      "birthtime": "2026-10-29T19:02:54.175Z"
+    },
+    {
+      "path": "artifacts/shots/mobile-riding.png",
+      "kind": "file",
+      "bytes": 372370,
+      "sha256": "1b49bb39df6b27234976d5e56e8d7f3900f87845ab13717d6e53961eb96bf043",
+      "birthtime": "2026-10-29T19:02:59.980Z"
+    },
+    {
+      "path": "artifacts/shots/mobile-kick.png",
+      "kind": "file",
+      "bytes": 427117,
+      "sha256": "52f9bb4c7c359ea8e8f405e325df14692d7e7a22c1406b32f7eb437ade8c7e66",
+      "birthtime": "2026-10-29T19:03:04.430Z"
+    },
+    {
+      "path": "artifacts/shots/mobile-kick-after.png",
+      "kind": "file",
+      "bytes": 434635,
+      "sha256": "557e28bc9f37039ad1a7ae033b09ee6d5b74b955739a7cad9aa40fede679405b",
+      "birthtime": "2026-10-29T19:03:05.146Z"
+    },
+    {
+      "path": "artifacts/shots/smoke-report.json",
+      "kind": "file",
+      "bytes": 2825,
+      "sha256": "be03a696bef871c4b1596a412109a2115f6f42c3a2e08725efc295cc465a5be0",
+      "birthtime": "2026-10-29T19:03:05.835Z"
+    }
+  ],
+  "regularFiles": 383,
+  "symlinks": 2,
+  "logicalBytes": 185991931,
+  "preserved": [
+    "src and tests",
+    "public and assets (including local Tripo masters and Blender sources)",
+    "all prior verification records",
+    "shared node_modules and runtime dependencies",
+    "current dist production build",
+    "user browser data",
+    "unrelated projects and live Blender"
+  ],
+  "services": {
+    "stopped": [
+      {
+        "pid": 29909,
+        "port": 5193,
+        "purpose": "owned candidate Vite"
+      },
+      {
+        "pid": 42256,
+        "port": 4184,
+        "purpose": "owned temporary main comparison"
+      }
+    ],
+    "retained": {
+      "pid": 32413,
+      "port": 4183,
+      "purpose": "playable production game"
+    }
+  },
+  "completedAt": "2026-10-29T19:11:53.554Z",
+  "unexpectedEntriesPreserved": []
+}

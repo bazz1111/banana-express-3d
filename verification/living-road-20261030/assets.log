@@ -1,0 +1,10 @@
+$ node scripts/check-assets.mjs
+{
+  "assets": 60,
+  "meshes": 183,
+  "triangles": 355647,
+  "canonicalMB": 49.98,
+  "firstScreenGLBMB": 27.38,
+  "texturedPrimitives": 139,
+  "source": "5.2.2 LTS"
+}

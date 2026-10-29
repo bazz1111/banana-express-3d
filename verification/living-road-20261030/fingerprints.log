@@ -1,0 +1,2 @@
+$ node scripts/asset-fingerprint.mjs check
+Fingerprints match: 62 files

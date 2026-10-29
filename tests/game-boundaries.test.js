@@ -105,7 +105,7 @@ test('maximum-speed charge and sprint keep their independent cooldowns and launc
   assert.equal(events.filter(e => e.type === 'dash').length, 1);
   advance(g, {}, 1 / 60);
   assert.equal(g.phase, 'racing');
-  assert.equal(g.cooldowns.kick, 18);
+  assert.equal(g.cooldowns.kick, 8);
   assert.ok(Math.abs(g.cooldowns.dash - 5.2) < 1e-8);
   assert.deepEqual(g.events.filter(e => e.type === 'kick'), [{ type: 'kick', id: 'truck', charged: true }]);
   assert.equal(g.kickedCount, 1);

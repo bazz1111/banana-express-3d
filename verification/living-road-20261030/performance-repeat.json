@@ -1,0 +1,175 @@
+{
+  "testedAt": "2026-10-29T18:48:06.636Z",
+  "seconds": 60,
+  "warmupSeconds": 5,
+  "repeats": 1,
+  "viewport": "1920x1080",
+  "platform": {
+    "os": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpu": "Apple M6"
+  },
+  "browser": "156.0.8078.48",
+  "fixture": {
+    "shieldRefreshed": true,
+    "naturalGameplay": false,
+    "virtualClock": false,
+    "stagedKicks": 6,
+    "initialDistance": 3750,
+    "lane": 4.6,
+    "bananas": 100,
+    "maximumSpeed": true,
+    "resetKickCooldown": true,
+    "trafficDisabled": true
+  },
+  "method": "All rAF intervals in the complete sample; all WebGL render passes including shadows; no slow-frame filtering",
+  "tiers": {
+    "low": {
+      "loadMs": 1644,
+      "transferMB": 16.816801071166992,
+      "encodedBodyMB": 16.807931900024414,
+      "decodedBodyMB": 31.198792457580566,
+      "actualSeconds": 60.002799999952316,
+      "distance": 5295.700000000216,
+      "speed": 26,
+      "baseSpeed": 26,
+      "kicks": 6,
+      "phase": "racing",
+      "quality": "low",
+      "memoryMB": 71.82209968566895,
+      "geometries": 145,
+      "textures": 37,
+      "frames": 4839,
+      "intervals": 4838,
+      "fps": 80.65309334120303,
+      "p50": 11.10000000000582,
+      "p95": 16.700000000004366,
+      "p99": 17.299999999995634,
+      "maxFrameMs": 22.60000000000582,
+      "calls": 84.94523661913618,
+      "maxCalls": 115,
+      "triangles": 1526775.1332920024,
+      "maxTriangles": 1581862,
+      "phases": {
+        "racing": 4839
+      },
+      "impact": {
+        "frames": 591,
+        "intervals": 591,
+        "fps": 77.05847838842165,
+        "p50": 11.199999999998909,
+        "p95": 16.80000000000291,
+        "p99": 22.099999999998545,
+        "maxFrameMs": 22.30000000000291,
+        "calls": 97.66666666666667,
+        "maxCalls": 107,
+        "triangles": 1567143.1285956006,
+        "maxTriangles": 1581862,
+        "phases": {
+          "racing": 591
+        }
+      },
+      "gpu": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+        "vendor": "Google Inc. (Apple)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+        "dpr": 1
+      },
+      "errors": [],
+      "framesOver33ms": 0,
+      "worstFrames": [
+        {
+          "timestampMs": 54900.8,
+          "intervalMs": 22.60000000000582,
+          "calls": 85,
+          "triangles": 1530361,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 23972.3,
+          "intervalMs": 22.5,
+          "calls": 100,
+          "triangles": 1562989,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 47608.9,
+          "intervalMs": 22.400000000001455,
+          "calls": 70,
+          "triangles": 1506449,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 30270.3,
+          "intervalMs": 22.399999999997817,
+          "calls": 84,
+          "triangles": 1529065,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 20045.9,
+          "intervalMs": 22.30000000000291,
+          "calls": 107,
+          "triangles": 1581862,
+          "phase": "racing",
+          "impact": true
+        },
+        {
+          "timestampMs": 33618.5,
+          "intervalMs": 22.30000000000291,
+          "calls": 83,
+          "triangles": 1527065,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 39444.9,
+          "intervalMs": 22.30000000000291,
+          "calls": 83,
+          "triangles": 1527889,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 10521.4,
+          "intervalMs": 22.299999999999272,
+          "calls": 101,
+          "triangles": 1556674,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 27987.7,
+          "intervalMs": 22.299999999999272,
+          "calls": 82,
+          "triangles": 1526913,
+          "phase": "racing",
+          "impact": false
+        },
+        {
+          "timestampMs": 50929.9,
+          "intervalMs": 22.200000000004366,
+          "calls": 81,
+          "triangles": 1524809,
+          "phase": "racing",
+          "impact": false
+        }
+      ]
+    }
+  },
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+  "gpu": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M6, Unspecified Version)",
+    "vendor": "Google Inc. (Apple)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "dpr": 1
+  },
+  "versionScope": "Same render/physics/camera source as final build; before shoulder gates. Traffic is explicitly disabled in this pressure fixture."
+}

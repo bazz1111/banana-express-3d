@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {obstacleSpecs} from '../src/game.ts';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const root=path.resolve(import.meta.dirname,'..'),out=path.join(root,'artifacts');fs.mkdirSync(out,{recursive:true});
+const root=path.resolve(import.meta.dirname,'..'),out=path.resolve(process.env.CHECK_DIR||path.join(root,'artifacts'));fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
   const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}),errors=[];
@@ -28,7 +28,7 @@ try{
   const metrics=await page.evaluate(()=>{const m=window.__renderCheck,frames=m.intervals.slice(-60).filter(n=>n>0&&n<500).sort((a,b)=>a-b);return {...m.last,medianFrameMs:frames[Math.floor(frames.length*.5)],p95FrameMs:frames[Math.floor(frames.length*.95)]};});
   await page.clock.install();await page.evaluate(()=>window.__instrumentFrames());
   const state=()=>page.evaluate(()=>{const {game:g,view:v}=window.__bananaGame;return {phase:g.phase,s:g.s,lane:g.lane,lateralSpeed:g.lateralSpeed,speed:g.speed,baseSpeed:g.baseSpeed,bananas:g.bananas,score:g.score,elapsed:g.elapsed,
-    stance:g.stance,charge:g.charge,jumpHeight:g.jumpHeight,kicks:g.kickedCount,cd:g.cooldowns.kick,buffs:g.buffs,obstacles:g.obstacles,pickups:g.pickups,
+    objective:g.objective,nearMisses:g.nearMisses,stance:g.stance,charge:g.charge,jumpHeight:g.jumpHeight,kicks:g.kickedCount,cd:g.cooldowns.kick,buffs:g.buffs,obstacles:g.obstacles,pickups:g.pickups,
     models:v.obstacleModels.size,bodies:v.physics.vehicles.size,children:v.scene.children.length};});
   await page.click('#start');await page.clock.runFor(3150);assert.equal((await state()).phase,'racing');
   const held=new Set();
@@ -52,9 +52,12 @@ try{
       let cost=Math.abs(x-(pickup?.lane??g.lane))*.35+Math.abs(x-g.lane)*.08;
       if(vehicle)cost+=Math.max(0,Math.abs(x-vehicle.lane)-2.5)*5;
       for(const o of obstacles){const spec=obstacleSpecs[o.type];if(o===vehicle||o===jumpable)continue;
-        const predicted=o.crossing?Math.sin((g.elapsed+Math.max(0,o.s-g.s-spec.length/2-.8)/g.speed)*(o.frequency??.25)+(o.seed??0))*4:o.lane;
-        // A static wall leaves a real outer gap; retain more buffer for traffic and long obstacles.
-        const extent=spec.width/2+(o.type==='wall'?.50:.90),gap=o.s-g.s-spec.length/2-.8;
+        const arrival=Math.max(0,o.s-g.s-spec.length/2-.8)/Math.max(1,g.speed-(o.speed??0));
+        const t=Math.min(1,((o.motionTime??0)+arrival)/(o.crossDuration??4));
+        const predicted=o.crossing?Math.max(-4.1,Math.min(4.1,o.originalLane+(o.crossDistance??-2.1)*t*t*(3-2*t))):o.lane;
+        // Keep clearance beyond the player's .36m half-width without declaring
+        // the usable outer gap beside a train blocked (2.15m vs 1.66m contact).
+        const extent=spec.width/2+(o.type==='wall'?.50:.65),gap=o.s-g.s-spec.length/2-.8;
         if(gap/g.speed<Math.abs(x-g.lane)/3.5+.35&&(x-predicted)*(g.lane-predicted)<0)cost+=1000;
         if(Math.abs(x-predicted)<extent)cost+=100/(Math.max(.1,gap/g.speed)+.2);
       }return cost;};
@@ -77,7 +80,7 @@ try{
     if(!dashed&&after.s>3500){await page.keyboard.down('KeyE');await page.clock.runFor(40);await page.keyboard.up('KeyE');dashed=true;}
     if(frame%250===0)console.log('ENDLESS_DISTANCE',Math.round(after.s),'bananas',after.bananas,'speed',after.speed);
   }
-  await controls({});const final=await state();assert.ok(final.s>3600,'Must reach the maximum automatic speed beyond the old endpoint');assert.equal(final.baseSpeed,26);assert.ok(dashed&&peakSpeed>=32.5,'Real E input must reach the boosted speed cap');assert.ok(final.bananas>20);assert.ok(kicked&&paused&&jumped&&stood&&satAgain);assert.ok(shieldSeen&&boostSeen&&doubleSeen,'All pickup powers should be reachable in actual play');
+  await controls({});const final=await state();assert.ok(final.s>3600,'Must reach the maximum automatic speed beyond the old endpoint');assert.equal(final.baseSpeed,26);assert.ok(dashed&&peakSpeed>=32.5,'Real E input must reach the boosted speed cap');assert.ok(final.bananas>20);assert.ok(final.objective.completed>0,'Natural collected bananas must complete a goal');assert.ok(kicked&&paused&&jumped&&stood&&satAgain);assert.ok(shieldSeen&&boostSeen&&doubleSeen,'All pickup powers should be reachable in actual play');
   await page.screenshot({path:path.join(out,'endless-running.png')});await page.click('#end-run');await page.clock.runFor(120);assert.equal((await state()).phase,'finished');
   assert.ok((await page.locator('#result-reason').textContent()).includes('主动'));await page.screenshot({path:path.join(out,'endless-result.png')});
   await page.click('#restart');await page.clock.runFor(100);const fresh=await state();assert.equal(fresh.bananas,0);assert.equal(fresh.s,0);assert.ok(['ready','countdown'].includes(fresh.phase));

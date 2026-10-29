@@ -45,6 +45,20 @@ export function projectBox(box,camera,matrix){
   return projectPoints(points,camera,matrix);
 }
 
+// Frame a short future envelope as well as the current silhouette. A damped
+// camera otherwise trails an outward-tumbling truck even after wind-up framing.
+export function anticipatedSupport(points,matrix,localCenter,linear,angular,seconds=.18){
+  const position=new THREE.Vector3(),rotation=new THREE.Quaternion(),scale=new THREE.Vector3();
+  matrix.decompose(position,rotation,scale);
+  const center=localCenter.clone().applyMatrix4(matrix);
+  const turn=angular.length();
+  if(turn)rotation.premultiply(new THREE.Quaternion().setFromAxisAngle(angular.clone().multiplyScalar(1/turn),turn*seconds));
+  center.addScaledVector(linear,seconds);center.y-=4.905*seconds*seconds;
+  position.copy(center).sub(localCenter.clone().multiply(scale).applyQuaternion(rotation));
+  const future=new THREE.Matrix4().compose(position,rotation,scale);
+  return points.flatMap(point=>[point.clone().applyMatrix4(matrix),point.clone().applyMatrix4(future)]);
+}
+
 export class KickCamera {
   constructor(){this.probe=new THREE.PerspectiveCamera();this.reset();}
   reset(){this.weight=0;this.retreat=0;this.safetyFov=0;this.lastFov=null;this.framedTarget=null;}

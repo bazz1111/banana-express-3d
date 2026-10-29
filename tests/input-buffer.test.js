@@ -56,7 +56,7 @@ test('cancelling touch while a keyboard source holds Q cannot erase its normal s
   const g=racer(),b=input();
   for(let i=0;i<50;i++)tick(g,b,c=>c==='KeyQ');
   b.cancel('KeyQ',true);tick(g,b);
-  assert.equal(g.cooldowns.kick,18);assert.ok(g.events.some(e=>e.type==='miss'));
+  assert.equal(g.cooldowns.kick,8);assert.ok(g.events.some(e=>e.type==='miss'));
 });
 
 test('one physical edge is consumed only on the first catch-up tick',()=>{

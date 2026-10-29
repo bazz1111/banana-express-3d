@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "calls": 116,
+    "triangles": 2000770,
+    "medianFrameMs": 16.699999999999818,
+    "p95FrameMs": 16.800000000000182
+  },
+  "phases": {
+    "ready": {
+      "frames": 122,
+      "maxCalls": 116,
+      "maxTriangles": 2000770
+    },
+    "countdown": {
+      "frames": 377,
+      "maxCalls": 117,
+      "maxTriangles": 2001002
+    },
+    "racing": {
+      "frames": 13162,
+      "maxCalls": 200,
+      "maxTriangles": 2353567
+    },
+    "paused": {
+      "frames": 134,
+      "maxCalls": 115,
+      "maxTriangles": 2125528
+    },
+    "finished": {
+      "frames": 165,
+      "maxCalls": 133,
+      "maxTriangles": 2210375
+    }
+  },
+  "final": {
+    "phase": "racing",
+    "s": 3602.7791666665057,
+    "lane": 2.0041357548188876,
+    "lateralSpeed": -2.870531669226544,
+    "speed": 26,
+    "baseSpeed": 26,
+    "bananas": 203,
+    "score": 9713.71249999982,
+    "elapsed": 198.86666666671707,
+    "objective": {
+      "index": 0,
+      "progress": 1,
+      "completed": 6
+    },
+    "nearMisses": 7,
+    "stance": "seated",
+    "charge": 0,
+    "jumpHeight": 0,
+    "kicks": 4,
+    "cd": 5.683333333333342,
+    "buffs": {
+      "boost": 0,
+      "shield": 0,
+      "double": 0
+    },
+    "models": 7,
+    "bodies": 2,
+    "children": 65
+  },
+  "peakModels": 8,
+  "peakBodies": 5,
+  "peakSpeed": 32.5,
+  "kicked": true,
+  "paused": true,
+  "jumped": true,
+  "stood": true,
+  "satAgain": true,
+  "dashed": true,
+  "shieldSeen": true,
+  "boostSeen": true,
+  "doubleSeen": true,
+  "collisionEnd": true,
+  "errors": []
+}

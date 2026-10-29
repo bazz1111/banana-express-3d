@@ -12,7 +12,7 @@ function initial(course,start,seconds,lane=0){
 }
 const unassisted=g=>!g.invulnerable&&!g.buffs.shield&&!g.buffs.double&&!g.kickedCount&&
   !g.events.some(e=>e.type==='pickup'||e.type==='shield');
-const copy=g=>({...g,events:[],held:{...g.held},buffs:{...g.buffs},cooldowns:{...g.cooldowns},
+const copy=g=>({...g,events:[],objective:{...g.objective},held:{...g.held},buffs:{...g.buffs},cooldowns:{...g.cooldowns},
   obstacles:g.obstacles.map(o=>({...o})),pickups:[]});
 
 export function findSteeringRoute(course,{start=0,seconds=12,beam=128,entryLanes=[0]}={}){
